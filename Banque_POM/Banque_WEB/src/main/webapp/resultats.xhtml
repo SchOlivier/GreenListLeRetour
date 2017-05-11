@@ -43,43 +43,78 @@
 					<!-- FIIINNNN MAAAAAAAP -->
 				</f:view>
 
-				<!-- Preload for demo -->
-				<p:outputPanel style="display:none">
-					<p:graphicImage name="/demo/images/antalya/konyaalti.png" />
-					<p:graphicImage name="/demo/images/antalya/ataturkparki.png" />
-					<p:graphicImage name="/demo/images/antalya/kaleici.png" />
-					<p:graphicImage name="/demo/images/antalya/karaalioglu.png" />
-				</p:outputPanel>
-			
-
-
-			<div id="monObjetsBloc" class="objetsBloc sectionBloc">
-
-
-				<ui:repeat value="#{mbRecherche.resultatRechercheList}" var="objet">
-					<div class="objetArticle letter">
-						<div class="imageDiv">
-					
-						</div>
-						<div class="infosObjet">
-							<h:commandLink action="#{mbRecherche.voirFiche(objet.id)}"  value="#{objet.libelle}"/>
-
-							<div class="objetIconeBloc">
-								<ul>
-									<li><span class="catObjet fa fa-gift fa-2x">#{objet.produit.groupe.domaine.id}</span></li>
-									<li><span class="distanceObjet fa fa-map-marker fa-2x">#{objet.distance}</span></li>
-									<li><span class="valeurObjet fa fa-snowflake-o fa-2x"></span>#{objet.valeur}</li>
-									<li><span class="compatibiliteObjet fa fa-heart fa-2x"></span>#{objet.pertinence}</li>
-
-								</ul>
-							</div>
-						</div>
+				<div class="searchOptionsBar">
+					<div class="nbResults">
+						<span>Résultats:
+							#{mbRecherche.resultatRechercheList.size()}</span>
 					</div>
+					<div class="orderResults">
+						<span>Trier par <select>
+								<option>Pertinence</option>
+								<option>Valeur: ordre croissant</option>
+								<option>Valeur: ordre décroissant</option>
+								<option>Distance</option>
+						</select>
+						</span>
+					</div>
+				</div>
+				<div class="resultatsBloc">
+					<div id="map" class="gMapBloc"></div>
+					<div id="monObjetsBloc" class="objetsBloc">
 
-				</ui:repeat>
-			</div>
+
+
+
+
+						<ui:repeat value="#{mbRecherche.resultatRechercheList}"
+							var="objet" varStatus="stat">
+							<div class="objetArticle letter">
+								<div class="imageDiv">
+
+									<h:graphicImage value="#{objet.photos[0].url}" />
+								</div>
+								<div class="infosObjet">
+									<div class="titleObjet">
+										<h:commandLink action="#{mbRecherche.voirFiche(objet.id)}"
+											value="#{objet.libelle}" />
+									</div>
+
+									<div class="titleObjet">
+										<h:commandLink
+											action="#{mbRecherche.voirProprietaire(objet.utilisateur.id)}"
+											value="#{objet.utilisateur.pseudo}" />
+										<span></span>
+
+									</div>
+									<div class="objetIconeBloc">
+										<ul>
+											<li><span class="catObjet fa fa-gift">#{objet.produit.groupe.domaine.id}</span></li>
+
+
+
+
+											<li><span class="objetIconeText">#{objet.distance}km</span><span
+												class="fa fa-map-marker"></span></li>
+											<li><span class="objetIconeText">#{objet.valeur}</span><span
+												class="fa fa-snowflake-o"></span></li>
+											<li><span class="objetIconeText">#{objet.pertinence}</span><span
+												class="fa fa-percent"></span></li>
+										</ul>
+									</div>
+								</div>
+								<div class="addBasketIcon">
+									<span class="fa fa-plus"></span>
+								</div>
+								<div class="numObjet">#{stat.index +1}</div>
+							</div>
+
+						</ui:repeat>
+
+
+
+					</div>
+				</div>
 			</h:form>
-			<!-- /Contenu Principal -->
 		</ui:define>
 	</ui:composition>
 </h:body>

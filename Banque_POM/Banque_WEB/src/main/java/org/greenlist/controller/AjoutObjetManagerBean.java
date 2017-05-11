@@ -1,21 +1,14 @@
-
 package org.greenlist.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.ConfigurableNavigationHandler;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 
 import org.greenlist.business.api.IBusinessObjet;
 import org.greenlist.business.api.IBusinessPhoto;
@@ -35,7 +28,7 @@ public class AjoutObjetManagerBean {
 	private IBusinessObjet proxyObjet;
 	@EJB
 	private IBusinessPhoto proxyPhoto;
-	
+
 	private Objet objet = new Objet();
 
 	private Set<String> mesImages = new HashSet<>();
@@ -56,17 +49,16 @@ public class AjoutObjetManagerBean {
 		objet.setUtilisateur(mbConnect.getUtilisateurConnecte());
 		objet.setDateDepot(Calendar.getInstance().getTime());
 		objet = proxyObjet.creerObjet(objet);
-		 
-		 for ( String url : mesImages){
-			 
-			 proxyPhoto.ajouterPhoto(objet, url);
-			 
-		 }
-	
-		objet = new Objet(); 
-		 return "/gestionObjets.xhtml?faces-redirect=true" ;
 
-		 
+		for (String url : mesImages) {
+
+			proxyPhoto.ajouterPhoto(objet, url);
+
+		}
+
+		objet = new Objet();
+		return "/gestionObjets.xhtml?faces-redirect=true";
+
 	}
 
 	public void handleFileUpload(FileUploadEvent event) {
@@ -74,29 +66,31 @@ public class AjoutObjetManagerBean {
 		this.photoUploade = event.getFile();
 		System.out.println("File name : " + photoUploade.getFileName() + "\nSize file : " + photoUploade.getSize());
 		String path = Thread.currentThread().getContextClassLoader().getResource("bidon.txt").getPath();
-		
+
 		path = path.split("WEB-INF")[0] + "img/";
 		path = path.substring(1);
 		System.out.println(path);
-		
 
-		String extension =".jpg";
-		
+		String extension = ".jpg";
+
 		String nomFichier = Long.toString(Calendar.getInstance().getTimeInMillis());
 		System.out.println(nomFichier);
-		
+		String urlObjet = "/img/" + nomFichier + extension;
+
 		String url = path + nomFichier + extension;
-		
-		while (!mesImages.add(url)){
+		System.out.println(" ici : " + url);
+
+		while (!mesImages.add(urlObjet)) {
 			nomFichier = Long.toString(Calendar.getInstance().getTimeInMillis());
-			url = path + nomFichier + extension;
+			urlObjet = path + nomFichier + extension;
 		}
 		try {
 			System.out.println(path + nomFichier + extension);
 			photoUploade.write(url);
-			System.out.println( photoUploade.getFileName() +"write OK");
+			System.out.println(photoUploade.getFileName() + "write OK");
 		} catch (Exception e) {
-			mesImages.remove(url);	// si on n'a pas réussi à écrire le fichier, on vire cette url du Set.
+			mesImages.remove(url); // si on n'a pas réussi à écrire le fichier,
+									// on vire cette url du Set.
 			System.out.println("souci d'écriture de fichier");
 			e.printStackTrace();
 		}
@@ -125,7 +119,6 @@ public class AjoutObjetManagerBean {
 	public void setObjet(Objet objet) {
 		this.objet = objet;
 	}
-
 
 	public IBusinessPhoto getProxyPhoto() {
 		return proxyPhoto;
