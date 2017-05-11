@@ -35,7 +35,7 @@
 				<ui:repeat value="#{mbRecherche.resultatRechercheList}" var="objet" varStatus="stat">
 					<div class="objetArticle letter">
 						<div class="imageDiv">
-							<img class="imageObjet" />
+							<h:graphicImage value="#{objet.photos[0].url}"/>
 						</div>
 						<div class="infosObjet">
 							<div class="titleObjet"><h:commandLink action="#{mbRecherche.voirFiche(objet.id)}"  value="#{objet.libelle}"/></div>

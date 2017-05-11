@@ -84,12 +84,12 @@ public class AjoutObjetManagerBean {
 		
 		String nomFichier = Long.toString(Calendar.getInstance().getTimeInMillis());
 		System.out.println(nomFichier);
-		
+		String urlObjet = "/img/" + nomFichier + extension ;
 		String url = path + nomFichier + extension;
-		
-		while (!mesImages.add(url)){
+		System.out.println(" ici : " + url);
+		while (!mesImages.add(urlObjet)){
 			nomFichier = Long.toString(Calendar.getInstance().getTimeInMillis());
-			url = path + nomFichier + extension;
+			urlObjet = path + nomFichier + extension;
 		}
 		try {
 			System.out.println(path + nomFichier + extension);

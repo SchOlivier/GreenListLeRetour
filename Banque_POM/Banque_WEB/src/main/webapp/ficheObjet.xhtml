@@ -46,19 +46,14 @@
 									<div class="infosContent">
 										<div class="photoContent">
 											<div>
+												<p:graphicImage value="#{photos[0].url}" alt="photo de l' objet" />
+											</div>
+											<ul class="miniaturesConteneur">
 												<ui:repeat value="#{mbFicheObjet.photos}" var="photo">
-													<p:graphicImage value="#{photo}" alt="photo de l' obhet" />
+													<p:graphicImage value="#{photo.url}" alt="photo de l' objet" />
 													<br />
 												</ui:repeat>
 
-											</div>
-											<ul class="miniaturesConteneur">
-												<li class="miniItem"><span class="fa fa-camera"></span>
-												</li>
-												<li class="miniItem"><span class="fa fa-camera"></span>
-												</li>
-												<li class="miniItem"><span class="fa fa-camera"></span>
-												</li>
 											</ul>
 										</div>
 										<div class="infosTab">

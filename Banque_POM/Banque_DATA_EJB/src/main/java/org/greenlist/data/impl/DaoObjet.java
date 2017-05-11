@@ -25,19 +25,16 @@ public class DaoObjet implements IDaoObjet {
 	private EntityManager em;
 
 	private static final String REQUETTE_GET_OBJET_BY_ID = "SELECT o FROM Objet o WHERE o.id = :pidObjet";
-	private static final String REQUETTE_GET_OBJET_BY_ID_WITH_PDT_TA =
-			"SELECT o FROM Objet o inner join fetch o.produit inner join fetch o.trancheAge inner join fetch o.utilisateur WHERE o.id = :pidObjet";
+	private static final String REQUETTE_GET_OBJET_BY_ID_WITH_PDT_TA = "SELECT o FROM Objet o inner join fetch o.produit inner join fetch o.trancheAge inner join fetch o.utilisateur WHERE o.id = :pidObjet";
 
 	private static final String REQUETTE_GET_OBJETS_BY_UTILISATEUR = "SELECT u.objets FROM Utilisateur as u WHERE u.id = :pIdUtilisateur";
 
 	private static final String REQUETTE_GET_OBJETS_BY_LIBELLE = "SELECT o FROM Objet as o WHERE o.libelle LIKE :pmotClef";
-	
+
 	private static final String REQUETE_GET_PHOTOS = "SELECT o.photos FROM Objet o WHERE o.id = :pIdObjet";
 
-	private static final String REQUETE_GET_GROUPE = 
-			  "SELECT g from Groupe g where g.id = :pGId " ;
-	private static final String REQUETE_GET_DOMAINE = 
-			  "SELECT D from Domaine d where d.id = :pDId " ;
+	private static final String REQUETE_GET_GROUPE = "SELECT g from Groupe g where g.id = :pGId ";
+	private static final String REQUETE_GET_DOMAINE = "SELECT D from Domaine d where d.id = :pDId ";
 	private static final String REQUETE_GET_ADRESSE = "SELECT a " + "FROM Adresse a "
 			+ "INNER JOIN fetch a.utilisateur u " + "INNER JOIN fetch u.objets o " + "WHERE o.id = :pIdObjet";
 
@@ -48,9 +45,8 @@ public class DaoObjet implements IDaoObjet {
 	private static final String REQUETTE_GET_OBJETS_BY_GROUPE = " SELECT o FROM Objet as  o"
 			+ " JOIN o.produit as produit " + "join produit.groupe as groupe" + " WHERE groupe = :pGroupe";
 
-	private static final String REQUETTE_GET_OBJETS_BY_PRODUIT = "SELECT o from Objet o inner join fetch o.produit p inner join fetch o.trancheAge "
-			+ "inner join fetch p.groupe g "
-			+ "inner join fetch g.domaine  WHERE o.produit = :pProduit "
+	private static final String REQUETTE_GET_OBJETS_BY_PRODUIT = "SELECT o from Objet o inner join fetch o.produit p inner join fetch o.trancheAge inner join fetch o.utilisateur u"
+			+ "inner join fetch p.groupe g " + "inner join fetch g.domaine  WHERE o.produit = :pProduit "
 			+ "AND o.utilisateur.id <> :pIdUtilisateur";
 
 	/**
@@ -76,10 +72,16 @@ public class DaoObjet implements IDaoObjet {
 		Objet objetComplet = new Objet();
 		Query query = em.createQuery(REQUETTE_GET_OBJET_BY_ID_WITH_PDT_TA).setParameter("pidObjet", idObjet);
 		objetComplet = (Objet) query.getSingleResult();
-		Query queryGroupe = em.createQuery(REQUETE_GET_GROUPE).setParameter("pGId", objetComplet.getProduit().getGroupe().getId());
-		objetComplet.getProduit().setGroupe((Groupe)queryGroupe.getSingleResult());
-		Query queryDomaine = em.createQuery(REQUETE_GET_DOMAINE).setParameter("pDId", objetComplet.getProduit().getGroupe().getDomaine().getId());
-		objetComplet.getProduit().getGroupe().setDomaine((Domaine)queryDomaine.getSingleResult());
+		Query queryGroupe = em.createQuery(REQUETE_GET_GROUPE).setParameter("pGId",
+				objetComplet.getProduit().getGroupe().getId());
+		objetComplet.getProduit().setGroupe((Groupe) queryGroupe.getSingleResult());
+		Query queryDomaine = em.createQuery(REQUETE_GET_DOMAINE).setParameter("pDId",
+				objetComplet.getProduit().getGroupe().getDomaine().getId());
+		objetComplet.getProduit().getGroupe().setDomaine((Domaine) queryDomaine.getSingleResult());
+
+		objetComplet.setPhotos(objetComplet.getPhotos());
+		
+		
 		
 		return objetComplet;
 	}
@@ -97,7 +99,7 @@ public class DaoObjet implements IDaoObjet {
 	}
 
 	/**
-	 * Methode pour r�cup�rer l'ensemble des objets d'un utilisateur
+	 * Methode pour r�cup�rer l'ensemble des objets d'un utilisateur avec les photos
 	 * 
 	 * @param utilisateur
 	 *            le propri�taire des objets recherch�s
@@ -106,8 +108,16 @@ public class DaoObjet implements IDaoObjet {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Objet> getObjetsByUtilisateur(Utilisateur utilisateur) {
-		String hql = "SELECT o FROM Objet o WHERE o.utilisateur.id = :pid";
-		return em.createQuery(hql).setParameter("pid", utilisateur.getId()).getResultList();
+		String hql = "SELECT o FROM Objet o  WHERE o.utilisateur.id = :pid";
+		List<Objet> objets = em.createQuery(hql).setParameter("pid", utilisateur.getId()).getResultList();
+		
+		for (Objet objet : objets) {
+			objet.setPhotos(getPhotos(objet));
+
+		}
+
+		return objets;
+			
 	}
 
 	/**
@@ -165,24 +175,41 @@ public class DaoObjet implements IDaoObjet {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Objet> getObjetsByProduit(Produit produit, Utilisateur utilisateur) {
-	
+
 		Query query = em.createQuery(REQUETTE_GET_OBJETS_BY_PRODUIT).setParameter("pProduit", produit);
 		query.setParameter("pIdUtilisateur", utilisateur.getId());
-		
-		
-		return query.getResultList();
+		List<Objet> objets = query.getResultList();
+
+		for (Objet objet : objets) {
+			objet.setPhotos(getPhotos(objet));
+
+		}
+
+		return objets;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Photo> getPhotos(Objet objet) {
+		List<Photo> photos = null;
+
 		Query query = em.createQuery(REQUETE_GET_PHOTOS).setParameter("pIdObjet", objet.getId());
-		return query.getResultList();
+		photos = query.getResultList();
+
+		if (photos.size() == 0) {
+			String path = "/img/pardefaut.png";
+
+			Photo defaut = new Photo();
+			defaut.setUrl(path);
+			defaut.setObjet(objet);
+			photos.add(defaut);
+		}
+
+		return photos;
 	}
-	
+
 	@Override
 	public Adresse getAdresse(Objet objet) {
 		return (Adresse) em.createQuery(REQUETE_GET_ADRESSE).setParameter("pIdObjet", objet.getId()).getSingleResult();
 	}
 }
-
