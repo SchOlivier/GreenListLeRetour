@@ -1,4 +1,4 @@
-$('.formulaire').find('input, textarea').on('keyup blur focus', function (e) {
+$('.formulaire').find('input, textarea').on('keyup blur focus', function clearFields(e) {
 
     var $this = $(this),
         label = $this.prev('label');

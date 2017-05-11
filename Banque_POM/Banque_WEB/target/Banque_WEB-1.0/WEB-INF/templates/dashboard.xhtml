@@ -8,11 +8,159 @@
 </h:head>
 <h:body>
 	<ui:composition>
+        <div id="profilBox" class="profilDashBoard">
+            <div class="profilSection">
+                <div class="fa fa-user-circle-o fa-3x">
+                <img id="imgProfil" class="imgProfilDashBoard " /></div>
+                <ul>
+                    <li>Troc4ever</li>
+                    <li>Confirmé</li>
+                    <li>
+                        <span class="fa fa-star smallStar"></span><span class="fa fa-star smallStar"></span><span class="fa fa-star smallStar"></span><span class="fa fa-star-half-o smallStar"></span><span class="fa fa-star-o smallStar"></span>
+                    </li>
+                    <li><button>Se Déconnecter</button></li>
+                </ul>
+            </div>
+            <div class="profilStats">
+                <ul>
+                    <li><span class="ion-wand smallIcon whiteColor"></span>4</li>
+                    <li><span class="ion-upload smallIcon whiteColor"></span>10</li>
+                    <li><span class="fa fa-contacts smallIcon whiteColor"></span>20</li>
+                    <li><span class="ion-asterisk smallIcon whiteColor"></span>4</li>
+                </ul>
+            </div>
+        </div>
+        <div id="echangeBox">
+            <div class="gestionLien">
+                <div id="echangeTrigger" class="categorieDashBoard">
+                    <span class="fa fa-contacts smallIcon greyColor"></span>
+                    <span class="categorieTitre">Echanges</span>
+                </div>
+                <div class="categorieBtn">
+                    <span id="echangePlusTrigger" class="fa fa-arrow-dropdown smallIcon greyColor"></span>
+                </div>
+            </div>
+            <ul id="echangePlus" class="echangePlusDashBoard">
+                <li>
+                    <div class="echangeEnCours"><img class="avatarEchangeEnCours" src="../icons/user.png" alt="userAvatar" />
+                        <ul>
+                            <li>laDiva</li>
+                            <li><span class="fa fa-star smallStar"></span><span class="fa fa-star smallStar"></span><span class="fa fa-star smallStar"></span><span class="fa fa-star-half smallStar"></span><span class="fa fa-star-outline smallStar"></span></li>
+                            <li>Rdv à fixer</li>
+                        </ul>
+                        <div class="endFloat"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="echangeEnCours"><img class="avatarEchangeEnCours" src="../icons/user.png" alt="userAvatar" />
+                        <ul>
+                            <li>monkeyD</li>
+                            <li><span class="fa fa-star smallStar"></span><span class="fa fa-star smallStar"></span><span class="fa fa-star smallStar"></span><span class="fa fa-star-half smallStar"></span><span class="fa fa-star-outline smallStar"></span></li>
+                            <li>Confirmer transaction</li>
+                        </ul>
+                        <div class="endFloat"></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="gestionLien">
+            <div id="souhaitsTrigger" class="categorieDashBoard">
+                <span class="ion-wand smallIcon greyColor"></span>
+                <span class="categorieTitre">Souhaits</span>
+            </div>
+            <div class="categorieBtn">
+                <span class="fa fa-add-circle smallIcon greyColor"></span>
+            </div>
+        </div>
+        <div class="gestionLien">
+            <div id="objetsTrigger" class="categorieDashBoard">
+                <span class="ion-upload smallIcon greyColor"></span>
+                <span class="categorieTitre">Objets</span>
+            </div>
+            <div class="categorieBtn">
+                <span class="fa fa-add-circle smallIcon greyColor"></span>
+            </div>
+        </div>
+        <div id="notificationBox" class="gestionLien">
+            <div id="notificationsTrigger" class="categorieDashBoard">
+                <span class="ion-ios-bell smallIcon greyColor"></span>
+                <span class="categorieTitre">Notifications</span>
+            </div>
+            <div class="categorieBtn">
+                <span class="ion-ios-trash smallIcon greyColor"></span>
+                <span class="fa fa-arrow-dropdown smallIcon greyColor"></span>
+            </div>
+        </div>
+        <div class="notificationsPlus">
+            <div class="hidden">Tout Vider</div>
+            <ul id="notificationsPlus" class="notificationsPlusDashBoard">
+                <li>
+                    <a href="#" class="btnNotification blue">
+                        <span class="title">Nouvel Objet Compatible</span>
+                        <span class="details">
+                            Souhait <i class="icon-time"></i>: <strong>Mar 12, 2013</strong>
+                        </span>
+                        <span class="price"><strong>✓</strong>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="btnNotification magenta">
+                        <span class="title">Nouvel Echange initié</span>
+                        <span class="details">
+                        Echange<i class="icon-time"></i>:
+                        <strong>Apr 2, 2013</strong>
+                    </span>
+                        <span class="price">
+                        <strong>✓</strong>
+                    </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="btnNotification green">
+                        <span class="title">Echange Modifié</span>
+                        <span class="details">
+                            Echange <i class="icon-time"></i>:
+                            <strong>Mar 10, 2013</strong>
+                        </span>
+                        <span class="price"><strong>✓</strong>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="btnNotification red">
+                        <span class="title">Alerte</span>
+                        <span class="details">
+                            Signalement <i class="icon-time"></i> :
+                            <strong>Dec 17, 2013</strong>
+                        </span>
+                        <span class="price">
+                            <strong>✓</strong>
+                        </span>
+                    </a>
+                </li>
+            </ul>
+            <div class="hidden">Tout Vider</div>
+        </div>
+        <div class="btnLiens">
+            <div id="blue" class="btnLien blue text-blanco text-shadow-negra">
+                <div class="fa fa-calendar btnBlue smallIcon greyColor"></div>
+            </div>
+            <div id="green" class="btnLien green text-blanco text-shadow-negra">
+                <div class="ion-gear-b btnGreen smallIcon greyColor"></div>
+            </div>
+            <div id="yellow" class="btnLien yellow text-blanco text-shadow-negra">
+                <div class="ion-help-circled btnYellow smallIcon greyColor"></div>
+            </div>
+            <div id="red" class="btnLien red text-blanco text-shadow-negra">
+                <div class="ion-help-circled btnRed smallIcon greyColor"></div>
+            </div>
+        </div>
 		<div id="profilBox" class="profilDashBoard">
 			<div class="profilSection">
 				<span id="imgProfil" class="imgProfilDashBoard"></span>
 				<ul>
-					<li>Troc4ever</li>
+					<li>Troc4Ever</li>
 					<li>Confirmé</li>
 					<li><span class="ion-android-star smallStar"></span><span
 						class="ion-android-star smallStar"></span><span

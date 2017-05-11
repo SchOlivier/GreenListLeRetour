@@ -5,77 +5,76 @@
 	xmlns:p="http://primefaces.org/ui">
 <h:head>
 	<title><ui:insert>Default Title</ui:insert></title>
-	<h:outputStylesheet library="css" name="style.css" target="head"/>  
-<!--     <script src="https://code.jquery.com/jquery-2.1.4.js"></script> -->
     <script src="http://maps.google.com/maps/api/js?key=AIzaSyDFouMfgD7XclwaKHPojMrWW44syHT2iZI"></script>
+    <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+    <h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="head" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 </h:head>
 <h:body>
 
-	<!-- TopBar Main Navigation -->
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="base.css" />
+		<h:outputStylesheet library="css" name="main.css" />
+		<h:outputStylesheet library="css" name="footer.css" />
+		<h:outputStylesheet library="css" name="echange.css" />
+		<h:outputStylesheet library="css" name="navmenu.css" />
+		<h:outputStylesheet library="css" name="bandeau.css" />
+		<h:outputStylesheet library="css" name="dashboard.css" />
+		<h:outputStylesheet library="css" name="tools.css" />
+		<h:outputStylesheet library="css" name="normalize.css" />
+		<h:outputStylesheet library="css" name="connexion.css" />
+		<h:outputStylesheet library="css" name="objet.css" />
+		<h:outputStylesheet library="css" name="souhait.css" />
+		<h:outputStylesheet library="css" name="ficheObjet.css" />
+	</f:facet>
 
-	<nav id="mainMenu" class="menuTop">
+	<!-- TopBar Main Navigation -->
+	<f:facet name="last">
+		<h:outputStylesheet library="css" name="base.css" />
+		<h:outputStylesheet library="css" name="main.css" />
+		<h:outputStylesheet library="css" name="footer.css" />
+		<h:outputStylesheet library="css" name="echange.css" />
+		<h:outputStylesheet library="css" name="navmenu.css" />
+		<h:outputStylesheet library="css" name="bandeau.css" />
+		<h:outputStylesheet library="css" name="dashboard.css" />
+		<h:outputStylesheet library="css" name="tools.css" />
+		<h:outputStylesheet library="css" name="normalize.css" />
+		<h:outputStylesheet library="css" name="connexion.css" />
+		<h:outputStylesheet library="css" name="objet.css" />
+		<h:outputStylesheet library="css" name="souhait.css" />
+		<h:outputStylesheet library="css" name="ficheObjet.css" />
+	</f:facet>
+	<nav id="mainMenu" class="menuTop">	
 		<ui:insert name="navbar">
 			<ui:include src="/WEB-INF/templates/navbar.xhtml"></ui:include>
 		</ui:insert>
 	</nav>
-
-	<!-- /TopBar Main Navigation -->
-
-	<!-- SideBar Tableau de Bord Adherent -->
-
 	<div id="myDashBoard" class="dashBoard" tabindex="-1">
 		<ui:insert name="dashboard">
 			<ui:include src="/WEB-INF/templates/dashboard.xhtml"></ui:include>
 		</ui:insert>
 	</div>
-
-	<!-- /SideBar Tableau de Bord Adherent -->
-	
-	<!-- SideBar Panel de Recherche -->
-
-    <div id="mySearchPanel" class="searchPanel" tabindex="-1">
-        <ui:insert name="searchpanel">
+	<div id="mySearchPanel" class="searchPanel" tabindex="-1">
+		<ui:insert name="searchpanel">
 			<ui:include src="/WEB-INF/templates/searchpanel.xhtml"></ui:include>
 		</ui:insert>
-    </div>
-
-    <!-- /SideBar Panel de Recherche -->
-
-    <!-- SideBar Panier -->
-
-    <div id="myBasketPanel" class="basketPanel" tabindex="-1">
-         <ui:insert name="basketpanel">
+	</div>
+	<div id="myBasketPanel" class="basketPanel" tabindex="-1">
+		<ui:insert name="basketpanel">
 			<ui:include src="/WEB-INF/templates/basketpanel.xhtml"></ui:include>
 		</ui:insert>
-    </div>
-
-    <!-- /SideBar Panel de Recherche -->
-
-     <!-- Contenu Principal -->
-    
-    <div id="mainPanel">
-        <ui:insert name="content"></ui:insert>
-    </div>
-
-    <!-- /Contenu Principal -->
-
-
-    <!-- Footer -->
-
-    <footer id="myFooter" class="mainFooter">
-         <ui:insert name="footer">
+	</div>
+	<div id="mainPanel" class="mainPanel">
+		<ui:insert name="content"></ui:insert>
+	</div>
+	<footer id="myFooter" class="mainFooter footer-distributed">
+		<ui:insert name="footer">
 			<ui:include src="/WEB-INF/templates/footer.xhtml"></ui:include>
 		</ui:insert>
-    </footer>
-
-    <!-- /Footer --> 
-    
-    <!-- Scripts  -->
-    
-    <h:outputScript library="js" name="base.js" target="body" />
-    
-    <!-- /Scripts  -->
-
+	</footer>
+    <h:outputScript library="js" name="slideshow.js"></h:outputScript>
+    <h:outputScript library="js" name="base.js"></h:outputScript>
+    <h:outputScript library="js" name="tabnav.js"></h:outputScript>
+    <h:outputScript library="js" name="formulaire.js"></h:outputScript>
 </h:body>
 </html>

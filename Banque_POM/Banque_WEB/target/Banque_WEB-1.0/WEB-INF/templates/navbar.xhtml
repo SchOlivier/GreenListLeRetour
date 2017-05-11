@@ -8,17 +8,21 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<nav id="mainMenu" class="menuTop">
         <ul class="mainNavBar">
-            <li id="dashBoardTrigger" class="userMainNavBar fa fa-user-circle-o fa-2x greyBorder smallIcon deepGreyColor"></li>
-            <li class="searchBar">
-                <span id="searchTrigger" class="magnifierMainNavBar fa fa-search fa-2x  smallIcon deepGreyColor"></span>
-                <input type="text" id="searchTextField" class="textFieldMainNavBar" />
-                <span class="moreMainNavBar fa fa-angle-double-down fa-2x verySmallIcon deepGreyColor"></span>
+            <li id="dashBoardTrigger" class="userMainNavBar fa fa-user-circle-o fa-2x deepGreyColor"></li>
+            <!--
+            <li class="bellMainNavBar fa fa-bell-o fa-2x fa-blink deepGreyColor"></li>
+-->
+            <li class="logoGLIcon">
+                <div class="logoGL"></div>
             </li>
-            <li id="basketTrigger" class="basketMainNavBar fa fa-heart fa-2x deepGreyColor"></li>
+            <li class="searchBar">
+                <span id="searchTrigger" class="magnifierMainNavBar fa fa-search fa-2x deepGreyColor"></span>
+                <input type="text" id="searchTextField" class="textFieldMainNavBar" />
+                <span class="moreMainNavBar fa fa-caret-down fa-2x deepGreyColor"></span>
+            </li>
+            <li id="basketTrigger" class="basketMainNavBar fa fa-shopping-basket fa-2x deepGreyColor"></li>
         </ul>
-    </nav>
-	</ui:composition>>
+	</ui:composition>
 </h:body>
 </html>

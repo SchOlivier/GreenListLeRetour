@@ -151,14 +151,14 @@
     width: 185px;
     height: 185px;
     background-image: url("#{resource['images/objet1.png']}");
-    background-image: url(../images/objet1.png);
+    _background-image: url(../images/objet1.png);
     background-size: cover;
 }
 
 .imageObjetMin {
     display: none;
     background-image: url("#{resource['images/objet1.png']}");
-    background-image: url(../images/objet1.png);
+    _background-image: url(../images/objet1.png);
     background-size: cover;
 }
 
@@ -329,6 +329,10 @@
     flex-wrap: wrap;
 }
 
+.photosConteneur>div{    
+    width: 100%;
+}
+
 .photoItem,
 .addIconBloc {
     height: 100px;
@@ -359,21 +363,22 @@
 
 .pageBouton {
     margin-left: 20px;
-    color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 20px;
 }
 
 .pageBouton div,
-.pageBouton span {
+.pageBouton span,
+.pageBouton input{
     margin: 2px;
     height: 35px;
     padding: 5px 20px 5px 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
 }
 
 .listeConteneur {

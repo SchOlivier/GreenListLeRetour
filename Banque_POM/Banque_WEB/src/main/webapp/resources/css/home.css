@@ -1,0 +1,60 @@
+.accueilTitle{
+    
+}
+
+.accueilItem{
+    
+}
+
+/***** Stats Bar ******/
+
+.statsSiteBloc{
+    background-color: #fff;
+    margin: 10px 0 10px 0;
+}
+
+.statsIcon{
+    width: 80px;
+    height: 80px;
+}
+
+.lutinIcon{
+    _background-image: url("#{resource['/images/chiffreCleLutin.jpg']}");
+    background: url("../images/chiffreCleLutin.jpg");
+    background-size: cover;
+}
+
+/*** ***/
+
+.commentBloc{
+    display: flex;
+    flex-flow: column nowrap;
+    
+}
+
+.accueilContent>li{
+    width: 300px;
+    height: 280px;
+}
+
+.accueilContent{    
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+}
+
+#etape1{
+    _background-image: url("#{resource['/images/etape1bis.png']}");
+    background: url("../images/etape1bis.png");
+    background-size: contain;
+}
+
+#etape2{
+    _background-image: url("#{resource['/images/etape2.png']}");
+    background: url("../images/etape2.png");
+    background-size: contain;
+}
+
+.accueilItem{
+    background: #aaa;
+}

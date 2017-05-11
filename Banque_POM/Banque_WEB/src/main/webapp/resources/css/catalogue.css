@@ -1,0 +1,73 @@
+.catBar{
+    margin: 10px;    
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    margin-top: 30px;
+}
+
+.domainIcon{
+    width: 30px;
+    height: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+}
+
+.catBar>li>ul{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.catBar>li>ul>li{    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.domainIcon{
+    width: 50px;
+    height: 50px;
+    padding: 5px;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+.domaine1{
+    background: url("#{resource['/images/domaine1.png']}");
+    _background: url("../images/domaine1.png");
+    background-color: darkgoldenrod;
+    background-size: cover;
+}
+
+.domaine2{
+    background: url("#{resource['/images/domaine2.png']}");
+    _background: url("../images/domaine2.png");
+    background-color: skyblue;
+    background-size: contain;
+}
+
+.domaine3{
+    background: url("#{resource['/images/domaine3.png']}");
+    _background: url("../images/domaine3.png");
+    background-color: mediumturquoise;
+    background-size: contain;
+}
+
+.domaine4{
+    background: url("#{resource['/images/domaine4.png']}");
+    _background: url("../images/domaine4.png");
+    background-color: darkseagreen;
+    background-size: contain;
+}
+
+.domaine5{
+    background: url("#{resource['/images/domaine5.png']}");
+    _background: url("../images/domaine5.png");
+    background-color: coral;
+    background-size: contain;
+}
