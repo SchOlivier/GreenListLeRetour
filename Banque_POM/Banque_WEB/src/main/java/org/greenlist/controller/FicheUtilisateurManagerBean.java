@@ -30,8 +30,7 @@ public class FicheUtilisateurManagerBean {
 	private int nbObjets = 0;
 	private int nbSouhaits = 0;
 	private int nbEchanges =  0 ;
-	private int distance = 0;
-	private int pertinence=0 ;
+
 	
 	
 	@PostConstruct
@@ -39,6 +38,22 @@ public class FicheUtilisateurManagerBean {
 		
 		
 		utilisateurAffiche = mbUtilisateur.getUtilisateurConnecte();
+		
+		getUtilisateurAffichage(utilisateurAffiche);
+		
+//		utilisateurAffiche = proxyUtilisateur.getUtilisateurCompletById(utilisateurAffiche);
+//		utilisateurAffiche.setObjets(proxyUtilisateur.recupererObjetsUtilisateur(utilisateurAffiche));
+//		
+//		nbEchanges = proxyUtilisateur.recupererNbEchangesValide(utilisateurAffiche);	
+//		nbSouhaits = proxyUtilisateur.recupererNbSouhaits(utilisateurAffiche);
+//		nbObjets = proxyUtilisateur.recupererNbObjets(utilisateurAffiche);
+//		moyenne = proxyUtilisateur.recupererMoyenne(utilisateurAffiche);
+//		nbAVis = proxyUtilisateur.recupererNbAvis(utilisateurAffiche);
+		
+	}
+	
+	public void getUtilisateurAffichage ( Utilisateur utilisateur){
+		
 		utilisateurAffiche = proxyUtilisateur.getUtilisateurCompletById(utilisateurAffiche);
 		utilisateurAffiche.setObjets(proxyUtilisateur.recupererObjetsUtilisateur(utilisateurAffiche));
 		
@@ -47,7 +62,6 @@ public class FicheUtilisateurManagerBean {
 		nbObjets = proxyUtilisateur.recupererNbObjets(utilisateurAffiche);
 		moyenne = proxyUtilisateur.recupererMoyenne(utilisateurAffiche);
 		nbAVis = proxyUtilisateur.recupererNbAvis(utilisateurAffiche);
-		
 	}
 
 	public String voirFiche(int idObjet){
@@ -134,21 +148,6 @@ public class FicheUtilisateurManagerBean {
 		this.mbUtilisateur = mbUtilisateur;
 	}
 
-	public int getDistance() {
-		return distance;
-	}
-
-	public void setDistance(int distance) {
-		this.distance = distance;
-	}
-
-	public int getPertinence() {
-		return pertinence;
-	}
-
-	public void setPertinence(int pertinence) {
-		this.pertinence = pertinence;
-	}
 	
 	
 }

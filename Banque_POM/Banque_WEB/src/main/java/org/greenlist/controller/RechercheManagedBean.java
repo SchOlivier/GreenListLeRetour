@@ -33,6 +33,7 @@ import org.primefaces.model.TreeNode;
 @SessionScoped
 public class RechercheManagedBean {
 
+	
 	private String recherche;
 	private Set<Objet> resultatRechercheSet;
 	private List<Objet> resultatRechercheList;
@@ -42,15 +43,20 @@ public class RechercheManagedBean {
 	private static final double SCORE_DOMAINE = 0.15;
 	private Utilisateur utilisateur;
 	private Map<Produit, Integer> compteurProduits;
-	private TreeNode root;
+	private TreeNode root = new DefaultTreeNode("Root", null);
 
 	private Map<Domaine, Set<Groupe>> mapDomaines;
 	private Map<Groupe, Set<Produit>> mapGroupes;
+	
+	
+
 
 	// sera à définir à partir de l'utilisateur qui effectuera la recherche.
 	// Valeur par défaut pour le moment.
 	private double latitude;
 	private double longitude;
+	
+	
 
 	@EJB
 	private IBusinessUtilisateur proxyUtilisateur;
@@ -133,22 +139,22 @@ public class RechercheManagedBean {
 
 		resultatRechercheList = new ArrayList<>(resultatRechercheSet);
 		Collections.sort(resultatRechercheList, new ObjetComparator());
-
+		
 		// Construction de l'arbre des catégories
-		TreeNode root = new DefaultTreeNode("Root", null);
+		
 
 		for (Domaine d : mapDomaines.keySet()) {
-			TreeNode tnD = new DefaultTreeNode(d, root);
+			TreeNode tnD = new DefaultTreeNode(d.getLibelle(), root);
 			root.getChildren().add(tnD);
 			// verif
 			System.out.println(d.getLibelle());
 			for (Groupe g : mapDomaines.get(d)) {
-				TreeNode tnG = new DefaultTreeNode(g, tnD);
+				TreeNode tnG = new DefaultTreeNode(g.getLibelle(), tnD);
 				tnD.getChildren().add(tnG);
 				// verif
 				System.out.println("  " + g.getLibelle());
 				for (Produit p : mapGroupes.get(g)) {
-					TreeNode tnP = new DefaultTreeNode(p, tnG);
+					TreeNode tnP = new DefaultTreeNode(p.getLibelle() + " (" + compteurProduits.get(p) + ")", tnG);
 					tnG.getChildren().add(tnP);
 					System.out.println("    " + p.getLibelle() + " (" + compteurProduits.get(p) + ")");
 				}
@@ -237,6 +243,14 @@ public class RechercheManagedBean {
 		return nav;
 		
 	}
+	
+
+	public String voirProprietaire ( int idUtilisateur){
+		String nav ="/ficheUtilisateur.xhtml?faces-redirect=true&id="+ idUtilisateur ;
+		return nav;
+		
+	}
+
 
 	private double deg2rad(double deg) {
 		return deg * Math.PI / 180;
@@ -322,4 +336,73 @@ public class RechercheManagedBean {
 		this.proxyAdresse = proxyAdresse;
 	}
 
+
+
+	public Utilisateur getUtilisateur() {
+		return utilisateur;
+	}
+
+
+
+	public void setUtilisateur(Utilisateur utilisateur) {
+		this.utilisateur = utilisateur;
+	}
+
+
+
+	public Map<Domaine, Set<Groupe>> getMapDomaines() {
+		return mapDomaines;
+	}
+
+
+
+	public void setMapDomaines(Map<Domaine, Set<Groupe>> mapDomaines) {
+		this.mapDomaines = mapDomaines;
+	}
+
+
+
+	public Map<Groupe, Set<Produit>> getMapGroupes() {
+		return mapGroupes;
+	}
+
+
+
+	public void setMapGroupes(Map<Groupe, Set<Produit>> mapGroupes) {
+		this.mapGroupes = mapGroupes;
+	}
+
+
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+
+
+	public void setMotsRecherche(Set<String> motsRecherche) {
+		this.motsRecherche = motsRecherche;
+	}
+
+	
+	
+	
 }

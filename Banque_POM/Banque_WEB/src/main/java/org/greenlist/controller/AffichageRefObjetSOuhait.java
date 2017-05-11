@@ -3,6 +3,7 @@ package org.greenlist.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -38,6 +39,13 @@ public class AffichageRefObjetSOuhait {
 	private List<Produit> produits = null ;
 	private List<Groupe> groupes = null  ;
 	private Domaine domaine = null;
+	private List<Domaine> domaines =null ;
+	
+	@PostConstruct
+	public void init(){
+		domaines = proxyDomaine.getDomaines();
+	}
+	
 	
 //
 //	public List<Groupe> getgroupes(Domaine domaine) {
@@ -138,6 +146,16 @@ public class AffichageRefObjetSOuhait {
 
 	public void setProxyDomaine(IBusinessDomaine proxyDomaine) {
 		this.proxyDomaine = proxyDomaine;
+	}
+
+
+	public List<Domaine> getDomaines() {
+		return domaines;
+	}
+
+
+	public void setDomaines(List<Domaine> domaines) {
+		this.domaines = domaines;
 	}
 	
 	
