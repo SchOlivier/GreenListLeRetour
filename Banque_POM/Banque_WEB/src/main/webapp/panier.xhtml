@@ -33,7 +33,7 @@
 						<ui:repeat var="objet" value="#{mbPanier.objets}">
 						<tr class="objetLigne">
 							<td class="selectColumn">
-							<h:selectManyCheckbox value="1" name="#{mbPanier.objet.id}"></h:selectManyCheckbox>
+							<h:selectBooleanCheckbox value="1" name="#{mbPanier.objet.id}"/>
 							</td>
 							<td class="imageColumn">
 							<p:graphicImage class="imageObjetLigne" value="#{mbPanier.photo}" alt="photo de l'objet" />
