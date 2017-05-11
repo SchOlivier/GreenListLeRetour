@@ -1,0 +1,83 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>GreenList - Bienvenue</title>
+</h:head>
+<h:body>
+	<ui:composition template="/WEB-INF/templates/base.xhtml">
+		<ui:define name="content">
+			<!-- Contenu Principal -->
+			<h:panelGroup>
+				<div class="pageTitleBloc">
+					<div>
+						<span class="fa fa-shopping-basket fa-lg pageTitleIcon"></span>
+					</div>
+					<div class="pageTitle">Panier</div>
+				</div>
+
+
+				<h:form class="panierForm">
+					<table class="panierBloc">
+					
+						<tr>
+							<th class="selectColumn"></th>
+							<th class="imageColumn"><span class="fa fa-camera"></span></th>
+							<th class="titleColumn"><span class="fa fa-info"></span></th>
+							<th class="userColumn"><span class="fa fa-user-circle-o"></span></th>
+							<th class="valeurColumn"><span class="fa fa-snowflake-o"></span></th>
+						</tr>
+						
+						<ui:repeat var="objet" value="#{mbPanier.objets}">
+						<tr class="objetLigne">
+							<td class="selectColumn">
+							<h:selectManyCheckbox value="1" name="#{mbPanier.objet.id}"></h:selectManyCheckbox>
+							</td>
+							<td class="imageColumn">
+							<p:graphicImage class="imageObjetLigne" value="#{mbPanier.photo}" alt="photo de l'objet" />
+							</td>
+							<td class="titleColumn">#{objet.libelle}</td>
+							
+							<td class="userColumn">#{mbPanier.proprietaire.pseudo}<br /> 
+								<span>#{mbPanier.moyenne}</span>
+								<span class="fa fa-star smallStar"></span>
+								<span class="fa fa-star smallStar"></span>
+								<span class="fa fa-star smallStar"></span>
+								<span class="fa fa-star-half-o smallStar"></span>
+								<span class="fa fa-star-o smallStar"></span> 
+								<br/> <a>#{mbPanier.nbAVis} Avis</a>
+							</td>
+							
+							<td class="valeurColumn">#{objet.valeur}</td>
+						</tr>
+						</ui:repeat>
+					</table>
+
+					<!-- Bloc de boutons -->
+
+					<div class="editButtonsBloc">
+						<div class="editSouhaitBloc editPanierButton">
+							<div class="editIcon">
+								<span class="fa fa-handshake-o"></span>
+							</div>
+						</div>
+						<div class="editSouhaitBloc editPanierButton">
+							<div class="editIcon">
+								<span class="fa fa-close"></span>
+							</div>
+						</div>
+						<div class="editSouhaitBloc editPanierButton">
+							<div class="editIcon">
+								<span class="fa fa-trash"></span>
+							</div>
+						</div>
+					</div>
+				</h:form>
+			</h:panelGroup>
+			<!-- /Contenu Principal -->
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

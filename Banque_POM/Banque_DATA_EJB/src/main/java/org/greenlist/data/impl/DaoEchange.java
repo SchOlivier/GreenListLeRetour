@@ -10,11 +10,15 @@ import javax.persistence.Query;
 
 import org.greenlist.data.api.IDaoEchange;
 import org.greenlist.data.api.IDaoObjet;
+import org.greenlist.entity.Adresse;
 import org.greenlist.entity.Conclusionechange;
 import org.greenlist.entity.Echange;
+import org.greenlist.entity.Liste;
 import org.greenlist.entity.Message;
 import org.greenlist.entity.Objet;
+import org.greenlist.entity.Photo;
 import org.greenlist.entity.Rdv;
+import org.greenlist.entity.Souhait;
 import org.greenlist.entity.Utilisateur;
 
 @Remote(IDaoEchange.class)
@@ -25,14 +29,31 @@ public class DaoEchange implements IDaoEchange {
 	private EntityManager em;
 	
 	
-	private static final String REQUETE_GET_ECHANGE = " SELECT e FROM Echange e "
-															+ "WHERE e.id = :pEid" ;
+	private static final String REQUETE_GET_ECHANGE = 
+			" SELECT e FROM Echange e "
+			+ "WHERE e.id = :pEid" ;
+	
+	private static final String REQUETE_GET_USERA =
+			"SELECT e.utilisateurByIdusera FROM Echange e "
+			+ "WHERE e = :pE";
+	
+	private static final String REQUETE_GET_USERB =
+			"SELECT e.utilisateurByIduserb FROM Echange e "
+			+ "WHERE e = :pE";
+	
 	private static final String REQUETE_GET_OBJETS = "SELECT e.objets fROM Echange e "
-															+ "WHERE e.id = :pEId" ;
+															+ "WHERE e.id = :pEid" ;
 	private static final String REQUETE_GET_MESSAGES = "SELECT e.messages FROM Echange e"
-															+ " WHERE e.id = :pEId" ;
-	private static final String REQUETE_GET_RDVS ="SELECT e.rdvs FROM Echange e "
-															+ "WHERE e.id = :pEId";
+															+ " WHERE e.id = :pEid" ;
+	private static final String REQUETE_GET_RDVS =
+			"SELECT rdv FROM Rdv rdv "
+			+ "INNER JOIN fetch rdv.adresse "
+			+ "INNER JOIN rdv.echange "
+			+ "WHERE rdv.echange.id = :pEid";
+	
+	private static final String REQUETE_GET_CONCLUSION =
+			"SELECT e.conclusionechange FROM Echange e "
+			+ "WHERE e = :pE";
 	
 	@Override
 	public Echange creerEchange(Echange echange) {
@@ -44,8 +65,44 @@ public class DaoEchange implements IDaoEchange {
 	public Echange GetEchange(int IdEchange) {
 		Query query = em.createQuery(REQUETE_GET_ECHANGE).
 				setParameter("pEid", IdEchange);
-				
-		return (Echange) query.getSingleResult();
+		return (Echange)query.getSingleResult();
+	}
+	
+	@Override
+	public Utilisateur GetUtilisateurA(Echange echange) {
+		Query query = em.createQuery(REQUETE_GET_USERA).
+				setParameter("pE", echange);
+		Utilisateur user = (Utilisateur)query.getSingleResult();
+		em.merge(user);
+		user = recupererDonneesUtilisateur(user);
+		return user;
+	}
+
+	@Override
+	public Utilisateur GetUtilisateurB(Echange echange) {
+		Query query = em.createQuery(REQUETE_GET_USERB).
+				setParameter("pE", echange);
+		Utilisateur user = (Utilisateur)query.getSingleResult();
+		em.merge(user);
+		user = recupererDonneesUtilisateur(user);
+		return user;
+	}
+
+	
+	private Utilisateur recupererDonneesUtilisateur(Utilisateur user){
+		List<Objet> objets = user.getObjets();
+		objets.size();
+		for (Objet o:objets){
+			List<Photo> photos = o.getPhotos();
+			photos.size();
+		}
+		List<Liste> listes = user.getListes();
+		listes.size();
+		for (Liste l:listes){
+			List<Souhait> souhaits = l.getSouhaits();
+			souhaits.size();
+		}
+		return user;
 	}
 
 	@Override
@@ -81,10 +138,12 @@ public class DaoEchange implements IDaoEchange {
 		return query.getResultList();
 	}
 
-	
-
-	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Conclusionechange> getConclusion(Echange echange) {
+		Query query = em.createQuery(REQUETE_GET_CONCLUSION).
+				setParameter("pE", echange);
+		return query.getResultList();
+	}
 
 }
-
-

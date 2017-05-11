@@ -12,15 +12,16 @@ import org.greenlist.data.api.IDaoPanier;
 import org.greenlist.entity.Objet;
 import org.greenlist.entity.Panier;
 import org.greenlist.entity.Utilisateur;
+
 @Remote(IDaoPanier.class)
 @Singleton
 public class DaoPanier implements IDaoPanier {
-	
-private static final String GET_OBJETS_BY_PANIER="SELECT p.objets FROM Panier p WHERE p.id = :pIdPanier";
-private static final String GET_PANIER_BY_UTILISATEUR="SELECT u.panier FROM Utilisateur u WHERE u.id =:pIdUtilisateur";
 
-@PersistenceContext(unitName="Banque_DATA_EJB")
-private EntityManager em;
+	private static final String GET_OBJETS_BY_PANIER = "SELECT p.objets FROM Panier p WHERE p.id = :pIdPanier";
+	private static final String GET_PANIER_BY_UTILISATEUR = "SELECT p FROM Panier p left join fetch p.objets WHERE p.utilisateur.id =:pIdUtilisateur";
+
+	@PersistenceContext(unitName = "Banque_DATA_EJB")
+	private EntityManager em;
 
 	@SuppressWarnings("unchecked")
 	@Override

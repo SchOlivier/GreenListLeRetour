@@ -17,6 +17,8 @@ public class BusinessAdresse implements IBusinessAdresse {
 
 	@EJB
 	private IDaoAdresse proxyAdresse;
+	
+	private Adresse adresse = null;
 
 	@Override
 	public List<Adresse> getAdresseByUtilisateur(Utilisateur utilisateur) {
@@ -29,4 +31,34 @@ public class BusinessAdresse implements IBusinessAdresse {
 		return adresses;
 	}
 
+	@Override
+	public Adresse getAdresseByIdUtilisateur(int idUtilisateur) {
+		try {
+			adresse = proxyAdresse.getAdresseByIdUtilisateur(idUtilisateur);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return adresse;
+	}
+
+	//GETTERS AND SETTERS
+	public IDaoAdresse getProxyAdresse() {
+		return proxyAdresse;
+	}
+
+	public void setProxyAdresse(IDaoAdresse proxyAdresse) {
+		this.proxyAdresse = proxyAdresse;
+	}
+
+	public Adresse getAdresse() {
+		return adresse;
+	}
+
+	public void setAdresse(Adresse adresse) {
+		this.adresse = adresse;
+	}
+
+
+	
 }

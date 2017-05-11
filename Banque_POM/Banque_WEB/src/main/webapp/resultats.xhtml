@@ -14,28 +14,33 @@
 			<!-- Contenu Principal -->
 			<h:form>
 				<f:view contentType="text/html">
-					<p:gmap id="gmap" center="36.890257,30.707417" zoom="13"
-						type="HYBRID" model="#{infoWindowView.advancedModel}"
-						style="width:100%;height:400px">
+					<!-- DEBUUUUUTTT  MAPPPPPPPPPP -->
 
-						<p:ajax event="overlaySelect"
-							listener="#{infoWindowView.onMarkerSelect}" />
+					<div id="map" class="gMapBloc">
 
-						<p:gmapInfoWindow id="infoWindow">
-							<p:outputPanel
-								style="text-align: center; display: block; margin: auto">
+						<p:gmap id="gmap"
+							center="#{mbAdresse.recupererCoordonnees().latitude}, #{mbAdresse.recupererCoordonnees().longitude}"
+							zoom="11" type="HYBRID" model="#{mbAdresse.advancedModel}"
+							style="width:800PX;height:600px">
 
-								<p:graphicImage
-									name="/demo/images/antalya/#{infoWindowView.marker.data}"
-									height="150" />
-								<br />
-								<h:outputText value="#{infoWindowView.marker.title}" />
+							<p:ajax event="overlaySelect"
+								listener="#{mbAdresse.onMarkerSelect}" />
 
-							</p:outputPanel>
-						</p:gmapInfoWindow>
-						<p:ajax event="overlaySelect"
-							listener="#{markerSelectionView.onMarkerSelect}" />
-					</p:gmap>
+							<p:gmapInfoWindow id="infoWindow">
+								<p:outputPanel
+									style="text-align: center; display: block; margin: auto">
+									<p:graphicImage
+										name="/demo/images/antalya/#{mbAdresse.marker.data}"
+										height="150" />
+									<br />
+									<h:outputText value="#{mbAdresse.marker.title}" />
+								</p:outputPanel>
+							</p:gmapInfoWindow>
+
+						</p:gmap>
+					</div>
+
+					<!-- FIIINNNN MAAAAAAAP -->
 				</f:view>
 
 				<!-- Preload for demo -->

@@ -10,7 +10,9 @@ import org.greenlist.entity.Adresse;
 import org.greenlist.entity.Utilisateur;
 
 public interface IDaoAdresse {
-	
+
 	List<Adresse> getAdresseByUtilisateur(Utilisateur utilisateur) throws Exception;
-	
+
+	Adresse getAdresseByIdUtilisateur(int idUtilisateur) throws Exception;
+
 }

@@ -13,6 +13,7 @@ import org.greenlist.entity.Echange;
 import org.greenlist.entity.Message;
 import org.greenlist.entity.Objet;
 import org.greenlist.entity.Rdv;
+import org.greenlist.entity.Utilisateur;
 
 @Remote(IBusinessEchange.class)
 @Stateless
@@ -29,10 +30,10 @@ public class BusinessEchange implements IBusinessEchange {
 	}
 
 	@Override
-	public Echange GetEchange( Echange echange) {
+	public Echange GetEchange( int idEchange) {
 
 		
-		return proxyEchange.GetEchange(echange.getId());
+		return proxyEchange.GetEchange(idEchange);
 	}
 
 	
@@ -111,6 +112,21 @@ public class BusinessEchange implements IBusinessEchange {
 		proxyEchange.majEchange(echange);
 		return echange;
 		
+	}
+
+	@Override
+	public Utilisateur GetUtilisateurA(Echange echange) {
+		return proxyEchange.GetUtilisateurA(echange);
+	}
+
+	@Override
+	public Utilisateur GetUtilisateurB(Echange echange) {
+		return proxyEchange.GetUtilisateurB(echange);
+	}
+
+	@Override
+	public List<Conclusionechange> getConclusion(Echange echange) {
+		return proxyEchange.getConclusion(echange);
 	}
 
 

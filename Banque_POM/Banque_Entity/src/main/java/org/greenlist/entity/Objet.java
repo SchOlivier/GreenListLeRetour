@@ -38,7 +38,7 @@ public class Objet implements java.io.Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IDTRANCHEAGE", nullable = false)
 	private TrancheAge trancheAge;
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "IDUTILISATEUR", nullable = false)
 	private Utilisateur utilisateur;
 	@Column(name = "LIBELLE", nullable = false, length = 50)
