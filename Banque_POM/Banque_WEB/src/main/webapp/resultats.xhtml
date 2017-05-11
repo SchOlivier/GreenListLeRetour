@@ -11,70 +11,62 @@
 	<ui:composition template="/WEB-INF/templates/base.xhtml">
 		<ui:define name="content">
 
-			<!-- Contenu Principal -->
-			<h:form>
-				<f:view contentType="text/html">
-					<p:gmap id="gmap" center="36.890257,30.707417" zoom="13"
-						type="HYBRID" model="#{infoWindowView.advancedModel}"
-						style="width:100%;height:400px">
 
-						<p:ajax event="overlaySelect"
-							listener="#{infoWindowView.onMarkerSelect}" />
-
-						<p:gmapInfoWindow id="infoWindow">
-							<p:outputPanel
-								style="text-align: center; display: block; margin: auto">
-
-								<p:graphicImage
-									name="/demo/images/antalya/#{infoWindowView.marker.data}"
-									height="150" />
-								<br />
-								<h:outputText value="#{infoWindowView.marker.title}" />
-
-							</p:outputPanel>
-						</p:gmapInfoWindow>
-						<p:ajax event="overlaySelect"
-							listener="#{markerSelectionView.onMarkerSelect}" />
-					</p:gmap>
-				</f:view>
-
-				<!-- Preload for demo -->
-				<p:outputPanel style="display:none">
-					<p:graphicImage name="/demo/images/antalya/konyaalti.png" />
-					<p:graphicImage name="/demo/images/antalya/ataturkparki.png" />
-					<p:graphicImage name="/demo/images/antalya/kaleici.png" />
-					<p:graphicImage name="/demo/images/antalya/karaalioglu.png" />
-				</p:outputPanel>
-			
-
-
-			<div id="monObjetsBloc" class="objetsBloc sectionBloc">
-
-
-				<ui:repeat value="#{mbRecherche.resultatRechercheList}" var="objet">
+			<div class="searchOptionsBar">
+				<div class="nbResults">
+					<span>Résultats: #{mbRecherche.resultatRechercheList.size()}</span>
+				</div>
+				<div class="orderResults">
+					<span>Trier par <select>
+							<option>Pertinence</option>
+							<option>Valeur: ordre croissant</option>
+							<option>Valeur: ordre décroissant</option>
+							<option>Distance</option>
+					</select>
+					</span>
+				</div>
+			</div>
+			<div class="resultatsBloc">
+				<div id="map" class="gMapBloc"></div>
+				<div id="monObjetsBloc" class="objetsBloc">
+				
+				<h:form>
+				
+				<ui:repeat value="#{mbRecherche.resultatRechercheList}" var="objet" varStatus="stat">
 					<div class="objetArticle letter">
 						<div class="imageDiv">
-					
+							<img class="imageObjet" />
 						</div>
 						<div class="infosObjet">
-							<h:commandLink action="#{mbRecherche.voirFiche(objet.id)}"  value="#{objet.libelle}"/>
-
+							<div class="titleObjet"><h:commandLink action="#{mbRecherche.voirFiche(objet.id)}"  value="#{objet.libelle}"/></div>
+							<div class="titleObjet"><h:commandLink action="#{mbRecherche.voirProprietaire(objet.utilisateur.id)}"  value="#{objet.utilisateur.pseudo}"/>
+								 <span></span>
+									
+							</div>
 							<div class="objetIconeBloc">
 								<ul>
-									<li><span class="catObjet fa fa-gift fa-2x">#{objet.produit.groupe.domaine.id}</span></li>
-									<li><span class="distanceObjet fa fa-map-marker fa-2x">#{objet.distance}</span></li>
-									<li><span class="valeurObjet fa fa-snowflake-o fa-2x"></span>#{objet.valeur}</li>
-									<li><span class="compatibiliteObjet fa fa-heart fa-2x"></span>#{objet.pertinence}</li>
-
+									<li><span class="catObjet fa fa-gift">#{objet.produit.groupe.domaine.id}</span></li>
+									<li><span class="objetIconeText">#{objet.distance}km</span><span
+										class="fa fa-map-marker"></span></li>
+									<li><span class="objetIconeText">#{objet.valeur}</span><span
+										class="fa fa-snowflake-o"></span></li>
+									<li><span class="objetIconeText">#{objet.pertinence}</span><span
+										class="fa fa-percent"></span></li>
 								</ul>
 							</div>
 						</div>
+						<div class="addBasketIcon">
+							<span class="fa fa-plus"></span>
+						</div>
+						<div class="numObjet">#{stat.index +1}</div>
 					</div>
-
-				</ui:repeat>
+					</ui:repeat>
+					
+				</h:form>	
+				
+				</div>
 			</div>
-			</h:form>
-			<!-- /Contenu Principal -->
+
 		</ui:define>
 	</ui:composition>
 </h:body>
