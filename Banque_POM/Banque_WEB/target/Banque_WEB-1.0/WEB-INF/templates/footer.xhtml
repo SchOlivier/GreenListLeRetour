@@ -8,22 +8,47 @@
 </h:head>
 <h:body>
 	<ui:composition>
-	<!-- Footer -->
+        <div class="footer-left">
+            <div class="footerTitle">
+                <div class="logoGLIcon">
+                    <div class="logoGL"></div>
+                </div>
+                <h3>GreenList</h3>
+            </div>
+            <p class="footer-links">
+                <a href="#">Accueil</a> ·
+                <a href="#">Conditions</a> ·
+                <a href="#">Infos</a> ·
+                <a href="#">Faq</a> ·
+                <a href="#">Contact</a>
+            </p>
 
-    <footer id="myFooter" class="mainFooter">
-        <div id="contactsBox">
-            <h1>Contact</h1>
-        </div>
-        <div id="reseauxBox">
-            <h1>Réseaux</h1>
-            <img id="imgReseaux" src="./img/logos_reseauxsociaux.png" alt="logos réseaux" />
-        </div>
-        <div id="conditionsBox">
-            <h1>Conditions</h1>
-        </div>
-    </footer>
+            <p class="footer-company-name">GreenList @ 2017</p>
 
-    <!-- /Footer --> 
+            <div class="footer-icons">
+
+                <a href="#"><i class="fa fa-facebook"></i></a>
+                <a href="#"><i class="fa fa-twitter"></i></a>
+                <a href="#"><i class="fa fa-linkedin"></i></a>
+                <a href="#"><i class="fa fa-github"></i></a>
+
+            </div>
+
+        </div>
+
+        <div class="footer-right">
+
+            <p>Contactez-nous</p>
+
+            <form action="#" method="post">
+
+                <input type="text" name="email" placeholder="Email" />
+                <textarea name="message" placeholder="Message"></textarea>
+                <button>Envoyer</button>
+
+            </form>
+
+        </div>
 	</ui:composition>
 </h:body>
 </html>

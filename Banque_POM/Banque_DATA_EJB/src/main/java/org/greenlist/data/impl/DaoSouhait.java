@@ -10,6 +10,7 @@ import javax.persistence.Query;
 
 import org.greenlist.data.api.IDaoSouhait;
 import org.greenlist.entity.Liste;
+import org.greenlist.entity.Objet;
 import org.greenlist.entity.Souhait;
 import org.greenlist.entity.Utilisateur;
 
@@ -22,6 +23,13 @@ import org.greenlist.entity.Utilisateur;
 public class DaoSouhait implements IDaoSouhait {
 	@PersistenceContext(unitName = "Banque_DATA_EJB")
 	private EntityManager em;
+	
+	private static final String REQUETTE_GET_SOUHAITS_BY_PRODUIT = "SELECT s from Souhait s inner join fetch s.produit p inner join fetch s.trancheAge "
+			+ "inner join fetch s.groupe g "
+			+ "inner join fetch s.domaine d"
+			+ "inner join fetch s.liste.utilisateur u"
+			+ "WHERE s.produit = :pProduit "
+			+ "AND s.utilisateur.id <> :pIdUtilisateur";
 
 	/**
 	 * renvoi la liste de souhait avec un utilisateur en argument
@@ -106,6 +114,14 @@ public class DaoSouhait implements IDaoSouhait {
 	public Liste addListe(Liste liste) {
 		em.persist(liste);
 		return liste;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Souhait> getSouhaits(Objet objet, Utilisateur utilisateur) throws Exception {
+		Query query = em.createQuery(REQUETTE_GET_SOUHAITS_BY_PRODUIT).setParameter("pProduit", objet.getProduit());
+		query.setParameter("pIdUtilisateur", utilisateur.getId());		
+		return query.getResultList();
 	}
 
 }

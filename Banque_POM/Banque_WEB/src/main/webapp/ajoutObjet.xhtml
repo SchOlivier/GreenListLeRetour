@@ -47,8 +47,7 @@
 					<ul class="catBloc">
 						<li class="domainIconBloc">
 							<ul>
-								<li>Domaine*
-								</li>
+								<li>Domaine*</li>
 								<li>
 								<h:commandButton class="domainIcon domaine1">
 								<f:ajax listener="#{mbAfficheRefObjetSOuhait.rechercherGroupes(1)}" event="click"
@@ -82,7 +81,7 @@
 							</ul>
 						</li>
 						<li class="groupCat">
-							<div class="catTitle">Groupe*</div> <h:selectOneMenu id="groupes"
+							<div class="catTitle">Groupe<span class="req">*</span></div> <h:selectOneMenu id="groupes"
 								class="dropDownListCat"
 								value="#{mbAfficheRefObjetSOuhait.selectedGroupe.id}">
 								<f:selectItems value="#{mbAfficheRefObjetSOuhait.groupes}"
@@ -94,7 +93,7 @@
 							</h:selectOneMenu>
 						</li>
 						<li class="groupCat">
-							<div class="catTitle">Produit*</div> <h:selectOneMenu
+							<div class="catTitle">Produit<span class="req">*</span></div> <h:selectOneMenu
 								class="dropDownListCat" id="produitsMenu"
 								value="#{mbObjetAjout.objet.produit.id}">
 								<f:selectItems value="#{mbAfficheRefObjetSOuhait.produits}"
@@ -102,7 +101,7 @@
 							</h:selectOneMenu>
 						</li>
 						<li class="groupCat">
-							<div class="catTitle">Tranche d'âge</div> <h:selectOneMenu
+							<div class="catTitle">Tranche d'âge<span class="req">*</span></div> <h:selectOneMenu
 								class="dropDownListCat"
 								value="#{mbObjetAjout.objet.trancheAge.id}">
 								<f:selectItems value="#{mbAfficheRefObjetSOuhait.tranchesAges}"

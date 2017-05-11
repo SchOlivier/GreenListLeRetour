@@ -29,8 +29,8 @@ public class Typenotification implements java.io.Serializable {
 	private String libelle;
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "typenotifications")
 	private List<Preference> preferences = new ArrayList<>();
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "typenotification")
-	private List<Notification> notifications = new ArrayList<>();
+	//@OneToMany(fetch = FetchType.LAZY, mappedBy = "typenotification")
+	//private List<Notification> notifications = new ArrayList<>();
 
 	public Typenotification() {
 	}
@@ -44,7 +44,6 @@ public class Typenotification implements java.io.Serializable {
 		this.id = id;
 		this.libelle = libelle;
 		this.preferences = preferences;
-		this.notifications = notifications;
 	}
 
 	public int getId() {
@@ -69,14 +68,6 @@ public class Typenotification implements java.io.Serializable {
 
 	public void setPreferences(List<Preference> preferences) {
 		this.preferences = preferences;
-	}
-
-	public List<Notification> getNotifications() {
-		return this.notifications;
-	}
-
-	public void setNotifications(List<Notification> notifications) {
-		this.notifications = notifications;
 	}
 
 }

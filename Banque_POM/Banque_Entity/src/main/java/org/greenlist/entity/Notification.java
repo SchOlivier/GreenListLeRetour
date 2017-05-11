@@ -26,9 +26,9 @@ public class Notification implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false)
 	private int id;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "IDTYPE", nullable = false)
-	private Typenotification typenotification;
+	//@ManyToOne(fetch = FetchType.LAZY)
+	//@JoinColumn(name = "IDTYPE", nullable = false)
+	//private Typenotification typenotification;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IDUTILISATEUR", nullable = false)
 	private Utilisateur utilisateur;
@@ -46,7 +46,7 @@ public class Notification implements java.io.Serializable {
 	public Notification(int id, Typenotification typenotification, Utilisateur utilisateur, Date dateEmission,
 			boolean islu, String contenu) {
 		this.id = id;
-		this.typenotification = typenotification;
+		//this.typenotification = typenotification;
 		this.utilisateur = utilisateur;
 		this.dateEmission = dateEmission;
 		this.islu = islu;
@@ -61,13 +61,13 @@ public class Notification implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public Typenotification getTypenotification() {
-		return this.typenotification;
-	}
-
-	public void setTypenotification(Typenotification typenotification) {
-		this.typenotification = typenotification;
-	}
+//	public Typenotification getTypenotification() {
+//		return this.typenotification;
+//	}
+//
+//	public void setTypenotification(Typenotification typenotification) {
+//		this.typenotification = typenotification;
+//	}
 
 	public Utilisateur getUtilisateur() {
 		return this.utilisateur;

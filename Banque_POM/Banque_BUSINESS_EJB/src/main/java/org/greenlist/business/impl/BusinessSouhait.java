@@ -1,6 +1,9 @@
 package org.greenlist.business.impl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Remote;
@@ -9,6 +12,8 @@ import javax.ejb.Stateless;
 import org.greenlist.business.api.IBusinessSouhait;
 import org.greenlist.data.api.IDaoSouhait;
 import org.greenlist.entity.Liste;
+import org.greenlist.entity.Objet;
+import org.greenlist.entity.Produit;
 import org.greenlist.entity.Souhait;
 import org.greenlist.entity.Utilisateur;
 
@@ -90,6 +95,18 @@ public class BusinessSouhait implements IBusinessSouhait {
 
 	public void setProxyDaoSouhait(IDaoSouhait proxyDaoSouhait) {
 		this.proxyDaoSouhait = proxyDaoSouhait;
+	}
+
+	@Override
+	public List<Souhait> getSouhaits(Objet objet, Utilisateur utilisateur){
+		List<Souhait> res = new ArrayList<>();
+		try {
+			res = proxyDaoSouhait.getSouhaits(objet, utilisateur);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		return res;	
 	}
 
 }

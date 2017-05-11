@@ -14,7 +14,7 @@
 	<ui:composition template="/WEB-INF/templates/base.xhtml">
 
 		<ui:define name="content">
-			<h:form id="formAjoutSouhait" enctype="multipart/form-data">
+			<h:form id="formAjoutSouhait" enctype="multipart/form-data" class="formulaire">
 				<div class="pageTitleBloc">
 					<div class="fa fa-plus fa-2x pageTitleIcon"></div>
 					<div class="pageTitle whiteColor grow">Ajouter un Souhait</div>
@@ -38,8 +38,9 @@
 						</li>
 						<li class="domainIconBloc">
 							<ul>
-								<li>Domaine</li>
-								<li class="domainIcon"><h:commandButton
+								<li>Domaine*</li>
+								<li class="domainIcon">
+								<h:commandButton
 										class="domainIcon domaine1">
 										<f:ajax listener="#{mbSouhait.saveDomaine(1)}" event="click"
 											render=":formAjoutSouhait:groupesMenu :formAjoutSouhait:produitsMenu"
@@ -72,7 +73,7 @@
 							</ul>
 						</li>
 						<li class="groupCat">
-							<div class="catTitle">Groupe</div> <h:selectOneMenu
+							<div class="catTitle">Groupe <span class="req">*</span></div> <h:selectOneMenu
 								class="dropDownListCat" id="groupesMenu"
 								value="#{mbAfficheRefObjetSOuhait.selectedGroupe.id}">
 								<f:selectItems value="#{mbAfficheRefObjetSOuhait.groupes}"
@@ -84,7 +85,7 @@
 							</h:selectOneMenu>
 						</li>
 						<li class="groupCat">
-							<div class="catTitle">Produit</div> <h:selectOneMenu
+							<div class="catTitle">Produit <span class="req">*</span></div> <h:selectOneMenu
 								id="produitsMenu" class="dropDownListCat"
 								value="#{mbSouhait.souhait.produit.id}">
 								<f:selectItems value="#{mbAfficheRefObjetSOuhait.produits}"
@@ -92,7 +93,7 @@
 							</h:selectOneMenu>
 						</li>
 						<li class="groupCat">
-							<div class="catTitle">Tranche d'âge</div> <h:selectOneMenu
+							<div class="catTitle">Tranche d'âge <span class="req">*</span></div> <h:selectOneMenu
 								class="dropDownListCat"
 								value="#{mbSouhait.souhait.trancheAge.id}">
 								<f:selectItems value="#{mbAfficheRefObjetSOuhait.tranchesAges}"
