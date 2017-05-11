@@ -6,60 +6,74 @@
 
 <h:head>
 	<title>GreenList - Ajout Souhait</title>
-
+<f:metadata>
+	<f:event listener="#{mbUtilisateur.securePage()}" type="preRenderView"></f:event>
+</f:metadata>
 </h:head>
 <h:body>
 	<ui:composition template="/WEB-INF/templates/base.xhtml">
 
 		<ui:define name="content">
-			<h:panelGroup>
+			<h:form id="formAjoutSouhait" enctype="multipart/form-data">
+				<div class="pageTitleBloc">
+					<div class="fa fa-plus fa-2x pageTitleIcon"></div>
+					<div class="pageTitle whiteColor grow">Ajouter un Souhait</div>
+				</div>
 
-				<h:form id="formAjoutSouhait" enctype="multipart/form-data">
-					<div class="pageTitleBloc">
-						<div class="fa fa-plus fa-2x pageTitleIcon"></div>
-						<div class="pageTitle whiteColor grow">Ajouter un Souhait</div>
-					</div>
+				<!-- Bloc de critères -->
 
-					<div class="criteresBloc">
-						<!-- Bloc de critères gauche -->
-						<ul class="catBloc">
-							<li class="domainIconBloc">
-								<ul>
-									<li>Domaine</li>
-									<li class="domainIcon">
-									<h:commandButton class="fa fa-home">
-											<f:ajax listener="#{mbSouhait.saveDomaine(1)}" event="click"
-												render=":formAjoutSouhait:groupesMenu :formAjoutSouhait:produitsMenu"
-												execute="@form" />
-										</h:commandButton>
-										</li>
-									<li class="domainIcon"><h:commandButton class="fa fa-home">
-											<f:ajax listener="#{mbSouhait.saveDomaine(2)}" event="click"
-												render=":formAjoutSouhait:groupesMenu :formAjoutSouhait:produitsMenu"
-												execute="@form" />
-										</h:commandButton></li>
-									<li class="domainIcon"><h:commandButton class="fa fa-home">
-											<f:ajax listener="#{mbSouhait.saveDomaine(3)}" event="click"
-												render=":formAjoutSouhait:groupesMenu :formAjoutSouhait:produitsMenu"
-												execute="@form" />
-										</h:commandButton></li>
-									<li class="domainIcon"><h:commandButton class="fa fa-home">
-											<f:ajax listener="#{mbSouhait.saveDomaine(4)}" event="click"
-												render=":formAjoutSouhait:groupesMenu :formAjoutSouhait:produitsMenu"
-												execute="@form" />
-										</h:commandButton></li>
-									<li class="domainIcon"><h:commandButton class="fa fa-home">
-											<f:ajax listener="#{mbSouhait.saveDomaine(5)}" event="click"
-												render=":formAjoutSouhait:groupesMenu :formAjoutSouhait:produitsMenu"
-												execute="@form" />
-										</h:commandButton></li>
-								</ul>
-							</li>
-							<li class="groupCat">
-								<div class="catTitle">Groupe</div>
-							</li>
-
-							<h:selectOneMenu id="groupesMenu"
+				<div class="criteresBloc">
+					<ul class="catBloc">
+						<li class="libelleInput">
+							<div class="field-wrap">
+								<label>Libellé<span class="req">*</span></label>
+								<h:inputText value="#{mbSouhait.souhait.libelle}" />
+							</div>
+						</li>
+						<li class="valeurInput">
+							<div class="field-wrap">
+								<label>Valeur Maximum de <span class="fa fa-snowflake-o floconIcon"></span></label>
+								<h:inputText value="#{mbSouhait.souhait.valeurmax}" />
+							</div>
+						</li>
+						<li class="domainIconBloc">
+							<ul>
+								<li>Domaine</li>
+								<li class="domainIcon"><h:commandButton
+										class="domainIcon domaine1">
+										<f:ajax listener="#{mbSouhait.saveDomaine(1)}" event="click"
+											render=":formAjoutSouhait:groupesMenu :formAjoutSouhait:produitsMenu"
+											execute="@form" />
+									</h:commandButton></li>
+								<li class="domainIcon"><h:commandButton
+										class="domainIcon domaine2">
+										<f:ajax listener="#{mbSouhait.saveDomaine(2)}" event="click"
+											render=":formAjoutSouhait:groupesMenu :formAjoutSouhait:produitsMenu"
+											execute="@form" />
+									</h:commandButton></li>
+								<li class="domainIcon"><h:commandButton
+										class="domainIcon domaine3">
+										<f:ajax listener="#{mbSouhait.saveDomaine(3)}" event="click"
+											render=":formAjoutSouhait:groupesMenu :formAjoutSouhait:produitsMenu"
+											execute="@form" />
+									</h:commandButton></li>
+								<li class="domainIcon"><h:commandButton
+										class="domainIcon domaine4">
+										<f:ajax listener="#{mbSouhait.saveDomaine(4)}" event="click"
+											render=":formAjoutSouhait:groupesMenu :formAjoutSouhait:produitsMenu"
+											execute="@form" />
+									</h:commandButton></li>
+								<li class="domainIcon"><h:commandButton
+										class="domainIcon domaine5">
+										<f:ajax listener="#{mbSouhait.saveDomaine(5)}" event="click"
+											render=":formAjoutSouhait:groupesMenu :formAjoutSouhait:produitsMenu"
+											execute="@form" />
+									</h:commandButton></li>
+							</ul>
+						</li>
+						<li class="groupCat">
+							<div class="catTitle">Groupe</div> <h:selectOneMenu
+								class="dropDownListCat" id="groupesMenu"
 								value="#{mbAfficheRefObjetSOuhait.selectedGroupe.id}">
 								<f:selectItems value="#{mbAfficheRefObjetSOuhait.groupes}"
 									var="g" itemLabel="#{g.libelle}" itemValue="#{g.id}" />
@@ -68,84 +82,70 @@
 									event="change" render=":formAjoutSouhait:produitsMenu"
 									execute="@form" />
 							</h:selectOneMenu>
+						</li>
+						<li class="groupCat">
+							<div class="catTitle">Produit</div> <h:selectOneMenu
+								id="produitsMenu" class="dropDownListCat"
+								value="#{mbSouhait.souhait.produit.id}">
+								<f:selectItems value="#{mbAfficheRefObjetSOuhait.produits}"
+									var="p" itemLabel="#{p.libelle}" itemValue="#{p.id}" />
+							</h:selectOneMenu>
+						</li>
+						<li class="groupCat">
+							<div class="catTitle">Tranche d'âge</div> <h:selectOneMenu
+								class="dropDownListCat"
+								value="#{mbSouhait.souhait.trancheAge.id}">
+								<f:selectItems value="#{mbAfficheRefObjetSOuhait.tranchesAges}"
+									var="t" itemLabel="#{t.libelle}" itemValue="#{t.id}" />
+							</h:selectOneMenu>
+						</li>
+					</ul>
+				</div>
 
-							<li class="groupCat">
-								<div class="catTitle">Produit</div> <h:selectOneMenu
-									id="produitsMenu" value="#{mbSouhait.souhait.produit.id}">
-									<f:selectItems value="#{mbAfficheRefObjetSOuhait.produits}"
-										var="p" itemLabel="#{p.libelle}" itemValue="#{p.id}" />
-								</h:selectOneMenu>
-							</li>
-							<li class="ageCat">
-								<div class="catTitleSaut">Tranche d'âge</div> <h:selectOneMenu
-									value="#{mbSouhait.souhait.trancheAge.id}">
-									<f:selectItems value="#{mbAfficheRefObjetSOuhait.tranchesAges}"
-										var="t" itemLabel="#{t.libelle}" itemValue="#{t.id}" />
-								</h:selectOneMenu>
-							</li>
 
-						</ul>
-						<ul class="catBloc">
-							<li class="libelleInput">
-								<div class="catTitle">Libelle</div> <h:inputText
-									value="#{mbSouhait.souhait.libelle}" />
-							</li>
+				<!-- Selectionner Listes -->
 
-							<li class="valeurInput">
-								<div class="catTitle">Valeur Max</div>
-								<div>
-									<h:inputText value="#{mbSouhait.souhait.valeurmax}" />
-									<span class="fa fa-snowflake-o fa-2xbigIcon"></span>
-								</div>
-							</li>
-						</ul>
+				<div class="listeBloc">
+					<div class="pageSubTitle">Ajouter à une liste</div>
+					<div class="listeConteneur">
+						<div class="listeTab">
+							<h:selectOneMenu id="listesMenu" class="dropDownListCat"
+								value="#{mbSouhait.souhait.liste.id}">
+								<f:selectItems value="#{mbListes.listes}" var="l"
+									itemLabel="#{l.libelle}" itemValue="#{l.id}" />
+							</h:selectOneMenu>
+							<input type="submit" class="ajoutSouhaitBouton longButton"
+								value="Choisir" />
+						</div>
+						<div class="listeTab">ou Nouvelle Liste</div>
+						<div class="listeTab">
+							<div class="field-wrap">
+								<label>Libellé<span class="req">*</span></label> <input
+									type="text" autocomplete="off" /> <input type="date"
+									value="2017-12-31" />
+							</div>
+							<button class="ajoutSouhaitBouton longButton">Créer et
+								Choisir</button>
+						</div>
 					</div>
-					
-						<!-- Bloc de listes -->
-					<div class="photosBloc">
-						<div class="pageSubTitle">Sélectionner une liste</div>
+				</div>
 
-						<h:selectOneMenu id="listesMenu"
-							value="#{mbSouhait.souhait.liste.id}">
-							<f:selectItems value="#{mbListes.listes}" var="l"
-								itemLabel="#{l.libelle}" itemValue="#{l.id}" />
-						</h:selectOneMenu>
+				<!-- Bloc de boutons -->
 
-						<div class="pageSubTitle">Nouvelle liste</div>
-						
-						Libellé : <h:inputText value=" "/>
-						Description :<h:inputText value=" " />
-						Date d'expiration : <input type="date" value="2017-12-25"/>
-						<h:button>Créer et choisir</h:button>
-
-
+				<div class="boutonsBloc">
+					<div class="pageBouton">
+						<h:commandButton class="souhaitItem"
+							action="#{mbSouhait.creerSouhait()}" value="Valider" />
 					</div>
-
-
-					<!-- Bloc de boutons -->
-					<div class="boutonsBloc">
-
-						<h:commandButton styleClass="pageBouton"
-							action="#{mbSouhait.creerSouhait()}">
-							<div class="fa fa-check fa-2x objetItem"></div>
-							<div class="objetItem">Valider</div>
-						</h:commandButton>
-
-						<h:commandButton styleClass="pageBouton">
-							<div class="fa fa-close fa-2x objetItem"></div>
-							<div class="objetItem">Annuler</div>
-						</h:commandButton>
-
-						<h:commandButton styleClass="testBouton">
-							<div class="objetItem">Test</div>
-						</h:commandButton>
-
-
+					<div class="pageBouton">
+						<h:commandButton class="souhaitItem" value="Annuler"
+							onclick="window.history.go(-1); return false;" />
 					</div>
-				</h:form>
-
-
-			</h:panelGroup>
+					<div class="pageBouton">
+						<h:commandButton class="souhaitItem" value="Test" />
+					</div>
+				</div>
+			</h:form>
 		</ui:define>
 
 	</ui:composition>

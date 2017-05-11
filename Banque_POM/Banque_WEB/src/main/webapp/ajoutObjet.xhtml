@@ -3,227 +3,142 @@
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>GreenList - Bienvenue</title>
 <f:metadata>
 	<f:event listener="#{mbUtilisateur.securePage()}" type="preRenderView"></f:event>
 </f:metadata>
-<h:head>
-	<title>GreenList - Bienvenue</title>
-
 </h:head>
 <h:body>
 	<ui:composition template="/WEB-INF/templates/base.xhtml">
-
-
-
-
-
-
-
-
-
 		<ui:define name="content">
-			<h:panelGroup>
-			
-				<h:form id="formAjoutObjet" enctype="multipart/form-data">
-					<div class="pageTitleBloc">
-						<div class="fa fa-plus fa-2x pageTitleIcon"></div>
-						<div class="pageTitle whiteColor grow">Ajouter un Objet</div>
-					</div>
+			<h:form id="formAjoutObjet" name="monAjoutObjetForm"
+				class="ajoutObjetForm formulaire" enctype="multipart/form-data">
+				<div class="pageTitleBloc">
+					<div class="fa fa-plus fa-2x pageTitleIcon"></div>
+					<div class="pageTitle whiteColor grow">Ajouter un Objet</div>
+				</div>
 
-					<div class="criteresBloc">
+				<!-- Bloc de critères -->
 
+				<div class="criteresBloc">
+					<ul class="catBloc">
+						<li class="libelleInput">
+							<div class="field-wrap">
+								<label>Libellé<span class="req">*</span></label>
+								<h:inputText value="#{mbObjetAjout.objet.libelle}" />
+							</div>
+						</li>
+						<li class="descriptionInput">
+							<div class="field-wrap">
+								<label>Description<span class="req">*</span></label>
+								<h:inputTextarea value="#{mbObjetAjout.objet.description}" />
+							</div>
+						</li>
+						<li class="valeurInput">
+							<div class="field-wrap">
+								<label>Valeur<span class="req">*</span></label>
+								<h:inputText class="valeurInput"
+									value="#{mbObjetAjout.objet.valeur}" />
+							</div> <span class="fa fa-snowflake-o floconIcon"></span>
+						</li>
+					</ul>
 
-
-
-
-
-						<!-- Bloc de critères gauche -->
-						<ul class="catBloc">
-							<li class="domainIconBloc">
-								<ul>
-									<li>Domaine</li>
-									<li class="domainIcon"><h:commandButton class="fa fa-home"
-											onclick="submit()"
-											action="#{mbAfficheRefObjetSOuhait.rechercherGroupes(1)}"></h:commandButton>
-									</li>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-									<li class="domainIcon"><h:commandButton class="fa fa-home"
-											onclick="submit()"
-											action="#{mbAfficheRefObjetSOuhait.rechercherGroupes(2)}"></h:commandButton></li>
-									<li class="domainIcon"><h:commandButton
-											class="fa fa-soccer-ball-o" onclick="submit()"
-											action="#{mbAfficheRefObjetSOuhait.rechercherGroupes(3)}"></h:commandButton></li>
-									<li class="domainIcon"><h:commandButton
-											class="fa fa-gamepad" onclick="submit()"
-											action="#{mbAfficheRefObjetSOuhait.rechercherGroupes(4)}"></h:commandButton></li>
-									<li class="domainIcon"><h:commandButton
-											class="fa fa-music" onclick="submit()"
-											action="#{mbAfficheRefObjetSOuhait.rechercherGroupes(5)}"></h:commandButton></li>
-								</ul>
-							</li>
-							<li class="groupCat">
-								<div class="catTitle">Groupe</div>
-							</li>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-							<h:selectOneMenu id="groupes"
+					<ul class="catBloc">
+						<li class="domainIconBloc">
+							<ul>
+								<li>Domaine*
+								</li>
+								<li>
+								<h:commandButton class="domainIcon domaine1">
+								<f:ajax listener="#{mbAfficheRefObjetSOuhait.rechercherGroupes(1)}" event="click"
+								render=":formAjoutObjet:groupes :formAjoutObjet:produitsMenu"
+								execute="@form" />
+								</h:commandButton>
+								</li>
+								<li><h:commandButton class="domainIcon domaine2">
+								<f:ajax listener="#{mbAfficheRefObjetSOuhait.rechercherGroupes(2)}" event="click"
+								render=":formAjoutObjet:groupes :formAjoutObjet:produitsMenu"
+								execute="@form" /></h:commandButton>
+								</li>
+								<li><h:commandButton
+										class="domainIcon domaine3">
+								<f:ajax listener="#{mbAfficheRefObjetSOuhait.rechercherGroupes(3)}" event="click"
+								render=":formAjoutObjet:groupes :formAjoutObjet:produitsMenu"
+								execute="@form" /></h:commandButton>
+								</li>
+								<li><h:commandButton
+										class="domainIcon domaine4">
+								<f:ajax listener="#{mbAfficheRefObjetSOuhait.rechercherGroupes(4)}" event="click"
+								render=":formAjoutObjet:groupes :formAjoutObjet:produitsMenu"
+								execute="@form" /></h:commandButton>
+								</li>
+								<li>
+								<h:commandButton class="domainIcon domaine5">
+								<f:ajax listener="#{mbAfficheRefObjetSOuhait.rechercherGroupes(5)}" event="click"
+								render=":formAjoutObjet:groupes :formAjoutObjet:produitsMenu"
+								execute="@form" />
+								</h:commandButton></li>
+							</ul>
+						</li>
+						<li class="groupCat">
+							<div class="catTitle">Groupe*</div> <h:selectOneMenu id="groupes"
+								class="dropDownListCat"
 								value="#{mbAfficheRefObjetSOuhait.selectedGroupe.id}">
 								<f:selectItems value="#{mbAfficheRefObjetSOuhait.groupes}"
 									var="g" itemLabel="#{g.libelle}" itemValue="#{g.id}" />
-								<f:ajax
+								<f:ajax 
 									listener="#{mbAfficheRefObjetSOuhait.rechercherProduits()}"
 									event="change" render=":formAjoutObjet:produitsMenu"
 									execute="@form" />
 							</h:selectOneMenu>
+						</li>
+						<li class="groupCat">
+							<div class="catTitle">Produit*</div> <h:selectOneMenu
+								class="dropDownListCat" id="produitsMenu"
+								value="#{mbObjetAjout.objet.produit.id}">
+								<f:selectItems value="#{mbAfficheRefObjetSOuhait.produits}"
+									var="p" itemLabel="#{p.libelle}" itemValue="#{p.id}" />
+							</h:selectOneMenu>
+						</li>
+						<li class="groupCat">
+							<div class="catTitle">Tranche d'âge</div> <h:selectOneMenu
+								class="dropDownListCat"
+								value="#{mbObjetAjout.objet.trancheAge.id}">
+								<f:selectItems value="#{mbAfficheRefObjetSOuhait.tranchesAges}"
+									var="t" itemLabel="#{t.libelle}" itemValue="#{t.id}" />
+							</h:selectOneMenu>
+						</li>
+					</ul>
+				</div>
 
+				<!-- Bloc Photos -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-							<li class="groupCat">
-								<div class="catTitle">Produit</div> <h:selectOneMenu
-									id="produitsMenu" value="#{mbObjetAjout.objet.produit.id}">
-									<f:selectItems value="#{mbAfficheRefObjetSOuhait.produits}"
-										var="p" itemLabel="#{p.libelle}" itemValue="#{p.id}" />
-								</h:selectOneMenu>
-							</li>
-							<li class="ageCat">
-								<div class="catTitleSaut">Tranche d'âge</div> <h:selectOneMenu
-									value="#{mbObjetAjout.objet.trancheAge.id}">
-									<f:selectItems value="#{mbAfficheRefObjetSOuhait.tranchesAges}"
-										var="t" itemLabel="#{t.libelle}" itemValue="#{t.id}" />
-								</h:selectOneMenu>
-							</li>
-
-						</ul>
-						<ul class="catBloc">
-
-							<li class="libelleInput">
-								<div class="catTitle">Libelle</div> <h:inputText
-
-
-									value="#{mbObjetAjout.objet.libelle}" />
-
-							</li>
-							<li class="descriptionInput">
-								<div class="catTitle">Description</div> <h:inputText
-									value="#{mbObjetAjout.objet.description}" />
-
-
-
-							</li>
-							<li class="valeurInput">
-								<div class="catTitle">Valeur</div>
-								<div>
-									<h:inputText value="#{mbObjetAjout.objet.valeur}" />
-									<span class="fa fa-snowflake-o fa-2xbigIcon"></span>
-								</div>
-							</li>
-						</ul>
+				<div class="photosBloc">
+					<div class="pageSubTitle">Ajouter des photos</div>
+					<div class="photosConteneur">
+						<p:fileUpload
+							fileUploadListener="#{mbObjetAjout.handleFileUpload}"
+							value="#{mbObjetAjout.photoUploade}" sequential="true"
+							mode="advanced" dragDropSupport="true" multiple="true"
+							label="Choisir" uploadLabel="Envoyer" cancelLabel="Annuler" />
 					</div>
-					<div class="photosBloc">
-						<div class="pageSubTitle">Ajouter des photos</div>
-						<div class="photosConteneur">
+				</div>
 
+				<!-- Bloc de boutons -->
 
-							<div class="photoItem objetItem">
-								<span class="fa fa-camera"></span>
-							</div>
-							<div class="photoItem objetItem">
-								<span class="fa fa-camera"></span>
-							</div>
-
-
-
-							<p:fileUpload
-								fileUploadListener="#{mbObjetAjout.handleFileUpload}"
-								value="#{mbObjetAjout.photoUploade}" sequential="true" mode="advanced" dragDropSupport="true" multiple="true"/>
-
-
-							<div class="addIconBloc"></div>
-						</div>
+				<div class="boutonsBloc">
+					<div class="pageBouton">
+						<h:commandButton class="objetItem"
+							action="#{mbObjetAjout.creerObjet}" value="Valider" />
 					</div>
-
-					<!-- Bloc de boutons -->
-					<div class="boutonsBloc">
-
-						<h:commandButton styleClass="pageBouton"
-							action="#{mbObjetAjout.creerObjet}">
-							<div class="fa fa-check fa-2x objetItem"></div>
-							<div class="objetItem">Valider</div>
-						</h:commandButton>
-
-						<h:commandButton styleClass="pageBouton">
-							<div class="fa fa-close fa-2x objetItem"></div>
-							<div class="objetItem">Annuler</div>
-						</h:commandButton>
-
-						<h:commandButton styleClass="testBouton">
-							<div class="objetItem">Test</div>
-						</h:commandButton>
-
-
+					<div class="pageBouton">
+						<h:commandButton class="objetItem" value="Annuler" onclick="window.history.go(-1); return false;" />
 					</div>
-				</h:form>
-
-
-
-			</h:panelGroup>
+				</div>
+			</h:form>
+			<h:outputScript library="js" name="inputValeur.js"></h:outputScript>
 		</ui:define>
-
 	</ui:composition>
 </h:body>
 </html>
