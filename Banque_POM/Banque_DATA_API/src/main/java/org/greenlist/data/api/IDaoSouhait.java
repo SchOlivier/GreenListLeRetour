@@ -3,6 +3,7 @@ package org.greenlist.data.api;
 import java.util.List;
 
 import org.greenlist.entity.Liste;
+import org.greenlist.entity.Objet;
 import org.greenlist.entity.Souhait;
 import org.greenlist.entity.Utilisateur;
 
@@ -21,4 +22,6 @@ public interface IDaoSouhait {
 	public Liste addListe(Liste liste);
 
 	List<Souhait> getSouhaits(int idListe) throws Exception;
+
+	List<Souhait> getSouhaits(Objet objet, Utilisateur utilisateur) throws Exception;
 }
