@@ -150,4 +150,7 @@ public class AdresseManagedBean {
 		this.adresse = adresse;
 	}
 	
+	
+	
+	
 }

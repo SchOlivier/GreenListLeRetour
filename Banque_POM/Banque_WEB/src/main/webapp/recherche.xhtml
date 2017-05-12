@@ -26,76 +26,11 @@
 
 				<div class="searchBloc">
 					<ul class="catBloc">
-						<li>
-							<div class="blocTitle">Recherche</div>
-						</li>
 
-						<li class="domainIconBloc">Domaine</li>
-
-						<h:selectOneMenu id="domaines"
-							value="#{mbAfficheRefObjetSOuhait.domaine.id}">
-							<f:selectItems value="#{mbAfficheRefObjetSOuhait.domaines}"
-								var="d" itemLabel="#{d.libelle}" itemValue="#{d.id}" />
-							<f:ajax
-								listener="#{mbAfficheRefObjetSOuhait.rechercherGroupes(d.id)}"
-								event="change" render=":formAjoutObjet:groupes" execute="@form" />
-						</h:selectOneMenu>
-						<li class="groupCat">
-							<div class="catTitle">Groupe</div>
-						</li>
-
-						<h:selectOneMenu id="groupes"
-							value="#{mbAfficheRefObjetSOuhait.selectedGroupe.id}">
-							<f:selectItems value="#{mbAfficheRefObjetSOuhait.groupes}"
-								var="g" itemLabel="#{g.libelle}" itemValue="#{g.id}" />
-							<f:ajax
-								listener="#{mbAfficheRefObjetSOuhait.rechercherProduits()}"
-								event="change" render=":formAjoutObjet:produitsMenu"
-								execute="@form" />
-						</h:selectOneMenu>
-
-						<li class="groupCat">
-							<div class="catTitle">Produit</div> <h:selectOneMenu
-								id="produitsMenu" value="#{mbObjetAjout.objet.produit.id}">
-								<f:selectItems value="#{mbAfficheRefObjetSOuhait.produits}"
-									var="p" itemLabel="#{p.libelle}" itemValue="#{p.id}" />
-							</h:selectOneMenu>
-						</li>
-						<li class="ageCat">
-							<div class="catTitleSaut">Tranche d'âge</div> <h:selectOneMenu
-								value="#{mbObjetAjout.objet.trancheAge.id}">
-								<f:selectItems value="#{mbAfficheRefObjetSOuhait.tranchesAges}"
-									var="t" itemLabel="#{t.libelle}" itemValue="#{t.id}" />
-							</h:selectOneMenu>
-						</li>
-
-					</ul>
-					<li class="groupCat">
-						<div class="catLabel">Distance</div> <h:inputText
-							id="rechercheDistance">
-						</h:inputText> <span>km</span>
-					</li>
-					<li class="groupCat">
-						<div class="catLabel">Valeur Maximum</div> <h:inputText
-							id="rechercheValeur">
-						</h:inputText> <span class="fa fa-snowflake-o"></span>
-					</li>
-					<li class="dateCat">
-						<div>
-							<h:selectBooleanCheckbox />
-							Depuis ma dernière visite uniquement
-						</div>
-					</li>
-					<li class="mapCat">
-						<div>
-							<h:selectBooleanCheckbox />
-							>Affiché sur une carte
-						</div>
-					</li>
-					<li class="boutonBloc"><h:commandButton value="Rechercher">
-							<f:ajax render="result" event="click" execute="maRecherche"
-								listener="#{mbRecherche.decouperRecherche()}" />
-						</h:commandButton></li>
+						<li class="boutonBloc"><h:commandButton value="Rechercher">
+								<f:ajax render="result" event="click" execute="maRecherche"
+									listener="#{mbRecherche.decouperRecherche()}" />
+							</h:commandButton></li>
 					</ul>
 					<ul class="catBloc">
 						<li>
