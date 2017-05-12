@@ -19,7 +19,7 @@ public class DaoPanier implements IDaoPanier {
 
 	private static final String GET_OBJETS_BY_PANIER = "SELECT p.objets FROM Panier p WHERE p.id = :pIdPanier";
 	private static final String GET_PANIER_BY_UTILISATEUR = "SELECT p FROM Panier p left join fetch p.objets WHERE p.utilisateur.id =:pIdUtilisateur";
-
+	private static final String GET_PANIER_INVIT = "SELECT p FROM Panier p left join fetch p.objets WHERE p.id = 500 " ;
 	@PersistenceContext(unitName = "Banque_DATA_EJB")
 	private EntityManager em;
 
@@ -33,6 +33,47 @@ public class DaoPanier implements IDaoPanier {
 	@Override
 	public Panier getPanierByUtilisateur(Utilisateur utilisateur) throws Exception {
 		Query query = em.createQuery(GET_PANIER_BY_UTILISATEUR).setParameter("pIdUtilisateur", utilisateur.getId());
+		return (Panier) query.getSingleResult();
+	}
+
+	@Override
+	public Panier creationPanier(Panier panier) {
+		 em.persist(panier);
+		return panier;
+	}
+
+	@Override
+	public List<Objet> ajouterObjetPanier(Objet objet, Panier panier) {
+		List<Objet> objets = null;
+		try {
+			objets = getObetsByPanier(panier);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		panier.setObjets(objets);
+		
+		panier.getObjets().add(objet);
+		if( panier.getId() != 0  ){
+		em.merge(panier);
+		}
+		return  panier.getObjets();
+	}
+
+	@Override
+	public List<Objet> viderPanier(Panier panier) {
+	
+		
+		List<Objet> vide = null;
+		panier.setObjets(vide);
+		em.merge(panier);
+		return panier.getObjets();
+	}
+
+	@Override
+	public Panier getInvite() {
+		Query query = em.createQuery(GET_PANIER_INVIT);
 		return (Panier) query.getSingleResult();
 	}
 

@@ -21,7 +21,7 @@ public class DaoAdresse implements IDaoAdresse {
 	private EntityManager em;
 	
 	private static final String REQUETTE_GET_ADRESSES_BY_UTILISATEUR = "SELECT u.adresses FROM Utilisateur as u "
-			+ "WHERE u.id = :pidUtilisateur";
+																								+ "WHERE u.id = :pidUtilisateur";
 	private static final String REQUETTE_GET_ADRESSES_BY_ID_UTILISATEUR="SELECT a FROM Adresse a WHERE a.utilisateur.id = :pidUtilisateur";
 
 	@SuppressWarnings("unchecked")

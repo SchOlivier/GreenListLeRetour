@@ -9,4 +9,9 @@ import org.greenlist.entity.Utilisateur;
 public interface IBusinessPanier {
 	List<Objet> getObetsByPanier(Panier panier);
 	Panier getPanierByUtilisateur(Utilisateur utilisateur);
+	
+public Panier creationPanier(Panier panier);
+	
+	public List<Objet> ajouterObjetPanier (Objet objet, Panier panier);
+	Panier getPanierInvite();
 }

@@ -11,7 +11,9 @@
 </h:head>
 <h:body>
 	<ui:composition template="/WEB-INF/templates/base.xhtml">
+		<ui:define name="title">TOTO HERE!!!!</ui:define>
 		<ui:define name="content">
+			<h:messages />
 			<h:form id="formAjoutObjet" name="monAjoutObjetForm"
 				class="ajoutObjetForm formulaire" enctype="multipart/form-data">
 				<div class="pageTitleBloc">
@@ -98,7 +100,7 @@
 								class="dropDownListCat" id="produitsMenu"
 								value="#{mbObjetAjout.objet.produit.id}">
 								<f:selectItems value="#{mbAfficheRefObjetSOuhait.produits}"
-									var="p" itemLabel="#{p.libelle}" itemValue="#{p.id}" />
+									var="pdt" itemLabel="#{pdt.libelle}" itemValue="#{pdt.id}" />
 							</h:selectOneMenu>
 						</li>
 						<li class="groupCat">
@@ -129,11 +131,11 @@
 
 				<div class="boutonsBloc">
 					<div class="pageBouton">
-						<h:commandButton class="objetItem"
-							action="#{mbObjetAjout.creerObjet}" value="Valider" />
+						<p:commandButton class="objetItem"
+							action="#{mbObjetAjout.creerObjet()}"  value="Valider" />
 					</div>
 					<div class="pageBouton">
-						<h:commandButton class="objetItem" value="Annuler" onclick="window.history.go(-1); return false;" />
+						<p:commandButton class="objetItem" value="Annuler" onclick="window.history.go(-1); return false;" />
 					</div>
 				</div>
 			</h:form>

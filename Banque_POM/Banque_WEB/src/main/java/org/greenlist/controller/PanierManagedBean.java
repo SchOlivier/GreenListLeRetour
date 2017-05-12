@@ -31,6 +31,9 @@ public class PanierManagedBean {
 	@ManagedProperty(value = "#{mbUtilisateur}")
 	private UtilisateurManagedBean mbConnect;
 	
+	@ManagedProperty(value="#{mbPanierSession}")
+	private PanierSessionMb mbPanierSession;
+	
 	@EJB
 	private IBusinessPanier proxyPanier;
 	@EJB
@@ -41,10 +44,8 @@ public class PanierManagedBean {
 	
 	@PostConstruct
 	public void init(){
-		panier = proxyPanier.getPanierByUtilisateur(mbConnect.getUtilisateurConnecte());
-//		Utilisateur user = new Utilisateur();
-//		user.setId(1);
-//		panier = proxyPanier.getPanierByUtilisateur(user);
+		panier = mbPanierSession.panierCnx();
+			System.out.println(panier.getObjets().size());
 		objets = panier.getObjets();
 		for(Objet objet : objets){
 		objet = proxyObjet.getObjetComplet(objet);
@@ -159,4 +160,16 @@ public class PanierManagedBean {
 		this.proxyUtilisateur = proxyUtilisateur;
 	}
 
+
+	public PanierSessionMb getMbPanierSession() {
+		return mbPanierSession;
+	}
+
+
+	public void setMbPanierSession(PanierSessionMb mbPanierSession) {
+		this.mbPanierSession = mbPanierSession;
+	}
+
+	
+	
 }

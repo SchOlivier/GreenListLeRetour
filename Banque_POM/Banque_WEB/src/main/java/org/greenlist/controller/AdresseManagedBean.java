@@ -37,6 +37,7 @@ public class AdresseManagedBean {
 	
 	
 	private List<Objet> objets = null;
+	private LatLng coord = null;
 	
 	public RechercheManagedBean getMbRechercher() {
 		return mbRechercher;
@@ -80,40 +81,62 @@ public class AdresseManagedBean {
 
 	@PostConstruct
 	public void init() {
+		//Centrer la map
 		advancedModel = new DefaultMapModel();
-	
-
-		// Shared coordinates
-		LatLng coord1 = new LatLng(recupererCoordonnees().getLatitude(), recupererCoordonnees().getLongitude());
-		// Icons and Data
-		advancedModel.addOverlay(new Marker(coord1, "JE SUIS ICI", "Valeur1.png",
-				"http://maps.google.com/mapfiles/ms/micons/blue-dot.png"));
-		
+		coord = new LatLng(latMap(), lngMap());
+		advancedModel.addOverlay(new Marker(coord, "Je suis ici", null,
+					"http://maps.google.com/mapfiles/ms/micons/blue-dot.png"));
 		//Afficher resultats objets sur la map
 		objets = mbRechercher.getResultatRechercheList();
-		for(Objet o : objets){
-		System.out.println(o.getLibelle());
-		}
 		for(Objet objet : objets){
-			// Shared coordinates
-			LatLng coord = new LatLng(recupererAdresseObjet(objet).getLatitude(), recupererAdresseObjet(objet).getLongitude());
-			// Icons and Data
-			Marker m = new Marker(coord, (objets.indexOf(objet)+1)+ " : " + objet.getLibelle() + " id= " + objet.getId() , "TestLego.jpg",
+			LatLng coord1 = new LatLng(recupererAdresseObjet(objet).getLatitude(), recupererAdresseObjet(objet).getLongitude());
+			Marker m = new Marker(coord1, (objets.indexOf(objet)+1)+ " : " + objet.getLibelle() + " id= " + objet.getId() , "chiffreCleLutin.jpg",
 					"http://maps.google.com/mapfiles/ms/micons/pink-dot.png");
 			advancedModel.addOverlay(m);
 		}
-		System.out.println(advancedModel.getMarkers());
-		
+		System.out.println(advancedModel.getMarkers());	
 	}
 	
-	
-	public Adresse recupererCoordonnees(){
-	
-		 adresse = proxyAdresse.getAdresseByIdUtilisateur(mbConnet.getUtilisateurConnecte().getId());
-		 
-		return adresse;
+	public Double latMap(){
+		Double lat = null;
+		if (mbConnet.getUtilisateurConnecte() != null){
+			 adresse = proxyAdresse.getAdresseByIdUtilisateur(mbConnet.getUtilisateurConnecte().getId());
+			 lat = adresse.getLatitude();
+			} else	lat = 48.858103;
+		return lat;
 	}
 	
+	public Double lngMap(){
+		Double lng = null;
+		if (mbConnet.getUtilisateurConnecte() != null){
+			 adresse = proxyAdresse.getAdresseByIdUtilisateur(mbConnet.getUtilisateurConnecte().getId());
+			 lng = adresse.getLongitude();
+			} else	lng = 2.345033;
+		return lng;
+	}
+	
+//	public LatLng centrerMap(){
+//		if (mbConnet.getUtilisateurConnecte() != null){
+//		 adresse = proxyAdresse.getAdresseByIdUtilisateur(mbConnet.getUtilisateurConnecte().getId());
+//		 coord = new LatLng(adresse.getLatitude(), adresse.getLongitude());
+//		 System.out.println("LES COORD DU USER CONNECTE!!!!!!!!!!!!!" + coord);
+//		} else {
+//		 coord = new LatLng(48.858103, 2.345039);
+//		 System.out.println("LES COORD PAR DEFAUT!!!!!!!!!!!!!" + coord);
+//		}
+//		return coord;
+//	}
+	
+	public LatLng getCoord() {
+		return coord;
+	}
+
+
+	public void setCoord(LatLng coord) {
+		this.coord = coord;
+	}
+
+
 	public Adresse recupererAdresseObjet(Objet objet){
 		int idProprietaire = objet.getUtilisateur().getId();
 		

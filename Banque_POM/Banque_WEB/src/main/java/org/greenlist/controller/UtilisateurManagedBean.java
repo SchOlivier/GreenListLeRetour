@@ -7,6 +7,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import org.greenlist.business.api.IBusinessUtilisateur;
+import org.greenlist.entity.Panier;
 import org.greenlist.entity.Utilisateur;
 
 @ManagedBean(name = "mbUtilisateur")
@@ -19,6 +20,7 @@ public class UtilisateurManagedBean {
 	private String pseudo ;
 	private String mdp ; 
 	private Utilisateur utilisateurConnecte = null;
+	private Panier panierUtilisateur = null ;
 
 	public void seConnecter() {
 	

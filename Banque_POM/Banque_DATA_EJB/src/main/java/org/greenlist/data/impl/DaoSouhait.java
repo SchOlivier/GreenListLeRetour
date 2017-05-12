@@ -30,8 +30,8 @@ public class DaoSouhait implements IDaoSouhait {
 	@Override
 	public List<Souhait> getSouhaits(Utilisateur utilisateur) throws Exception{
 
-		final String req = "SELECT s FROM Souhait s " + "INNER JOIN Liste li ON li.id = s.idListe "
-				+ "INNER JOIN Utilisateur u ON u.id = li.idUtilisateur" + "WHERE u.id = :pidUtilisateur";
+		final String req = "SELECT s FROM Souhait s " + "INNER JOIN s.liste li  "
+				+ "INNER JOIN li.utilisateur u  " + "WHERE u.id = :pidUtilisateur";
 		
 		Query query = em.createQuery(req).setParameter("pidUtilisateur", utilisateur.getId());
 		return query.getResultList();

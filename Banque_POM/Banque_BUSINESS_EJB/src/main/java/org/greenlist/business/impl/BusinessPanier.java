@@ -40,4 +40,22 @@ public class BusinessPanier implements IBusinessPanier {
 		return panier;
 	}
 
+	@Override
+	public Panier creationPanier(Panier panier) {
+	
+		return proxyPanier.creationPanier(panier);
+	}
+
+	@Override
+	public List<Objet> ajouterObjetPanier(Objet objet, Panier panier) {
+		
+		return proxyPanier.ajouterObjetPanier(objet, panier);
+	}
+
+	@Override
+	public Panier getPanierInvite() {
+		// TODO Auto-generated method stub
+		return proxyPanier.getInvite();
+	}
+
 }
