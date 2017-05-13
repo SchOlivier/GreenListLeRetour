@@ -11,6 +11,7 @@ import org.greenlist.data.api.IDaoEchange;
 import org.greenlist.entity.Conclusionechange;
 import org.greenlist.entity.Echange;
 import org.greenlist.entity.Message;
+import org.greenlist.entity.Note;
 import org.greenlist.entity.Objet;
 import org.greenlist.entity.Rdv;
 import org.greenlist.entity.Utilisateur;
@@ -31,7 +32,6 @@ public class BusinessEchange implements IBusinessEchange {
 
 	@Override
 	public Echange GetEchange( int idEchange) {
-
 		
 		return proxyEchange.GetEchange(idEchange);
 	}
@@ -69,9 +69,8 @@ public class BusinessEchange implements IBusinessEchange {
 
 	@Override
 	public Echange prendreRdv(Echange echange, Rdv rdv) {
-		echange.setRdvs(proxyEchange.getRdv(echange));
-		echange.getRdvs().add(rdv);
-		proxyEchange.majEchange(echange);
+		rdv.setEchange(echange);
+		proxyEchange.ajouterRdv(rdv);
 		return echange;
 	}
 
@@ -128,6 +127,11 @@ public class BusinessEchange implements IBusinessEchange {
 	@Override
 	public Echange majEchange(Echange echange) {
 		return proxyEchange.majEchange(echange);
+	}
+
+	@Override
+	public List<Note> getNotes(Echange echange) {
+		return proxyEchange.getNotes(echange);
 	}
 
 

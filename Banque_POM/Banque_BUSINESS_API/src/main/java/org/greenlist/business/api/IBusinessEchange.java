@@ -5,6 +5,7 @@ import java.util.List;
 import org.greenlist.entity.Conclusionechange;
 import org.greenlist.entity.Echange;
 import org.greenlist.entity.Message;
+import org.greenlist.entity.Note;
 import org.greenlist.entity.Objet;
 import org.greenlist.entity.Rdv;
 import org.greenlist.entity.Utilisateur;
@@ -40,5 +41,7 @@ public interface IBusinessEchange {
 	public List<Conclusionechange> getConclusion (Echange echange);
 	
 	public Echange majEchange(Echange echange);
+
+	public List<Note> getNotes(Echange echange);
 
 }

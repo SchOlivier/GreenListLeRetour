@@ -1,6 +1,8 @@
 package org.greenlist.controller;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -11,12 +13,15 @@ import javax.faces.bean.SessionScoped;
 import org.greenlist.business.api.IBusinessEchange;
 import org.greenlist.business.api.IBusinessObjet;
 import org.greenlist.business.api.IBusinessUtilisateur;
+import org.greenlist.entity.Adresse;
 import org.greenlist.entity.Conclusionechange;
 import org.greenlist.entity.Echange;
+import org.greenlist.entity.Note;
 import org.greenlist.entity.Objet;
 import org.greenlist.entity.Rdv;
 import org.greenlist.entity.Utilisateur;
 import org.greenlist.utilitaire.EtapeEchange;
+import org.primefaces.util.DateUtils;
 
 @ManagedBean(name = "mbEchange")
 @SessionScoped
@@ -31,8 +36,11 @@ public class EchangeManagedBean {
 	private List<Rdv> rdvs;
 	private Conclusionechange conclusion;
 	private List<Objet> objets;
+	private List<Note> notes;
+	private Date dateRdv;
 
-	private static final int IDECHANGE = 2;
+	private static final String TERMINE = "Termine";
+	private static final String NOTATION = "Notation";
 
 	// TODO: retirer ces attributs à la fin des tests
 	@EJB
@@ -40,22 +48,33 @@ public class EchangeManagedBean {
 	@EJB
 	private IBusinessUtilisateur proxyUser;
 
+	private static final int IDECHANGE = 3;
+	private boolean bidouille;
+
 	// METHODE DE TEST
-	public void testMethod(int userId) {
-		echange.setEtape(EtapeEchange.NEGOCIATION);
-		Utilisateur user = new Utilisateur();
-		user.setId(userId);
-		if (userId == 1) {
-			echange.setHasvalidatedusera(true);
+	public void testMethod(int i) {
+
+		if (i==1){
+			proposerRDV(userA);
 		}
 		else{
-			echange.setHasvalidateduserb(true);
+			valider(userB);
 		}
-		valider(user);
+	}
+	
+	public void afficherEtape(){
+		calculerEtape();
+		System.out.println(echange.getEtape().getLibelle());
 	}
 
 	@PostConstruct
 	public void init() {
+
+		recupereDonnees();
+		calculerEtape();
+	}
+
+	private void recupereDonnees() {
 		// TODO: a modifier avec l'id de l'échange récupérée d'une page
 		// précédente.
 		echange = proxyEchange.GetEchange(IDECHANGE);
@@ -63,11 +82,32 @@ public class EchangeManagedBean {
 		userB = proxyEchange.GetUtilisateurB(echange);
 		rdvs = proxyEchange.getRdv(echange);
 		objets = echange.getObjets();
+		notes = proxyEchange.getNotes(echange);
 		List<Conclusionechange> conclus = proxyEchange.getConclusion(echange);
 		if (conclus.size() > 0) {
 			conclusion = conclus.get(0);
 		} else {
 			conclusion = null;
+		}
+	}
+
+	private void calculerEtape() {
+		Date dateDuJour = new Date();
+
+		if (conclusion != null && conclusion.getLibelle().equals(TERMINE)) {
+			echange.setEtape(EtapeEchange.TERMINE);
+		} else if (conclusion != null && conclusion.getLibelle().equals(NOTATION)) {
+			echange.setEtape(EtapeEchange.NOTATION);
+		} else if (rdvs.size() > 0 && rdvs.get(0).getDate().before(dateDuJour)) {
+			echange.setEtape(EtapeEchange.CONCLUSION_RDV);
+		} else if (rdvs.size() > 0 && rdvs.get(0).getDate().after(dateDuJour)) {
+			echange.setEtape(EtapeEchange.RDV);
+		} else if (echange.getDateValidationNegociation() != null) {
+			echange.setEtape(EtapeEchange.PRISE_RDV);
+		} else if (echange.getDateDebutNegociation() != null) {
+			echange.setEtape(EtapeEchange.NEGOCIATION);
+		} else {
+			echange.setEtape(EtapeEchange.INITIALISATION);
 		}
 	}
 
@@ -81,8 +121,6 @@ public class EchangeManagedBean {
 	 */
 	private void accepterEchange() {
 		echange.setDateDebutNegociation(new Date());
-		echange.setHasvalidatedusera(false);
-		echange.setHasvalidateduserb(false);
 		echange.setEtape(EtapeEchange.NEGOCIATION);
 		proxyEchange.majEchange(echange);
 	}
@@ -125,12 +163,30 @@ public class EchangeManagedBean {
 		resetValidations();
 		proxyEchange.majEchange(echange);
 	}
-	
+
 	private void conclureNegociation() {
 		echange.setDateValidationNegociation(new Date());
-		resetValidations();
+		echange.setEtape(EtapeEchange.PRISE_RDV);
 		proxyEchange.majEchange(echange);
-		
+
+	}
+
+	// ETAPE 3 - Prise de RDV
+
+	public void proposerRDV(Utilisateur user) {
+		// Adresse en dur parce que j'ai pas envie de me faire chier, ce sera
+		// celle de l'userA.
+		Rdv rdv = new Rdv();
+		rdv.setAdresse(userA.getAdresses().get(0));
+		rdv.setDate(dateRdv);
+		proxyEchange.prendreRdv(echange, rdv);
+		// on annule l'éventuelle validation de l'autre user.
+		if (user.getId() == userA.getId()) {
+			echange.setHasvalidateduserb(false);
+		} else {
+			echange.setHasvalidatedusera(false);
+		}
+		valider(user);
 	}
 
 	// METHODES GENERALES
@@ -153,6 +209,7 @@ public class EchangeManagedBean {
 		proxyEchange.majEchange(echange);
 
 		if (echange.isHasvalidatedusera() && echange.isHasvalidateduserb()) {
+			resetValidations();
 			switch (echange.getEtape()) {
 			case INITIALISATION:
 				accepterEchange();
@@ -173,25 +230,31 @@ public class EchangeManagedBean {
 				ConclureNotation();
 				break;
 			case TERMINE:
-				//rien à faire
+				// rien à faire
 				break;
 			}
+			System.out.println(echange.getEtape().getLibelle());
 		}
 	}
 
 	private void ConclureNotation() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void conclureRDV() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void accepterRDV() {
-		// TODO Auto-generated method stub
-		
+		if (dateRdv.after(new Date())) {
+			echange.setEtape(EtapeEchange.RDV);
+		}
+		else{
+			echange.setEtape(EtapeEchange.CONCLUSION_RDV);
+		}
+
 	}
 
 	private void resetValidations() {
@@ -255,6 +318,22 @@ public class EchangeManagedBean {
 
 	public void setObjets(List<Objet> objets) {
 		this.objets = objets;
+	}
+
+	public List<Note> getNotes() {
+		return notes;
+	}
+
+	public void setNotes(List<Note> notes) {
+		this.notes = notes;
+	}
+
+	public Date getDateRdv() {
+		return dateRdv;
+	}
+
+	public void setDateRdv(Date dateRdv) {
+		this.dateRdv = dateRdv;
 	}
 
 }

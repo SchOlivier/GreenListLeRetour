@@ -10,10 +10,15 @@
 <h:body>
 	<h:panelGroup>
 		<h:form class="echange">
-			<div>#{mbEchange.userB.prenom}</div>
+			<div>#{mbEchange.userB.nom}</div>
 			<div>
-				<h:commandButton action="#{mbEchange.testMethod(1)}" value="testButton" />
+			<p:calendar id="datetime" value="#{mbEchange.dateRdv}" pattern="MM/dd/yyyy HH:mm:ss" />
+				<h:commandButton action="#{mbEchange.testMethod(1)}" value="Créer RDV" />
+				<h:commandButton action="#{mbEchange.testMethod(2)}" value="Valider RDV" />
 			</div>	
+			<div>
+				<h:commandButton action="#{mbEchange.afficherEtape()}" value="Etape ?" />
+			</div>
 		</h:form>
 	</h:panelGroup>
 </h:body>

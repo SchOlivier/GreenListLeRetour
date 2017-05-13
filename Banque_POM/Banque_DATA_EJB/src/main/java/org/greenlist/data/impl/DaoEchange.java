@@ -15,6 +15,7 @@ import org.greenlist.entity.Conclusionechange;
 import org.greenlist.entity.Echange;
 import org.greenlist.entity.Liste;
 import org.greenlist.entity.Message;
+import org.greenlist.entity.Note;
 import org.greenlist.entity.Objet;
 import org.greenlist.entity.Photo;
 import org.greenlist.entity.Rdv;
@@ -28,23 +29,45 @@ public class DaoEchange implements IDaoEchange {
 	@PersistenceContext(unitName = "Banque_DATA_EJB")
 	private EntityManager em;
 
-	private static final String REQUETE_GET_ECHANGE = " SELECT e FROM Echange e " + "LEFT JOIN fetch e.objets "
+	private static final String REQUETE_GET_ECHANGE = 
+			" SELECT e FROM Echange e "
+			+ "LEFT JOIN fetch e.objets "
 			+ "WHERE e.id = :pEid";
 
-	private static final String REQUETE_GET_USERA = "SELECT e.utilisateurByIdusera FROM Echange e " + "WHERE e = :pE";
+	private static final String REQUETE_GET_USERA = 
+			"SELECT u FROM Utilisateur u "
+			+ "INNER JOIN fetch u.adresses "
+			+ "INNER JOIN u.echangesForIdusera e "
+			+ "WHERE e.id = :pE";
 
-	private static final String REQUETE_GET_USERB = "SELECT e.utilisateurByIduserb FROM Echange e " + "WHERE e = :pE";
+	private static final String REQUETE_GET_USERB =
+			"SELECT u FROM Utilisateur u "
+			+ "INNER JOIN fetch u.adresses "
+			+ "INNER JOIN u.echangesForIduserb e "
+			+ "WHERE e.id = :pE";
 
 	private static final String REQUETE_GET_OBJETS = "SELECT e.objets fROM Echange e " + "WHERE e.id = :pEid";
 	private static final String REQUETE_GET_MESSAGES = "SELECT e.messages FROM Echange e" + " WHERE e.id = :pEid";
-	private static final String REQUETE_GET_RDVS = "SELECT rdv FROM Rdv rdv " + "INNER JOIN fetch rdv.adresse "
-			+ "INNER JOIN rdv.echange " + "WHERE rdv.echange.id = :pEid";
 
 	private static final String REQUETE_GET_CONCLUSION = "SELECT e.conclusionechange FROM Echange e " + "WHERE e = :pE";
 
 	private static final String REQUETE_RETIRER_OBJET = "DELETE FROM ECHANGE_OBJET "
-			+ "WHERE ECH_ID = :EId AND OBJ_ID = :OId";
-
+			+ "WHERE ECH_ID = :peId AND OBJ_ID = :poId";
+	
+	private static final String REQUETE_GET_RDVS =
+			"SELECT rdv FROM Rdv rdv " 
+			+ "INNER JOIN fetch rdv.adresse "
+			+ "INNER JOIN rdv.echange "
+			+ "WHERE rdv.echange.id = :pEid";
+	
+	private static final String REQUETE_GET_NOTES =
+			"SELECT e.notes FROM Echange e "
+			+ "WHERE e.id = :peId";
+			
+//			"SELECT n FROM Note n "
+//			+ "INNER JOIN n.echange "
+//			+ "WHERE n.echange.id = :peId";
+	
 	@Override
 	public Echange creerEchange(Echange echange) {
 		em.persist(echange);
@@ -59,7 +82,7 @@ public class DaoEchange implements IDaoEchange {
 
 	@Override
 	public Utilisateur GetUtilisateurA(Echange echange) {
-		Query query = em.createQuery(REQUETE_GET_USERA).setParameter("pE", echange);
+		Query query = em.createQuery(REQUETE_GET_USERA).setParameter("pE", echange.getId());
 		Utilisateur user = (Utilisateur) query.getSingleResult();
 		em.merge(user);
 		user = recupererDonneesUtilisateur(user);
@@ -68,7 +91,7 @@ public class DaoEchange implements IDaoEchange {
 
 	@Override
 	public Utilisateur GetUtilisateurB(Echange echange) {
-		Query query = em.createQuery(REQUETE_GET_USERB).setParameter("pE", echange);
+		Query query = em.createQuery(REQUETE_GET_USERB).setParameter("pE", echange.getId());
 		Utilisateur user = (Utilisateur) query.getSingleResult();
 		em.merge(user);
 		user = recupererDonneesUtilisateur(user);
@@ -128,10 +151,22 @@ public class DaoEchange implements IDaoEchange {
 
 	@Override
 	public Echange retirerObjet(Objet objet, Echange echange) {
-		Query query = em.createNativeQuery(REQUETE_RETIRER_OBJET).setParameter("EId", echange.getId())
-				.setParameter("OId", objet.getId());
+		Query query = em.createNativeQuery(REQUETE_RETIRER_OBJET).setParameter("peId", echange.getId())
+				.setParameter("poId", objet.getId());
 		query.executeUpdate();
 		return echange;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Note> getNotes(Echange echange) {
+		return em.createQuery(REQUETE_GET_NOTES).setParameter("peId", echange.getId()).getResultList();
+	}
+
+	@Override
+	public void ajouterRdv(Rdv rdv) {
+		em.persist(rdv);
+		
 	}
 
 }
