@@ -37,7 +37,7 @@ public class PanierSessionMb {
 	
 	public Panier panierCnx(){
 		
-		panierSession = proxyPanier.getPanier();
+		panierSession = proxyPanier.getPanierInvite();
 		
 		return panierSession;
 		

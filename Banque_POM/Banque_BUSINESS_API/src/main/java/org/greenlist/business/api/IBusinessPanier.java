@@ -13,5 +13,5 @@ public interface IBusinessPanier {
 public Panier creationPanier(Panier panier);
 	
 	public List<Objet> ajouterObjetPanier (Objet objet, Panier panier);
-	Panier getPanierInvite();
+	public Panier getPanierInvite();
 }
