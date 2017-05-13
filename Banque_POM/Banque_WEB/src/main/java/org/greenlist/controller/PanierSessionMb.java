@@ -37,19 +37,8 @@ public class PanierSessionMb {
 	
 	public Panier panierCnx(){
 		
+		panierSession = proxyPanier.getPanier();
 		
-		utilisateurConnecte = mbConnect.getUtilisateurConnecte();
-		
-		if (utilisateurConnecte != null){
-			
-			panierSession = proxyPanier.getPanierByUtilisateur(utilisateurConnecte);
-			
-		}else {
-			if (panierSession == null ){
-				
-			panierSession = proxyPanier.getPanierInvite();
-			}
-		}
 		return panierSession;
 		
 	}

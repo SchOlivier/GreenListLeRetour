@@ -45,8 +45,7 @@ public class PanierManagedBean {
 	@PostConstruct
 	public void init(){
 		panier = mbPanierSession.panierCnx();
-			System.out.println(panier.getObjets().size());
-		objets = panier.getObjets();
+		objets = proxyPanier.getObetsByPanier(panier);
 		for(Objet objet : objets){
 		objet = proxyObjet.getObjetComplet(objet);
 		//photo = proxyObjet.getPhotos(objet).get(0);
