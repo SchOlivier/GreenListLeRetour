@@ -1,77 +1,206 @@
 package org.greenlist.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 
 import org.greenlist.business.api.IBusinessEchange;
+import org.greenlist.business.api.IBusinessObjet;
+import org.greenlist.business.api.IBusinessUtilisateur;
 import org.greenlist.entity.Conclusionechange;
 import org.greenlist.entity.Echange;
-import org.greenlist.entity.Photo;
+import org.greenlist.entity.Objet;
 import org.greenlist.entity.Rdv;
 import org.greenlist.entity.Utilisateur;
+import org.greenlist.utilitaire.EtapeEchange;
 
 @ManagedBean(name = "mbEchange")
 @SessionScoped
 public class EchangeManagedBean {
-	
+
 	@EJB
 	private IBusinessEchange proxyEchange;
-	
+
 	private Echange echange;
 	private Utilisateur userA;
 	private Utilisateur userB;
 	private List<Rdv> rdvs;
 	private Conclusionechange conclusion;
-	
-	
-	
-	private static final int IDECHANGE = 7;
-	
-	@PostConstruct
-	public void init(){
-		//TODO: a modifier avec l'id de l'échange récupérée d'une page précédente.
-		echange = proxyEchange.GetEchange(IDECHANGE);
-		System.out.println("j'ai récupéré l'échange");
-		
-		userA = proxyEchange.GetUtilisateurA(echange);
-		userB = proxyEchange.GetUtilisateurB(echange);
-		
-		rdvs = proxyEchange.getRdv(echange);
-		
-		List<Photo> photos = userA.getObjets().get(0).getPhotos();
-		
-		if (photos == null){
-			System.out.println("j'ai récupéré les photos mais il n'y en a pas");
-		}
-		else {
-			System.out.println("j'ai plein de photos ! au moins " + photos.size());
-		}
-		
-		List<Conclusionechange> conclus = proxyEchange.getConclusion(echange);
-		if (conclus.size()>0){
-			conclusion = conclus.get(0);
+	private List<Objet> objets;
+
+	private static final int IDECHANGE = 2;
+
+	// TODO: retirer ces attributs à la fin des tests
+	@EJB
+	private IBusinessObjet proxyObjet;
+	@EJB
+	private IBusinessUtilisateur proxyUser;
+
+	// METHODE DE TEST
+	public void testMethod(int userId) {
+		echange.setEtape(EtapeEchange.NEGOCIATION);
+		Utilisateur user = new Utilisateur();
+		user.setId(userId);
+		if (userId == 1) {
+			echange.setHasvalidatedusera(true);
 		}
 		else{
-			conclusion = null;
+			echange.setHasvalidateduserb(true);
 		}
-		
-		
-//		userB = echange.getUtilisateurByIduserb();
-//		System.out.println("j'ai recupéré userB");
-//		
-//		userA = echange.getUtilisateurByIdusera();
-//		System.out.println("j'ai récupéré userA");
-		
-//		System.out.println(userB.getId());
+		valider(user);
 	}
 
-	//Getters, Setters
+	@PostConstruct
+	public void init() {
+		// TODO: a modifier avec l'id de l'échange récupérée d'une page
+		// précédente.
+		echange = proxyEchange.GetEchange(IDECHANGE);
+		userA = proxyEchange.GetUtilisateurA(echange);
+		userB = proxyEchange.GetUtilisateurB(echange);
+		rdvs = proxyEchange.getRdv(echange);
+		objets = echange.getObjets();
+		List<Conclusionechange> conclus = proxyEchange.getConclusion(echange);
+		if (conclus.size() > 0) {
+			conclusion = conclus.get(0);
+		} else {
+			conclusion = null;
+		}
+	}
+
+	// ETAPE 1 - INITIALISATION
+
+	/**
+	 * L'userB accepte l'échange : on passe à l'étape de négociation, les
+	 * HasValidated passent à false, et la date de début de négociation est
+	 * enregistrée.
+	 * 
+	 */
+	private void accepterEchange() {
+		echange.setDateDebutNegociation(new Date());
+		echange.setHasvalidatedusera(false);
+		echange.setHasvalidateduserb(false);
+		echange.setEtape(EtapeEchange.NEGOCIATION);
+		proxyEchange.majEchange(echange);
+	}
+
+	// ETAPE 2 - Negociation
+
+	/**
+	 * Un utilisateur ajoute ou enleve un objet de la négociation.
+	 * 
+	 * @param objet
+	 *            l'objet ajouté/enlevé
+	 * @param ajout
+	 *            si true: ajout, sinon, retrait.
+	 */
+	public void majNegociation(Objet objet, boolean ajout) {
+		resetValidations();
+		if (ajout) {
+			proxyEchange.ajouterObjet(objet, echange);
+		} else {
+			proxyEchange.retirerObjet(objet, echange);
+		}
+	}
+
+	/**
+	 * Modification du nombre de sapins proposés. La valeur proposée est
+	 * enregistrée pour l'uilisateur A. Du coup, si c'est B qui propose, cette
+	 * valeur est négative.
+	 * 
+	 * @param valeur
+	 *            le montant proposé
+	 * @param user
+	 *            l'utilisateur qui propose
+	 */
+	public void majNegociation(int valeur, Utilisateur user) {
+		if (user.getId() == userA.getId()) {
+			echange.setValeur(valeur);
+		} else {
+			echange.setValeur(-valeur);
+		}
+		resetValidations();
+		proxyEchange.majEchange(echange);
+	}
 	
+	private void conclureNegociation() {
+		echange.setDateValidationNegociation(new Date());
+		resetValidations();
+		proxyEchange.majEchange(echange);
+		
+	}
+
+	// METHODES GENERALES
+
+	// TODO: construire la méthode au fur et à mesure.
+	/**
+	 * Méthode appelée quand un utilisateur valide le statut actuel de
+	 * l'échange, à toutes les étapes. Si les deux ont validé, appelle la
+	 * méthode pour passer à l'étape suivante.
+	 * 
+	 * @param user
+	 *            l'utilisateur ayant validé.
+	 */
+	public void valider(Utilisateur user) {
+		if (user.getId() == userA.getId()) {
+			echange.setHasvalidatedusera(true);
+		} else {
+			echange.setHasvalidateduserb(true);
+		}
+		proxyEchange.majEchange(echange);
+
+		if (echange.isHasvalidatedusera() && echange.isHasvalidateduserb()) {
+			switch (echange.getEtape()) {
+			case INITIALISATION:
+				accepterEchange();
+				break;
+			case NEGOCIATION:
+				conclureNegociation();
+				break;
+			case PRISE_RDV:
+				accepterRDV();
+				break;
+			case RDV:
+				// rien à faire
+				break;
+			case CONCLUSION_RDV:
+				conclureRDV();
+				break;
+			case NOTATION:
+				ConclureNotation();
+				break;
+			case TERMINE:
+				//rien à faire
+				break;
+			}
+		}
+	}
+
+	private void ConclureNotation() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void conclureRDV() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void accepterRDV() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void resetValidations() {
+		echange.setHasvalidatedusera(false);
+		echange.setHasvalidateduserb(false);
+	}
+
+	// Getters, Setters
+
 	public IBusinessEchange getProxyEchange() {
 		return proxyEchange;
 	}
@@ -119,6 +248,13 @@ public class EchangeManagedBean {
 	public void setConclusion(Conclusionechange conclusion) {
 		this.conclusion = conclusion;
 	}
-	
+
+	public List<Objet> getObjets() {
+		return objets;
+	}
+
+	public void setObjets(List<Objet> objets) {
+		this.objets = objets;
+	}
 
 }

@@ -41,24 +41,21 @@ public class BusinessEchange implements IBusinessEchange {
 	
 	@Override
 	public List<Objet> getObjets(Echange echange) {
-		// TODO Auto-generated method stub
 		return proxyEchange.getObjets(echange);
 	}
 	
 	@Override
 	public Echange ajouterObjet(Objet objet, Echange echange) {
-		echange.setObjets(proxyEchange.getObjets(echange));
-		echange.getObjets().add(objet);
+		List<Objet> objets = proxyEchange.getObjets(echange);
+		objets.add(objet);
+		echange.setObjets(objets);
 		proxyEchange.majEchange(echange);
 		return echange;
 	}
 
 	@Override
 	public Echange retirerObjet(Objet objet, Echange echange) {
-		echange.setObjets(proxyEchange.getObjets(echange));
-		echange.getObjets().remove(objet);
-		proxyEchange.majEchange(echange);
-		return echange;
+		return proxyEchange.retirerObjet(objet, echange);
 	}
 
 
@@ -67,7 +64,6 @@ public class BusinessEchange implements IBusinessEchange {
 	
 	@Override
 	public List<Rdv> getRdv(Echange echange) {
-		// TODO Auto-generated method stub
 		return proxyEchange.getRdv(echange);
 	}
 
@@ -127,6 +123,11 @@ public class BusinessEchange implements IBusinessEchange {
 	@Override
 	public List<Conclusionechange> getConclusion(Echange echange) {
 		return proxyEchange.getConclusion(echange);
+	}
+
+	@Override
+	public Echange majEchange(Echange echange) {
+		return proxyEchange.majEchange(echange);
 	}
 
 

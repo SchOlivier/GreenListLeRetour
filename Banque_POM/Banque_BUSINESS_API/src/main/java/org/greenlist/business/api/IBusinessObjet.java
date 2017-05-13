@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.greenlist.entity.Adresse;
+import org.greenlist.entity.Echange;
 import org.greenlist.entity.Objet;
 import org.greenlist.entity.Photo;
 import org.greenlist.entity.Produit;
@@ -61,4 +62,6 @@ public interface IBusinessObjet {
 
 
 	Objet getObjetComplet(Objet objet);
+	
+	Echange creerEchange(Objet objet, Utilisateur userA, Utilisateur userB);
 }

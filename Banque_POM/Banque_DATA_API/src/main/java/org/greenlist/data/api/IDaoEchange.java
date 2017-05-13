@@ -31,7 +31,7 @@ public interface IDaoEchange {
 	
 	public List<Conclusionechange> getConclusion (Echange echange);
 	
-	
+	public Echange retirerObjet(Objet objet, Echange echange);
 	
 	
 	

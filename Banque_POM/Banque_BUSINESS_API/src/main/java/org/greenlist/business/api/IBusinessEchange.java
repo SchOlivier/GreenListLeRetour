@@ -38,5 +38,7 @@ public interface IBusinessEchange {
 	public Echange conclureEchange(Echange echange, Conclusionechange conclusionechange);
 	
 	public List<Conclusionechange> getConclusion (Echange echange);
+	
+	public Echange majEchange(Echange echange);
 
 }

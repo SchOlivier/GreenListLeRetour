@@ -11,6 +11,7 @@ import javax.ejb.Stateless;
 import org.greenlist.business.api.IBusinessObjet;
 import org.greenlist.data.api.IDaoObjet;
 import org.greenlist.entity.Adresse;
+import org.greenlist.entity.Echange;
 import org.greenlist.entity.Objet;
 import org.greenlist.entity.Photo;
 import org.greenlist.entity.Produit;
@@ -69,5 +70,10 @@ public class BusinessObjet implements IBusinessObjet {
 	@Override
 	public Adresse getAdresse(Objet objet) {
 		return proxyObjet.getAdresse(objet);
+	}
+
+	@Override
+	public Echange creerEchange(Objet objet, Utilisateur userA, Utilisateur userB) {
+		return proxyObjet.creerEchange(objet, userA, userB);
 	}
 }

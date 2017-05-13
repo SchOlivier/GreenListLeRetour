@@ -70,9 +70,11 @@ public class Echange implements java.io.Serializable {
 	@Temporal(TemporalType.DATE)
 	@Column(name = "DATE_CONCLUSION", length = 10)
 	private Date dateConclusion;
+	@Column(name = "VALEUR_USER_A", nullable = false)
+	private int valeur;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "echange")
 	private List<Rdv> rdvs = new ArrayList<>();
-	@ManyToMany(fetch = FetchType.LAZY, cascade=CascadeType.PERSIST)
+	@ManyToMany(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
 	@JoinTable(	name="ECHANGE_OBJET",
 				joinColumns=@JoinColumn(name="ECH_ID"),
 				inverseJoinColumns=@JoinColumn(name="OBJ_ID"))
@@ -277,6 +279,14 @@ public class Echange implements java.io.Serializable {
 
 	public void setEtape(EtapeEchange etape) {
 		this.etape = etape;
+	}
+
+	public int getValeur() {
+		return valeur;
+	}
+
+	public void setValeur(int valeur) {
+		this.valeur = valeur;
 	}
 
 }

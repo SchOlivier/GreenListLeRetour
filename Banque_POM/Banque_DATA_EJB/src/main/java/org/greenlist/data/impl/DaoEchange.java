@@ -27,34 +27,24 @@ public class DaoEchange implements IDaoEchange {
 
 	@PersistenceContext(unitName = "Banque_DATA_EJB")
 	private EntityManager em;
-	
-	
-	private static final String REQUETE_GET_ECHANGE = 
-			" SELECT e FROM Echange e "
-			+ "WHERE e.id = :pEid" ;
-	
-	private static final String REQUETE_GET_USERA =
-			"SELECT e.utilisateurByIdusera FROM Echange e "
-			+ "WHERE e = :pE";
-	
-	private static final String REQUETE_GET_USERB =
-			"SELECT e.utilisateurByIduserb FROM Echange e "
-			+ "WHERE e = :pE";
-	
-	private static final String REQUETE_GET_OBJETS = "SELECT e.objets fROM Echange e "
-															+ "WHERE e.id = :pEid" ;
-	private static final String REQUETE_GET_MESSAGES = "SELECT e.messages FROM Echange e"
-															+ " WHERE e.id = :pEid" ;
-	private static final String REQUETE_GET_RDVS =
-			"SELECT rdv FROM Rdv rdv "
-			+ "INNER JOIN fetch rdv.adresse "
-			+ "INNER JOIN rdv.echange "
-			+ "WHERE rdv.echange.id = :pEid";
-	
-	private static final String REQUETE_GET_CONCLUSION =
-			"SELECT e.conclusionechange FROM Echange e "
-			+ "WHERE e = :pE";
-	
+
+	private static final String REQUETE_GET_ECHANGE = " SELECT e FROM Echange e " + "LEFT JOIN fetch e.objets "
+			+ "WHERE e.id = :pEid";
+
+	private static final String REQUETE_GET_USERA = "SELECT e.utilisateurByIdusera FROM Echange e " + "WHERE e = :pE";
+
+	private static final String REQUETE_GET_USERB = "SELECT e.utilisateurByIduserb FROM Echange e " + "WHERE e = :pE";
+
+	private static final String REQUETE_GET_OBJETS = "SELECT e.objets fROM Echange e " + "WHERE e.id = :pEid";
+	private static final String REQUETE_GET_MESSAGES = "SELECT e.messages FROM Echange e" + " WHERE e.id = :pEid";
+	private static final String REQUETE_GET_RDVS = "SELECT rdv FROM Rdv rdv " + "INNER JOIN fetch rdv.adresse "
+			+ "INNER JOIN rdv.echange " + "WHERE rdv.echange.id = :pEid";
+
+	private static final String REQUETE_GET_CONCLUSION = "SELECT e.conclusionechange FROM Echange e " + "WHERE e = :pE";
+
+	private static final String REQUETE_RETIRER_OBJET = "DELETE FROM ECHANGE_OBJET "
+			+ "WHERE ECH_ID = :EId AND OBJ_ID = :OId";
+
 	@Override
 	public Echange creerEchange(Echange echange) {
 		em.persist(echange);
@@ -63,16 +53,14 @@ public class DaoEchange implements IDaoEchange {
 
 	@Override
 	public Echange GetEchange(int IdEchange) {
-		Query query = em.createQuery(REQUETE_GET_ECHANGE).
-				setParameter("pEid", IdEchange);
-		return (Echange)query.getSingleResult();
+		Query query = em.createQuery(REQUETE_GET_ECHANGE).setParameter("pEid", IdEchange);
+		return (Echange) query.getSingleResult();
 	}
-	
+
 	@Override
 	public Utilisateur GetUtilisateurA(Echange echange) {
-		Query query = em.createQuery(REQUETE_GET_USERA).
-				setParameter("pE", echange);
-		Utilisateur user = (Utilisateur)query.getSingleResult();
+		Query query = em.createQuery(REQUETE_GET_USERA).setParameter("pE", echange);
+		Utilisateur user = (Utilisateur) query.getSingleResult();
 		em.merge(user);
 		user = recupererDonneesUtilisateur(user);
 		return user;
@@ -80,25 +68,23 @@ public class DaoEchange implements IDaoEchange {
 
 	@Override
 	public Utilisateur GetUtilisateurB(Echange echange) {
-		Query query = em.createQuery(REQUETE_GET_USERB).
-				setParameter("pE", echange);
-		Utilisateur user = (Utilisateur)query.getSingleResult();
+		Query query = em.createQuery(REQUETE_GET_USERB).setParameter("pE", echange);
+		Utilisateur user = (Utilisateur) query.getSingleResult();
 		em.merge(user);
 		user = recupererDonneesUtilisateur(user);
 		return user;
 	}
 
-	
-	private Utilisateur recupererDonneesUtilisateur(Utilisateur user){
+	private Utilisateur recupererDonneesUtilisateur(Utilisateur user) {
 		List<Objet> objets = user.getObjets();
 		objets.size();
-		for (Objet o:objets){
+		for (Objet o : objets) {
 			List<Photo> photos = o.getPhotos();
 			photos.size();
 		}
 		List<Liste> listes = user.getListes();
 		listes.size();
-		for (Liste l:listes){
+		for (Liste l : listes) {
 			List<Souhait> souhaits = l.getSouhaits();
 			souhaits.size();
 		}
@@ -107,43 +93,45 @@ public class DaoEchange implements IDaoEchange {
 
 	@Override
 	public Echange majEchange(Echange echange) {
-	em.merge(echange);
+		em.merge(echange);
 		return echange;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Objet> getObjets(Echange echange) {
-		Query query = em.createQuery(REQUETE_GET_OBJETS).
-				setParameter("pEid", echange.getId());
+		Query query = em.createQuery(REQUETE_GET_OBJETS).setParameter("pEid", echange.getId());
 		return query.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Message> getMessages(Echange echange) {
-		Query query = em.createQuery(REQUETE_GET_MESSAGES).
-				setParameter("pEid", echange.getId());
-		
+		Query query = em.createQuery(REQUETE_GET_MESSAGES).setParameter("pEid", echange.getId());
+
 		return query.getResultList();
 	}
-
-	
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Rdv> getRdv(Echange echange) {
-		Query query = em.createQuery(REQUETE_GET_RDVS).
-				setParameter("pEid", echange.getId());
+		Query query = em.createQuery(REQUETE_GET_RDVS).setParameter("pEid", echange.getId());
 		return query.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Conclusionechange> getConclusion(Echange echange) {
-		Query query = em.createQuery(REQUETE_GET_CONCLUSION).
-				setParameter("pE", echange);
+		Query query = em.createQuery(REQUETE_GET_CONCLUSION).setParameter("pE", echange);
 		return query.getResultList();
+	}
+
+	@Override
+	public Echange retirerObjet(Objet objet, Echange echange) {
+		Query query = em.createNativeQuery(REQUETE_RETIRER_OBJET).setParameter("EId", echange.getId())
+				.setParameter("OId", objet.getId());
+		query.executeUpdate();
+		return echange;
 	}
 
 }

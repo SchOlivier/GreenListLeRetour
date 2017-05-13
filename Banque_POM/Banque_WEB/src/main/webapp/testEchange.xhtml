@@ -10,11 +10,10 @@
 <h:body>
 	<h:panelGroup>
 		<h:form class="echange">
-			<div>#{mbEchange.echange.dateCreation}</div>
-			<div>#{mbEchange.userA.nom} #{mbEchange.userA.objets.get(0).libelle}</div>
-			<div>#{mbEchange.userB.nom} #{mbEchange.userB.objets.get(0).libelle}</div>
-			<div>#{mbEchange.rdvs.get(0).date} #{mbEchange.rdvs.get(0).adresse.latitude}</div>
-			<div>#{mbEchange.conclusion.libelle}</div>
+			<div>#{mbEchange.userB.prenom}</div>
+			<div>
+				<h:commandButton action="#{mbEchange.testMethod(1)}" value="testButton" />
+			</div>	
 		</h:form>
 	</h:panelGroup>
 </h:body>

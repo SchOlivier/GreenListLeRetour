@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.greenlist.entity.Adresse;
 import org.greenlist.entity.Domaine;
+import org.greenlist.entity.Echange;
 import org.greenlist.entity.Groupe;
 import org.greenlist.entity.Objet;
 import org.greenlist.entity.Photo;
@@ -26,5 +27,6 @@ public interface IDaoObjet {
 	
 	List<Photo> getPhotos(Objet objet);
 	
+	Echange creerEchange(Objet objet, Utilisateur userA, Utilisateur userB);
 
 }

@@ -1,5 +1,7 @@
 package org.greenlist.data.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Remote;
@@ -11,6 +13,7 @@ import javax.persistence.Query;
 import org.greenlist.data.api.IDaoObjet;
 import org.greenlist.entity.Adresse;
 import org.greenlist.entity.Domaine;
+import org.greenlist.entity.Echange;
 import org.greenlist.entity.Groupe;
 import org.greenlist.entity.Objet;
 import org.greenlist.entity.Photo;
@@ -213,5 +216,19 @@ public class DaoObjet implements IDaoObjet {
 	@Override
 	public Adresse getAdresse(Objet objet) {
 		return (Adresse) em.createQuery(REQUETE_GET_ADRESSE).setParameter("pIdObjet", objet.getId()).getSingleResult();
+	}
+
+	@Override
+	public Echange creerEchange(Objet objet, Utilisateur userA, Utilisateur userB) {
+		Echange echange = new Echange();
+		echange.setDateCreation(new Date());
+		echange.setUtilisateurByIdusera(userA);
+		echange.setUtilisateurByIduserb(userB);
+		List<Objet> objets = new ArrayList<>();
+		objets.add(objet);
+		echange.setObjets(objets);
+		echange.setHasvalidatedusera(true);
+		em.persist(echange);
+		return echange;
 	}
 }
