@@ -1,5 +1,6 @@
 package org.greenlist.business.impl;
 
+import java.io.ObjectStreamConstants;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -8,6 +9,7 @@ import javax.ejb.Stateless;
 
 import org.greenlist.business.api.IBusinessEchange;
 import org.greenlist.data.api.IDaoEchange;
+import org.greenlist.data.api.IDaoObjet;
 import org.greenlist.entity.Conclusionechange;
 import org.greenlist.entity.Echange;
 import org.greenlist.entity.Message;
@@ -22,6 +24,9 @@ public class BusinessEchange implements IBusinessEchange {
 
 	@EJB
 	private IDaoEchange proxyEchange;
+	
+	@EJB
+	private IDaoObjet proxyObjet;
 
 	// CRUD EChange 
 	@Override
@@ -31,9 +36,20 @@ public class BusinessEchange implements IBusinessEchange {
 
 	@Override
 	public Echange GetEchange( int idEchange) {
-
+		Echange echange = proxyEchange.GetEchange(idEchange);
+		List<Objet> objCOmplet = echange.getObjets();
 		
-		return proxyEchange.GetEchange(idEchange);
+		
+
+		for (Objet objet : objCOmplet){
+			 proxyObjet.getObjetByIdWithProduitAndTA(objet.getId());
+		}
+		
+		
+		echange.setObjets(objCOmplet);
+		
+		
+		return echange;
 	}
 
 	
@@ -130,6 +146,16 @@ public class BusinessEchange implements IBusinessEchange {
 		return proxyEchange.majEchange(echange);
 	}
 
+	public IDaoEchange getProxyEchange() {
+		return proxyEchange;
+	}
 
+	public void setProxyEchange(IDaoEchange proxyEchange) {
+		this.proxyEchange = proxyEchange;
+	}
+
+ // get set 
+	
+	
 	
 }

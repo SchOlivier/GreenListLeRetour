@@ -35,7 +35,7 @@ public class DaoEchange implements IDaoEchange {
 
 	private static final String REQUETE_GET_USERB = "SELECT e.utilisateurByIduserb FROM Echange e " + "WHERE e = :pE";
 
-	private static final String REQUETE_GET_OBJETS = "SELECT e.objets fROM Echange e " + "WHERE e.id = :pEid";
+	private static final String REQUETE_GET_OBJETS = "SELECT e.objets o fROM Echange e inner join fetch o.produit inner join fetch o.trancheAge " + "WHERE e.id = :pEid";
 	private static final String REQUETE_GET_MESSAGES = "SELECT e.messages FROM Echange e" + " WHERE e.id = :pEid";
 	private static final String REQUETE_GET_RDVS = "SELECT rdv FROM Rdv rdv " + "INNER JOIN fetch rdv.adresse "
 			+ "INNER JOIN rdv.echange " + "WHERE rdv.echange.id = :pEid";

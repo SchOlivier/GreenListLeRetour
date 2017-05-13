@@ -24,7 +24,14 @@ public class EchangeManagedBean {
 
 	@EJB
 	private IBusinessEchange proxyEchange;
+	@EJB
+	private IBusinessUtilisateur proxyUtilisateur;
+	@EJB
+	private IBusinessObjet proxyObjet;
+	@EJB
+	private IBusinessUtilisateur proxyUser;
 
+	
 	private Echange echange;
 	private Utilisateur userA;
 	private Utilisateur userB;
@@ -32,13 +39,10 @@ public class EchangeManagedBean {
 	private Conclusionechange conclusion;
 	private List<Objet> objets;
 
-	private static final int IDECHANGE = 2;
+	
+	private static final int IDECHANGE = 1;
 
 	// TODO: retirer ces attributs à la fin des tests
-	@EJB
-	private IBusinessObjet proxyObjet;
-	@EJB
-	private IBusinessUtilisateur proxyUser;
 
 	// METHODE DE TEST
 	public void testMethod(int userId) {
@@ -63,6 +67,7 @@ public class EchangeManagedBean {
 		userB = proxyEchange.GetUtilisateurB(echange);
 		rdvs = proxyEchange.getRdv(echange);
 		objets = echange.getObjets();
+		
 		List<Conclusionechange> conclus = proxyEchange.getConclusion(echange);
 		if (conclus.size() > 0) {
 			conclusion = conclus.get(0);
@@ -199,6 +204,21 @@ public class EchangeManagedBean {
 		echange.setHasvalidateduserb(false);
 	}
 
+	
+	// de l'affichage de l utilisateur 
+	
+	public int userMoyenne(Utilisateur utilisateur){
+		return proxyUtilisateur.recupererMoyenne(utilisateur);
+	}
+	
+	public int userAvis(Utilisateur utilisateur){
+		return proxyUtilisateur.recupererNbAvis(utilisateur);
+		
+	}
+	
+	public int userXP(Utilisateur utilisateur){
+		return proxyUtilisateur.recupererNbEchangesValide(utilisateur);
+	}
 	// Getters, Setters
 
 	public IBusinessEchange getProxyEchange() {
