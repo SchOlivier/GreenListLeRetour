@@ -63,10 +63,14 @@ public class DaoEchange implements IDaoEchange {
 	private static final String REQUETE_GET_NOTES =
 			"SELECT e.notes FROM Echange e "
 			+ "WHERE e.id = :peId";
-			
-//			"SELECT n FROM Note n "
-//			+ "INNER JOIN n.echange "
-//			+ "WHERE n.echange.id = :peId";
+	
+	private static final String GET_CONCLUSION_BY_ID =
+			"SELECT c FROM Conclusionechange c "
+			+ "WHERE c.id = :pCId";
+	
+	private static final String SUPPRIMER_RDVS =
+			"DELETE FROM RDV "
+			+ "WHERE RDV.IDECHANGE = :pEId";
 	
 	@Override
 	public Echange creerEchange(Echange echange) {
@@ -142,11 +146,18 @@ public class DaoEchange implements IDaoEchange {
 		return query.getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<Conclusionechange> getConclusion(Echange echange) {
+	public Conclusionechange getConclusion(Echange echange) {
 		Query query = em.createQuery(REQUETE_GET_CONCLUSION).setParameter("pE", echange);
-		return query.getResultList();
+		Conclusionechange conclusion;
+		// la conclusion n'est pas nécessairement rattachée à l'échange, 
+		// du coup try/catch au cas où il n'y ait rien à récuperer.
+		try {
+			conclusion = (Conclusionechange) query.getSingleResult();
+		} catch (Exception e) {
+			conclusion = null;
+		}
+		return conclusion;
 	}
 
 	@Override
@@ -165,8 +176,28 @@ public class DaoEchange implements IDaoEchange {
 
 	@Override
 	public void ajouterRdv(Rdv rdv) {
+		Query query = em.createNativeQuery(SUPPRIMER_RDVS).setParameter("pEId", rdv.getEchange().getId());
+		query.executeUpdate();
 		em.persist(rdv);
 		
+	}
+
+	@Override
+	public void majRdv(Rdv rdv) {
+		em.merge(rdv);
+	}
+
+	@Override
+	public Conclusionechange getConclusionById(int id) {
+		return (Conclusionechange) em.createQuery(GET_CONCLUSION_BY_ID)
+				.setParameter("pCId", id)
+				.getSingleResult();
+	}
+
+	@Override
+	public Note noterEchange(Note note) {
+		em.persist(note);
+		return note;
 	}
 
 }

@@ -587,10 +587,10 @@ INSERT INTO photo (ID, URL, IDOBJET) VALUES (58,'/img/58.jpg',48)
 INSERT INTO photo (ID, URL, IDOBJET) VALUES (59,'/img/59.jpg',49)
 INSERT INTO photo (ID, URL, IDOBJET) VALUES (60,'/img/60.jpg',50)
 
-INSERT into rdv (ID, IDADRESSE, IDECHANGE, DATE) values (1,1,4,'2017-05-21');
-INSERT into rdv (ID, IDADRESSE, IDECHANGE, DATE) values (2,2,5,'2017-04-25');
-INSERT into rdv (ID, IDADRESSE, IDECHANGE, DATE) values (3,2,6,'2017-04-29');
-INSERT into rdv (ID, IDADRESSE, IDECHANGE, DATE) values (4,1,7,'2017-04-22');
+INSERT into rdv (ID, IDADRESSE, IDECHANGE, DATE, accepte) values (1,1,4,'2017-05-21', 1);
+INSERT into rdv (ID, IDADRESSE, IDECHANGE, DATE, accepte) values (2,2,5,'2017-04-25', 1);
+INSERT into rdv (ID, IDADRESSE, IDECHANGE, DATE, accepte) values (3,2,6,'2017-04-29', 1);
+INSERT into rdv (ID, IDADRESSE, IDECHANGE, DATE, accepte) values (4,1,7,'2017-04-22', 1);
 
 INSERT into NOTE (ID, IDECHANGE, IDUTILISATEURNOTE, IDUTILISATEURESTNOTE, NOTE, APPRECIATION) values (1,7,1,2,5,'AlexT est réactif et arrangeant, echange très agréable');
 INSERT into NOTE (ID, IDECHANGE, IDUTILISATEURNOTE, IDUTILISATEURESTNOTE, NOTE, APPRECIATION) values (2,7,2,1,5,'Rien à dire, l''échange s''est très bien déroulé.');

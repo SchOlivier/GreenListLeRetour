@@ -26,13 +26,15 @@ public class Rdv implements java.io.Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false)
 	private int id;
+	@Column(name = "ACCEPTE", nullable=false)
+	private boolean accepte;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IDADRESSE", nullable = false)
 	private Adresse adresse;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "IDECHANGE")
 	private Echange echange;
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATE", nullable = false, length = 10)
 	private Date date;
 
@@ -82,6 +84,14 @@ public class Rdv implements java.io.Serializable {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public boolean isAccepte() {
+		return accepte;
+	}
+
+	public void setAccepte(boolean accepte) {
+		this.accepte = accepte;
 	}
 
 }

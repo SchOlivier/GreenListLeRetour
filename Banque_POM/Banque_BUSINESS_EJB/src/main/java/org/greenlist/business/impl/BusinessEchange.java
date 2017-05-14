@@ -120,7 +120,7 @@ public class BusinessEchange implements IBusinessEchange {
 	}
 
 	@Override
-	public List<Conclusionechange> getConclusion(Echange echange) {
+	public Conclusionechange getConclusion(Echange echange) {
 		return proxyEchange.getConclusion(echange);
 	}
 
@@ -132,6 +132,23 @@ public class BusinessEchange implements IBusinessEchange {
 	@Override
 	public List<Note> getNotes(Echange echange) {
 		return proxyEchange.getNotes(echange);
+	}
+
+	@Override
+	public void accepterRDV(Rdv rdv) {
+		rdv.setAccepte(true);
+		proxyEchange.majRdv(rdv);
+		
+	}
+
+	@Override
+	public Conclusionechange getConclusionById(int idConclusion) {
+		return proxyEchange.getConclusionById(idConclusion);
+	}
+
+	@Override
+	public Note noterEchange(Note note) {
+		return proxyEchange.noterEchange(note);
 	}
 
 

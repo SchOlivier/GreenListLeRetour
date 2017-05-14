@@ -30,13 +30,19 @@ public interface IDaoEchange {
 	
 	public List<Rdv> getRdv(Echange echange);
 	
-	public List<Conclusionechange> getConclusion (Echange echange);
+	public Conclusionechange getConclusion (Echange echange);
 	
 	public Echange retirerObjet(Objet objet, Echange echange);
 
 	public List<Note> getNotes(Echange echange);
 
 	public void ajouterRdv(Rdv rdv);
+	
+	public void majRdv (Rdv rdv);
+	
+	public Conclusionechange getConclusionById(int id);
+	
+	public Note noterEchange (Note note);
 	
 	
 	

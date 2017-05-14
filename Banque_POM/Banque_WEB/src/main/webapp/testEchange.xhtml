@@ -10,15 +10,111 @@
 <h:body>
 	<h:panelGroup>
 		<h:form class="echange">
-			<div>#{mbEchange.userB.nom}</div>
+		
+		Etape de l'échange : <h:outputLabel
+				value="#{mbEchange.echange.etape.libelle}" />
+		<div>
+		Nombre de rdvs : <h:outputLabel value="#{mbEchange.nbRdvs}" />
+		</div>
+			<hr />
+
+			<h3>Initialisation</h3>
 			<div>
-			<p:calendar id="datetime" value="#{mbEchange.dateRdv}" pattern="MM/dd/yyyy HH:mm:ss" />
-				<h:commandButton action="#{mbEchange.testMethod(1)}" value="Créer RDV" />
-				<h:commandButton action="#{mbEchange.testMethod(2)}" value="Valider RDV" />
-			</div>	
-			<div>
-				<h:commandButton action="#{mbEchange.afficherEtape()}" value="Etape ?" />
+				<h:commandButton action="#{mbEchange.testMethod(1)}"
+					value="Valider UserA" />
 			</div>
+			<hr />
+
+			<h3>Négociation</h3>
+			<div>
+				<h:commandButton action="#{mbEchange.testMethod(2)}"
+					value="Ajout Objet 2" />
+			</div>
+			<div>
+				<h:commandButton action="#{mbEchange.testMethod(2)}"
+					value="Ajout Objet 3" />
+			</div>
+			<div>
+				<h:commandButton action="#{mbEchange.testMethod(2)}"
+					value="valider UserA" />
+			</div>
+			<div>
+				<h:inputText value="#{mbEchange.sapins}" />
+				<h:commandButton action="#{mbEchange.testMethod(2)}"
+					value="Ajout Sapins pour userA" />
+			</div>
+			<div>
+				<h:commandButton action="#{mbEchange.testMethod(2)}"
+					value="retrait objet3" />
+			</div>
+			<div>
+				<h:commandButton action="#{mbEchange.testMethod(2)}"
+					value="Valider UserB" />
+			</div>
+			<div>
+				<h:commandButton action="#{mbEchange.testMethod(2)}"
+					value="Valider UserA" />
+			</div>
+			<hr />
+
+			<h3>Prise de RDV</h3>
+			<div>
+				<p:calendar id="datetime" value="#{mbEchange.dateRdv}"
+					pattern="MM/dd/yyyy HH:mm:ss" />
+			</div>
+			<div>
+				<h:commandButton action="#{mbEchange.testMethod(3)}"
+					value="Proposer RDV userA" />
+			</div>
+			<div>
+				<h:commandButton action="#{mbEchange.testMethod(3)}"
+					value="Proposer RDV userB" />
+			</div>
+			<hr />
+
+			<h3>RDV</h3>
+			<div>
+				Vérifie que c'est bon, puis change la date à un truc dans le passé
+				dans la BDD.
+				<h:commandButton action="#{mbEchange.testMethod(4)}"
+					value="Calcul Etape" />
+			</div>
+			<hr />
+			<h3>Conclusion RDV</h3>
+			<div>
+				<h:commandButton action="#{mbEchange.testMethod(5)}"
+					value="enregistrer conclusion A" />
+			</div>
+			<div>
+				<h:commandButton action="#{mbEchange.testMethod(5)}"
+					value="enregistrer conclusion B" />
+			</div>
+			<div>
+				<h:commandButton action="#{mbEchange.testMethod(5)}"
+					value="Valider UserA" />
+			</div>
+			<hr />
+
+			<h3>Notation</h3>
+			<div>
+				Appréciation A :
+				<h:inputText value="#{mbEchange.appreciationA}" />
+				Note A :
+				<h:inputText value="#{mbEchange.noteA}" />
+				<h:commandButton action="#{mbEchange.testMethod(6)}"
+					value="noter userA" />
+			</div>
+			<div>
+				Appréciation B :
+				<h:inputText value="#{mbEchange.appreciationB}" />
+				Note B :
+				<h:inputText value="#{mbEchange.noteB}" />
+				<h:commandButton action="#{mbEchange.testMethod(6)}"
+					value="noter userB" />
+			</div>
+			<hr />
+
+			<h3>Fin</h3>
 		</h:form>
 	</h:panelGroup>
 </h:body>
