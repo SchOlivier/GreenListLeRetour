@@ -131,7 +131,19 @@ public class EchangeManagedBean {
 		}
 		
 		
+		}
 		
+	public Echange ajouterObjet (Objet ajout){
+//		 Objet ajout = new Objet();
+//		 ajout.setId(objetId);
+		
+		return proxyEchange.ajouterObjet(ajout, echange);
+		
+	}
+	
+	private Echange retirerObjet(Objet retrait) {
+		return proxyEchange.retirerObjet(retrait, echange);
+
 	}
 	/**
 	 * Modification du nombre de sapins proposés. La valeur proposée est

@@ -139,7 +139,7 @@
 								<ui:repeat value="#{mbEchange.objetsA}" var="objet">
 									<ul class="echangeLigneObjet">
 										<li class="ordre1"><span
-											class="fa fa-plus-circle fa-2x deepGreyColor"> </span></li>
+											class="fa fa-plus-circle fa-2x deepGreyColor"><h:commandButton action="#{mbEchange.retirerObjet(objet)}" value="+" /></span></li>
 										
 										<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
 										<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
@@ -155,7 +155,7 @@
 								<ui:repeat value="#{mbEchange.objetsB}" var="objet">
 									<ul class="echangeLigneObjet">
 										<li class="ordre1"><span
-											class="fa fa-plus-circle fa-2x deepGreyColor"> </span></li>
+											class="fa fa-plus-circle fa-2x deepGreyColor"><h:commandButton action="#{mbEchange.retirerObjet(objet)}" value="-" /> </span></li>
 										
 										<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
 										<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
@@ -221,7 +221,7 @@
 								<ui:repeat value="#{mbEchange.userA.objets}" var="objet">
 									<ul class="echangeLigneObjet">
 										<li class="ordre1"><span
-											class="fa fa-plus-circle fa-2x deepGreyColor"> </span></li>
+											class="fa fa-plus-circle fa-2x deepGreyColor"> <h:commandButton action="#{mbEchange.ajouterObjet(objet)}" value="+" /> </span></li>
 										
 										<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
 										<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
@@ -234,7 +234,7 @@
 								<ui:repeat value="#{mbEchange.userB.objets}" var="objet">
 									<ul class="echangeLigneObjet">
 										<li class="ordre1"><span
-											class="fa fa-plus-circle fa-2x deepGreyColor"> </span></li>
+											class="fa fa-plus-circle fa-2x deepGreyColor">  <h:commandButton action="#{mbEchange.ajouterObjet(objet)}" value="+" /></span></li>
 										
 										<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
 										<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
