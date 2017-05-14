@@ -20,8 +20,11 @@ public interface IBusinessEchange {
 	public Utilisateur GetUtilisateurB(Echange echange);
 
 	public List<Objet> getObjets(Echange echange);
+	
+	public List<Objet> getObjetUserEchange( Echange echange , Utilisateur utilisateur);
 
 	public List<Message> getMessages(Echange echange);
+	
 
 	public List<Message> envoyerMessage(Echange echange, Message message);
 

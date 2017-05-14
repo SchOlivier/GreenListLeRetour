@@ -1,0 +1,262 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>GreenList - Bienvenue</title>
+
+</h:head>
+<h:body>
+	<ui:composition template="/WEB-INF/templates/base.xhtml">
+		<ui:define name="content">
+			<!-- Contenu Principal -->
+			<div class="mainPanel">
+				<!-- Echange Progress Steps Bar -->
+
+				<ol class="progress-track">
+					<li class="progress-done">
+						<center>
+							<div class="icon-wrap">
+								<span class="fa fa-check"></span>
+							</div>
+							<span class="progress-text"> Initialisation </span>
+						</center>
+					</li>
+
+					<li class="progress-done progress-current">
+						<center>
+							<div class="icon-wrap">
+								<span class="fa fa-spinner fa-pulse"></span>
+							</div>
+							<span class="progress-text"> Négociation </span>
+						</center>
+					</li>
+
+					<li class="progress-todo">
+						<center>
+							<div class="icon-wrap">
+								<span></span>
+							</div>
+							<span class="progress-text">Rendez-vous</span>
+						</center>
+					</li>
+
+					<li class="progress-todo">
+						<center>
+							<div class="icon-wrap">
+								<span></span>
+							</div>
+							<span class="progress-text">Transaction</span>
+						</center>
+					</li>
+					<li class="progress-todo">
+						<center>
+							<div class="icon-wrap">
+								<span></span>
+							</div>
+							<span class="progress-text">Confirmation</span>
+						</center>
+					</li>
+				</ol>
+
+				<!-- Echange Etape -->
+
+				<!-- Page titre -->
+
+
+				<div class="pageTitleBloc">
+					<div class="pageTitleIcon">
+						<span class="fa-2x">2</span>
+					</div>
+					<div class="pageTitle">Négocier Echange</div>
+				</div>
+
+				<!-- Page Content -->
+
+				<div class="mainEchange">
+					<div class="echangeVersusBloc">
+						<div class="pageSubTitle">
+							<span>Moi</span>
+						</div>
+						<div class="pageSubTitle">
+							<span>Autre</span>
+						</div>
+					</div>
+					<div class="echangeVersusBloc">
+						<div class="userEchangeBloc">
+							<div>
+								<span class="fa fa-user-circle-o fa-3x userAvatar"></span>
+								<!-- <img id="imgProfil" class="userAvatar" /> -->
+							</div>
+							<ul>
+								<li><a>#{mbEchange.userA.pseudo}</a></li>
+								<li><span>Confirmé
+										#{mbEchange.userXP(mbEchange.userA)}</span></li>
+								<li>#{mbEchange.userMoyenne(mbEchange.userA)} <span
+									class="fa fa-star smallStar"></span><span
+									class="fa fa-star smallStar"></span><span
+									class="fa fa-star smallStar"></span><span
+									class="fa fa-star smallStar"></span><span
+									class="fa fa-star-half-o smallStar"></span>
+								</li>
+								<li><span><a>#{mbEchange.userAvis(mbEchange.userA)}
+											Avis</a></span></li>
+							</ul>
+						</div>
+
+						<div class="userEchangeBloc">
+							<div>
+								<span class="fa fa-user-circle-o fa-3x userAvatar"></span>
+								<!-- <img id="imgProfil" class="userAvatar" /> -->
+							</div>
+							<ul>
+								<li><a>#{mbEchange.userB.pseudo}</a></li>
+								<li><span>Confirmé
+										#{mbEchange.userXP(mbEchange.userB)}</span></li>
+								<li>#{mbEchange.userMoyenne(mbEchange.userB)} <span
+									class="fa fa-star smallStar"></span><span
+									class="fa fa-star smallStar"></span><span
+									class="fa fa-star smallStar"></span><span
+									class="fa fa-star smallStar"></span><span
+									class="fa fa-star-half-o smallStar"></span>
+								</li>
+								<li><span><a>#{mbEchange.userAvis(mbEchange.userA)}
+											Avis</a></span></li>
+							</ul>
+						</div>
+					</div>
+
+					<form class="mainForm">
+
+						<div class="echangeOneBloc">
+							<span>creer le #{mbEchange.echange.dateCreation}</span>
+						</div>
+
+						<div class="echangeVersusBloc">
+							<section class="echangeObjetListe blocGauche">
+
+								<ui:repeat value="#{mbEchange.objetsA}" var="objet">
+									<ul class="echangeLigneObjet">
+										<li class="ordre1"><span
+											class="fa fa-plus-circle fa-2x deepGreyColor"> </span></li>
+										
+										<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
+										<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
+										<li class="fa fa-snowflake-o ordre5"></li>
+									</ul>
+
+								</ui:repeat>
+
+
+
+							</section>
+							<section class="echangeObjetListe blocDroit">
+								<ui:repeat value="#{mbEchange.objetsB}" var="objet">
+									<ul class="echangeLigneObjet">
+										<li class="ordre1"><span
+											class="fa fa-plus-circle fa-2x deepGreyColor"> </span></li>
+										
+										<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
+										<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
+										<li class="fa fa-snowflake-o ordre5"></li>
+									</ul>
+
+								</ui:repeat>
+								
+							</section>
+						</div>
+
+						<div class="echangeVersusBloc">
+							<ul class="userTotal">
+								<li class="ordre1">Total</li>
+								<li class="ordre2">#{mbEchange.totalValeur(mbEchange.objetsA)}</li>
+								<li class="fa fa-snowflake-o ordre5"></li>
+							</ul>
+							<ul class="userTotal ordreInverse">
+								<li class="ordre1">Total</li>
+								<li class="ordre2">#{mbEchange.totalValeur(mbEchange.objetsB)}</li>
+								<li class="fa fa-snowflake-o ordre5"></li>
+							</ul>
+						</div>
+						<div class="echangeVersusBloc">
+							<div class="validateState">
+								<div class="pageBouton">
+									<div class="objetItem">Valider</div>
+								</div>
+								ou<span class="fa fa-check-square-o"></span>
+							</div>
+							<div class="validateState">
+								<span class="fa fa-check-square-o fa-blink"></span> ou <span
+									class="fa fa-square-o"></span>
+							</div>
+						</div>
+
+						<div class="echangeVersusBloc">
+							<div class="tabTitle moreTab">
+								<span class="arrowButton fa fa-caret-left"></span> <span
+									class="fa fa-magic"></span>
+							</div>
+							<div class="tabTitle moreTab">
+								<span class="fa fa-magic"></span> <span
+									class="arrowButton fa fa-caret-right"></span>
+							</div>
+						</div>
+
+						
+						<div class="echangeVersusBloc">
+							<div class="tabTitle moreTab">
+								<span class="arrowButton fa fa-caret-left"></span> <span
+									class="fa fa-gift"></span>
+							</div>
+							<div class="tabTitle moreTab">
+								<span class="fa fa-gift"></span> <span
+									class="arrowButton fa fa-caret-right"></span>
+							</div>
+						</div>
+
+						<div class="echangeVersusBloc">
+							<section class="echangeObjetListe blocGauche">
+
+								<ui:repeat value="#{mbEchange.userA.objets}" var="objet">
+									<ul class="echangeLigneObjet">
+										<li class="ordre1"><span
+											class="fa fa-plus-circle fa-2x deepGreyColor"> </span></li>
+										
+										<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
+										<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
+										<li class="fa fa-snowflake-o ordre5"></li>
+									</ul>
+
+								</ui:repeat>
+							</section>
+							<section class="echangeObjetListe blocDroit">
+								<ui:repeat value="#{mbEchange.userB.objets}" var="objet">
+									<ul class="echangeLigneObjet">
+										<li class="ordre1"><span
+											class="fa fa-plus-circle fa-2x deepGreyColor"> </span></li>
+										
+										<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
+										<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
+										<li class="fa fa-snowflake-o ordre5"></li>
+									</ul>
+
+								</ui:repeat>
+							</section>
+						</div>
+						<div class="boutonsCenterBloc">
+							<div class="pageBouton">
+								<div class="objetItem">Annuler</div>
+							</div>
+
+						</div>
+					</form>
+				</div>
+
+				<!-- Chat Bloc -->
+			</div>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

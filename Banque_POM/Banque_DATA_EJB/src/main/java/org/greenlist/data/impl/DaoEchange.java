@@ -1,5 +1,6 @@
 package org.greenlist.data.impl;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.Remote;
@@ -35,7 +36,8 @@ public class DaoEchange implements IDaoEchange {
 
 	private static final String REQUETE_GET_USERB = "SELECT e.utilisateurByIduserb FROM Echange e " + "WHERE e = :pE";
 
-	private static final String REQUETE_GET_OBJETS = "SELECT e.objets o fROM Echange e inner join fetch o.produit inner join fetch o.trancheAge " + "WHERE e.id = :pEid";
+	private static final String REQUETE_GET_OBJETS = "SELECT e.objets  fROM Echange e " + "WHERE e.id = :pEid";
+	private static final String REQUETE_COMPLETE_OBJET ="SELECT o FROM Objet o inner join fetch o.produit inner join fetch o.trancheAge WHERE o.id = :pidObjet";
 	private static final String REQUETE_GET_MESSAGES = "SELECT e.messages FROM Echange e" + " WHERE e.id = :pEid";
 	private static final String REQUETE_GET_RDVS = "SELECT rdv FROM Rdv rdv " + "INNER JOIN fetch rdv.adresse "
 			+ "INNER JOIN rdv.echange " + "WHERE rdv.echange.id = :pEid";
@@ -100,8 +102,18 @@ public class DaoEchange implements IDaoEchange {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Objet> getObjets(Echange echange) {
+		
 		Query query = em.createQuery(REQUETE_GET_OBJETS).setParameter("pEid", echange.getId());
-		return query.getResultList();
+		List<Objet> objets = query.getResultList();
+		List<Objet> objetsComplets = null;
+		
+		System.out.println(objets.size());
+		for (Objet objet : objets ){
+			em.merge(objet);
+			objet.getTrancheAge();
+			objet.getProduit();
+		}
+		return objets;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -134,4 +146,23 @@ public class DaoEchange implements IDaoEchange {
 		return echange;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Objet> getObjetUserEchange(Echange echange, Utilisateur utilisateur) {
+		
+		Query query = em.createQuery(REQUETE_GET_OBJETS).setParameter("pEid", echange.getId());
+	
+		List<Objet> objets = query.getResultList();
+		
+		
+		   Iterator<Objet> i = objets.iterator();
+	        while (i.hasNext()){
+	            if (i.next().getUtilisateur().getId() != utilisateur.getId()){
+	                i.remove();
+	            }
+	        }
+		
+				return objets;
+
+}
 }

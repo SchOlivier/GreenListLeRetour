@@ -57,7 +57,16 @@ public class BusinessEchange implements IBusinessEchange {
 	
 	@Override
 	public List<Objet> getObjets(Echange echange) {
-		return proxyEchange.getObjets(echange);
+		
+		List<Objet> objets = proxyEchange.getObjets(echange);
+		
+		for (Objet objet : objets){
+		
+			proxyObjet.getObjetByIdWithProduitAndTA(objet.getId());
+			
+		}
+		
+		return objets;
 	}
 	
 	@Override
@@ -74,7 +83,7 @@ public class BusinessEchange implements IBusinessEchange {
 		return proxyEchange.retirerObjet(objet, echange);
 	}
 
-
+	
 
 	// partie RDV 
 	
@@ -154,6 +163,11 @@ public class BusinessEchange implements IBusinessEchange {
 		this.proxyEchange = proxyEchange;
 	}
 
+	@Override
+	public List<Objet> getObjetUserEchange(Echange echange, Utilisateur utilisateur) {
+		
+		return proxyEchange.getObjetUserEchange(echange,  utilisateur);
+	}
  // get set 
 	
 	

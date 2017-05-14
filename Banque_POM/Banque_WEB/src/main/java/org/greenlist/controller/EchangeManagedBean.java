@@ -1,6 +1,7 @@
 package org.greenlist.controller;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -38,9 +39,11 @@ public class EchangeManagedBean {
 	private List<Rdv> rdvs;
 	private Conclusionechange conclusion;
 	private List<Objet> objets;
+	private List<Objet> objetsA;
+	private List<Objet> objetsB;
 
 	
-	private static final int IDECHANGE = 1;
+	private static final int IDECHANGE = 2;
 
 	// TODO: retirer ces attributs à la fin des tests
 
@@ -66,7 +69,7 @@ public class EchangeManagedBean {
 		userA = proxyEchange.GetUtilisateurA(echange);
 		userB = proxyEchange.GetUtilisateurB(echange);
 		rdvs = proxyEchange.getRdv(echange);
-		objets = echange.getObjets();
+		objets = proxyEchange.getObjets(echange);
 		
 		List<Conclusionechange> conclus = proxyEchange.getConclusion(echange);
 		if (conclus.size() > 0) {
@@ -74,7 +77,16 @@ public class EchangeManagedBean {
 		} else {
 			conclusion = null;
 		}
-	}
+		objetsA = proxyEchange.getObjetUserEchange(echange, userA);
+		
+		objetsB = proxyEchange.getObjetUserEchange(echange, userB);
+		
+		
+		
+        
+        }
+		
+	
 
 	// ETAPE 1 - INITIALISATION
 
@@ -110,7 +122,17 @@ public class EchangeManagedBean {
 			proxyEchange.retirerObjet(objet, echange);
 		}
 	}
-
+	public  void getObjetsEchangeUser(Utilisateur utilisateurA){
+		List<Objet> objetsUser = null;
+		for (Objet objet : objets){
+			if (objet.getUtilisateur().getId() == utilisateurA.getId()){
+				objetsA.add(objet);
+			}else objetsB.add(objet);
+		}
+		
+		
+		
+	}
 	/**
 	 * Modification du nombre de sapins proposés. La valeur proposée est
 	 * enregistrée pour l'uilisateur A. Du coup, si c'est B qui propose, cette
@@ -205,6 +227,9 @@ public class EchangeManagedBean {
 	}
 
 	
+	
+	
+	
 	// de l'affichage de l utilisateur 
 	
 	public int userMoyenne(Utilisateur utilisateur){
@@ -219,6 +244,20 @@ public class EchangeManagedBean {
 	public int userXP(Utilisateur utilisateur){
 		return proxyUtilisateur.recupererNbEchangesValide(utilisateur);
 	}
+		// calcul sur listes 
+		
+	public int totalValeur (List<Objet> laliste){
+		int total = 0 ;
+		
+		for (Objet objet : laliste){
+			total = total + objet.getValeur();
+		}
+		
+		return total;
+		
+		
+	}
+	
 	// Getters, Setters
 
 	public IBusinessEchange getProxyEchange() {
@@ -277,4 +316,22 @@ public class EchangeManagedBean {
 		this.objets = objets;
 	}
 
+	public List<Objet> getObjetsA() {
+		return objetsA;
+	}
+
+	public void setObjetsA(List<Objet> objetsA) {
+		this.objetsA = objetsA;
+	}
+
+	public List<Objet> getObjetsB() {
+		return objetsB;
+	}
+
+	public void setObjetsB(List<Objet> objetsB) {
+		this.objetsB = objetsB;
+	}
+
+	
+	
 }
