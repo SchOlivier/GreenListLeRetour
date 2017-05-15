@@ -1,0 +1,240 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:head>
+	<title>Echange - Prise de Rendez-vous</title>
+	<f:metadata>
+		<f:event listener="#{mbEchange.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+</h:head>
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/base.xhtml">
+		<ui:define name="content">
+			<h:panelGroup class="mainPanel">
+				<h:form class="mainForm">
+					<!-- Echange Progress Steps Bar -->
+
+					<ol class="progress-track">
+						<li class="progress-done">
+							<center>
+								<div class="icon-wrap">
+									<span class="fa fa-check"></span>
+								</div>
+								<span class="progress-text"> Initialisation </span>
+							</center>
+						</li>
+						<li class="progress-done">
+							<center>
+								<div class="icon-wrap">
+									<span class="fa fa-check"></span>
+								</div>
+								<span class="progress-text"> Négociation </span>
+							</center>
+						</li>
+
+						<li class="progress-done progress-current">
+							<center>
+								<div class="icon-wrap">
+									<span class="fa fa-spinner fa-pulse"></span>
+								</div>
+								<span class="progress-text"> Rendez-Vous </span>
+							</center>
+						</li>
+
+						<li class="progress-todo">
+							<center>
+								<div class="icon-wrap">
+									<span></span>
+								</div>
+								<span class="progress-text">Transaction</span>
+							</center>
+						</li>
+						<li class="progress-todo">
+							<center>
+								<div class="icon-wrap">
+									<span></span>
+								</div>
+								<span class="progress-text">Confirmation</span>
+							</center>
+						</li>
+					</ol>
+
+					<!-- Echange Etape -->
+
+					<!-- Page titre -->
+
+
+					<div class="pageTitleBloc">
+						<div class="pageTitleIcon">
+							<span class="fa-2x">3</span>
+						</div>
+						<div class="pageTitle">Prendre RDV</div>
+					</div>
+
+					<!-- Page Content -->
+
+					<div class="mainEchange">
+						<div class="echangeOneBloc">Proposez une date et un lieu de
+							rendez-vous ou acceptez la proposition actuelle.</div>
+						<div class="calendrierBloc echangeTwoBloc">
+							<div class="dateBloc">
+								<div class="pageSubTitle">Nouveau Rendez-vous</div>
+								<div>
+									Date RDV :
+									<p:calendar id="datetime" value="#{mbEchange.dateRdv}"
+										pattern="MM/dd/yyyy HH:mm" />
+								</div>
+								<ul>
+									<li>Mes Adresses :</li>
+									<ui:repeat var="a" value="#{mbEchange.adresses}">
+										<li><h:selectBooleanCheckbox value="false" />#{a.numeroVoie}
+											#{a.rue} - #{a.ville}</li>
+									</ui:repeat>
+									<li><h:selectBooleanCheckbox value="false" />Autre
+										adresse</li>
+								</ul>
+								<h:panelGroup class="pageBouton"
+									rendered="#{mbEchange.dateProposee == null}">
+									<h:commandButton update="@form" class="objetItem"
+										action="#{mbEchange.proposerRDV()}" value="Proposer" />
+								</h:panelGroup>
+								<h:panelGroup class="pageBouton"
+									rendered="#{mbEchange.dateProposee != null}">
+									<h:commandButton update="@form" class="objetItem"
+										action="#{mbEchange.proposerRDV()}" value="Modifier" />
+								</h:panelGroup>
+
+							</div>
+							<div class="timeBloc">
+								<h:panelGroup id="rdvPropose">
+									<div class="pageSubTitle">Rendez-vous proposé</div>
+									<h:panelGroup rendered="#{mbEchange.dateProposee == null}">
+									Aucun rendez-vous proposé actuellement.
+								</h:panelGroup>
+									<h:panelGroup rendered="#{mbEchange.dateProposee != null}">
+										<h:outputText value="#{mbEchange.dateProposee}">
+											<f:convertDateTime pattern="MM/dd/yyyy HH:mm"/>
+										</h:outputText>
+										<div>#{mbEchange.adresseProposee.numeroVoie}
+											#{mbEchange.adresseProposee.rue} -
+											#{mbEchange.adresseProposee.ville}</div>
+									</h:panelGroup>
+								</h:panelGroup>
+
+							</div>
+
+						</div>
+						<div class="pageSubTitle">Localisation</div>
+						<div class="echangeOneBloc">
+							<div class="mapBloc">
+								<h:panelGroup rendered="#{mbEchange.dateProposee != null}">
+									<p:gmap id="map"
+										center="#{mbEchange.adresseProposee.latitude}, #{mbEchange.adresseProposee.longitude}"
+										zoom="12" type="ROADMAP" style="width:100%;height:400px"
+										model="#{mbEchange.simpleModel}">
+
+									</p:gmap>
+								</h:panelGroup>
+							</div>
+						</div>
+						<div class="boutonsCenterBloc"></div>
+						<div class="echangeVersusBloc">
+							<div class="pageSubTitle">
+								<span>Moi</span>
+							</div>
+							<div class="pageSubTitle">
+								<span>Autre</span>
+							</div>
+						</div>
+						<h:panelGroup rendered="false">
+							<div class="echangeVersusBloc">
+								<div class="userEchangeBloc">
+									<div>
+										<span class="fa fa-user-circle-o fa-3x userAvatar"></span>
+										<!-- <img id="imgProfil" class="userAvatar" /> -->
+									</div>
+									<ul>
+										<li><a>#{mbEchange.moi.pseudo}</a></li>
+										<li><span>Confirmé
+												#{mbEchange.userXP(mbEchange.moi)}</span></li>
+										<li>#{mbEchange.userMoyenne(mbEchange.moi)} <span
+											class="fa fa-star smallStar"></span><span
+											class="fa fa-star smallStar"></span><span
+											class="fa fa-star smallStar"></span><span
+											class="fa fa-star smallStar"></span><span
+											class="fa fa-star-half-o smallStar"></span>
+										</li>
+										<li><span><a>#{mbEchange.userAvis(mbEchange.moi)}
+													Avis</a></span></li>
+									</ul>
+								</div>
+
+								<div class="userEchangeBloc">
+									<div>
+										<span class="fa fa-user-circle-o fa-3x userAvatar"></span>
+										<!-- <img id="imgProfil" class="userAvatar" /> -->
+									</div>
+									<ul>
+										<li><a>#{mbEchange.autre.pseudo}</a></li>
+										<li><span>Confirmé
+												#{mbEchange.userXP(mbEchange.autre)}</span></li>
+										<li>#{mbEchange.userMoyenne(mbEchange.autre)} <span
+											class="fa fa-star smallStar"></span><span
+											class="fa fa-star smallStar"></span><span
+											class="fa fa-star smallStar"></span><span
+											class="fa fa-star smallStar"></span><span
+											class="fa fa-star-half-o smallStar"></span>
+										</li>
+										<li><span><a>#{mbEchange.userAvis(mbEchange.autre)}
+													Avis</a></span></li>
+									</ul>
+								</div>
+							</div>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{mbEchange.dateProposee != null}"
+							class="echangeVersusBloc">
+							<div class="validateState">
+								<h:panelGroup rendered="#{mbEchange.hasValidatedMoi}">
+									<span class="fa fa-check-square-o fa-2x" />Validé
+								</h:panelGroup>
+								<h:panelGroup class="pageBouton"
+									rendered="#{!mbEchange.hasValidatedMoi}">
+									<h:commandButton update="@form" class="objetItem"
+										action="#{mbEchange.valider()}" value="Valider" />
+								</h:panelGroup>
+							</div>
+							<div class="validateState">
+								<h:panelGroup rendered="#{mbEchange.hasValidatedAutre}">
+									<span class="fa fa-check-square-o fa-2x" />#{mbEchange.autre.pseudo}
+										a validé cette proposition
+								</h:panelGroup>
+								<h:panelGroup rendered="#{!mbEchange.hasValidatedAutre}">
+									<span class="fa fa-square-o fa-2x" /> En attente de
+										#{mbEchange.autre.pseudo}
+								</h:panelGroup>
+							</div>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{mbEchange.dateProposee == null}"
+							class="echangeOneBloc fa-lg">
+							Proposez un RDV
+						</h:panelGroup>
+					</div>
+					<!-- Chat Bloc -->
+
+				</h:form>
+			</h:panelGroup>
+		</ui:define>
+	</ui:composition>
+
+	<!-- Scripts Temporaires -->
+
+
+
+</h:body>
+
+</html>

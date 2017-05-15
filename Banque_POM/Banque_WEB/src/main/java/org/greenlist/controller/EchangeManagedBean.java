@@ -31,6 +31,10 @@ import org.greenlist.entity.Rdv;
 import org.greenlist.entity.Utilisateur;
 import org.greenlist.utilitaire.Conclusion;
 import org.greenlist.utilitaire.EtapeEchange;
+import org.primefaces.model.map.DefaultMapModel;
+import org.primefaces.model.map.LatLng;
+import org.primefaces.model.map.MapModel;
+import org.primefaces.model.map.Marker;
 
 @ManagedBean(name = "mbEchange")
 @SessionScoped
@@ -42,8 +46,6 @@ public class EchangeManagedBean {
 	private IBusinessUtilisateur proxyUtilisateur;
 	@EJB
 	private IBusinessObjet proxyObjet;
-	@EJB
-	private IBusinessUtilisateur proxyUser;
 	@EJB
 	private IBusinessAdresse proxyAdresse;
 	
@@ -66,10 +68,13 @@ public class EchangeManagedBean {
 	private int noteB;
 	private String appreciationB;
 	private List<Adresse> adresses;
-	private Map<Integer, Boolean> selectedAdresses;
-	private int nbRdvs;
-																	 
-	private static final int IDECHANGE = 2;
+	private Adresse adresseProposee;
+	private Date dateProposee;
+	private MapModel simpleModel;
+	private Utilisateur moi;
+	private Utilisateur autre;
+	private boolean hasValidatedMoi;
+	private boolean hasValidatedAutre;							   
 	
 	private static final String PAGE_INITIALISATION = "testInitialisation.xhtml";
 	private static final String PAGE_NEGOCIATION = "testNegociation.xhtml";
@@ -88,7 +93,7 @@ public class EchangeManagedBean {
 				
 
 	// TODO: retirer ces attributs à la fin des tests
-	 
+	 private static int IDECHANGE = 3;
 		   
 	
 		   
@@ -101,15 +106,7 @@ public class EchangeManagedBean {
 				  
 	// METHODE DE TEST
 	public void testMethod(int userId) {
-		echange.setEtape(EtapeEchange.NEGOCIATION);
-		Utilisateur user = new Utilisateur();
-		user.setId(userId);
-		if (userId == 1) {
-			echange.setHasvalidatedusera(true);
-		} else {
-			echange.setHasvalidateduserb(true);
-		}
-		valider(user);
+		
 	}
 
 	@PostConstruct
@@ -224,30 +221,24 @@ public class EchangeManagedBean {
 	// ETAPE 3 - Prise de RDV
 
 	public void proposerRDV() {
-		System.out.println("Je rentre dans la proposition de rdv");
-		Utilisateur user = mbConnect.getUtilisateurConnecte();
-		
-		
+		System.out.println("je rentre dans la propal");	
+		// je m'en suis pas sorti avec l'adresse, elle sera en dur, ce sera l'adresse 1 de l'userA.
 		Rdv rdv = new Rdv();
-		Adresse a = new Adresse();
-		for (Entry<Integer, Boolean> e:selectedAdresses.entrySet()){
-			if(e.getValue()){
-				a = adresses.get(e.getKey());
-				System.out.println("je suis passé par là !");
-			}
-		}
+		Adresse a = userA.getAdresses().get(0);
 		rdv.setAdresse(a);
 		rdv.setDate(dateRdv);
-		System.out.println(dateRdv);
+		System.out.println("Date du rdv : " + dateRdv);
 		proxyEchange.prendreRdv(echange, rdv);
 		rdvs = proxyEchange.getRdv(echange);
+		dateProposee = rdvs.get(0).getDate();
+		adresseProposee = rdvs.get(0).getAdresse();
 		// on annule l'éventuelle validation de l'autre user.
-		resetValidationAutreUser(user);
-		valider(user);
+		resetValidationAutreUser();
+		valider();
 	}
 
-	private void resetValidationAutreUser(Utilisateur user) {
-		if (user.getId() == userA.getId()) {
+	private void resetValidationAutreUser() {
+		if (moi.getId() == userA.getId()) {
 			echange.setHasvalidateduserb(false);
 		} else {
 			echange.setHasvalidatedusera(false);
@@ -266,11 +257,11 @@ public class EchangeManagedBean {
 	 * conclusion "l'échange a eu lieu tel quel". Les autes options seront là
 	 * pour faire joli.
 	 */
-	public void enregistrerConclusion(Utilisateur user) {
+	public void enregistrerConclusion() {
 		echange.setConclusionechange(proxyEchange.getConclusionById(Conclusion.NOTATION.getIdConclusion()));
 		proxyEchange.majEchange(echange);
-		resetValidationAutreUser(user);
-		valider(user);
+		resetValidationAutreUser();
+		valider();
 	}
 
 	// ETAPE 6 - Notation
@@ -281,9 +272,9 @@ public class EchangeManagedBean {
 	 * @param user
 	 *            l'utilisateur effectuant la notation
 	 */
-	public void Noter(Utilisateur user) {
+	public void Noter() {
 		Note note = new Note();
-		if (user.getId() == userA.getId()) {
+		if (moi.getId() == userA.getId()) {
 			note.setEchange(echange);
 			note.setUtilisateurByIdutilisateurestnote(userB);
 			note.setUtilisateurByIdutilisateurnote(userA);
@@ -297,12 +288,10 @@ public class EchangeManagedBean {
 			note.setNote(noteB);
 		}
 		proxyEchange.noterEchange(note);
-		valider(user);
+		valider();
 	}
 																	 
 	// METHODES GENERALES
-
-	// TODO: construire la méthode au fur et à mesure.
 	private void razDonnees() {
 		echange = new Echange();
 		userA = new Utilisateur();
@@ -312,33 +301,50 @@ public class EchangeManagedBean {
 		notes = new ArrayList<>();
 		conclusion = new Conclusionechange();
 		adresses = new ArrayList<>();
-		selectedAdresses = new HashMap<>();
+		dateProposee = null;
+		adresseProposee = new Adresse();
+		simpleModel = new DefaultMapModel();
 	}
 
 	private void recupereDonnees() {
 		// TODO: a modifier avec l'id de l'échange récupérée d'une page
 		// précédente.
+		
 		echange = proxyEchange.GetEchange(IDECHANGE);
 		userA = proxyEchange.GetUtilisateurA(echange);
-		cribleListes(userA.getObjets());
+								  
 		userB = proxyEchange.GetUtilisateurB(echange);
-		cribleListes(userB.getObjets());
+		moi = mbConnect.getUtilisateurConnecte();
+		if (moi.getId() == userA.getId()){
+			autre = userB;
+			hasValidatedMoi = echange.isHasvalidatedusera();
+			hasValidatedAutre = echange.isHasvalidateduserb();
+		}
+		else{
+			autre = userA;
+			hasValidatedMoi = echange.isHasvalidateduserb();
+			hasValidatedAutre = echange.isHasvalidatedusera();
+		}
+		
+		
 		rdvs = proxyEchange.getRdv(echange);
-		nbRdvs = rdvs.size();
+					   
 		objets = echange.getObjets();
 		notes = proxyEchange.getNotes(echange);
 		conclusion = proxyEchange.getConclusion(echange);
 		adresses.addAll(proxyAdresse.getAdresseByUtilisateur(userA));
 		adresses.addAll(proxyAdresse.getAdresseByUtilisateur(userB));
-		for (Adresse a: adresses){
-			selectedAdresses.put(a.getId(), false);
+		if (rdvs.size()>0){
+			dateProposee = rdvs.get(0).getDate();
+			adresseProposee = rdvs.get(0).getAdresse();
+			LatLng coord = new LatLng(adresseProposee.getLatitude(), adresseProposee.getLongitude());
+			simpleModel.addOverlay(new Marker(coord, "Adresse proposée"));
+		} else {
+			dateProposee = null;
+			adresseProposee.setNumeroVoie("");
+			adresseProposee.setRue("");
+			adresseProposee.setVille("");
 		}
-		
-		objetsA = proxyEchange.getObjetUserEchange(echange, userA);
-
-		objetsB = proxyEchange.getObjetUserEchange(echange, userB);
-			
-		
 	}
 
 	/**
@@ -412,8 +418,8 @@ public class EchangeManagedBean {
 	 * @param user
 	 *            l'utilisateur ayant validé.
 	 */
-	public void valider(Utilisateur user) {
-		if (user.getId() == userA.getId()) {
+	public void valider() {
+		if (moi.getId() == userA.getId()) {
 			echange.setHasvalidatedusera(true);
 		} else {
 			echange.setHasvalidateduserb(true);
@@ -421,7 +427,7 @@ public class EchangeManagedBean {
 		proxyEchange.majEchange(echange);
 
 		if (echange.isHasvalidatedusera() && echange.isHasvalidateduserb()) {
-		  
+			resetValidations();
 			switch (echange.getEtape()) {
 			case INITIALISATION:
 				accepterEchange();
@@ -445,7 +451,7 @@ public class EchangeManagedBean {
 				// rien à faire
 				break;
 			}
-  calculerEtape();
+			calculerEtape();
 		}
 	}
 
@@ -648,12 +654,28 @@ public class EchangeManagedBean {
 		Sapins = sapins;
 	}
 
-	public int getNbRdvs() {
-		return nbRdvs;
+	public Adresse getAdresseProposee() {
+		return adresseProposee;
 	}
 
-	public void setNbRdvs(int nbRdvs) {
-		this.nbRdvs = nbRdvs;
+	public void setAdresseProposee(Adresse adresseProposee) {
+		this.adresseProposee = adresseProposee;
+	}
+
+	public Date getDateProposee() {
+		return dateProposee;
+	}
+
+	public void setDateProposee(Date dateProposee) {
+		this.dateProposee = dateProposee;
+	}
+
+	public MapModel getSimpleModel() {
+		return simpleModel;
+	}
+
+	public void setSimpleModel(MapModel simpleModel) {
+		this.simpleModel = simpleModel;
 	}
 
 	public List<Adresse> getAdresses() {
@@ -664,16 +686,6 @@ public class EchangeManagedBean {
 		this.adresses = adresses;
 	}
 
-	public Map<Integer, Boolean> getSelectedAdresses() {
-		System.out.println("dans le getter !");
-		return selectedAdresses;
-	}
-
-	public void setSelectedAdresses(Map<Integer, Boolean> selectedAdresses) {
-		System.out.println("dans le setter !");
-		this.selectedAdresses = selectedAdresses;
-	}
-
 	public UtilisateurManagedBean getMbConnect() {
 		return mbConnect;
 	}
@@ -682,5 +694,38 @@ public class EchangeManagedBean {
 		this.mbConnect = mbConnect;
 	}
 
+	public Utilisateur getMoi() {
+		return moi;
+	}
+
+	public void setMoi(Utilisateur moi) {
+		this.moi = moi;
+	}
+
+	public Utilisateur getAutre() {
+		return autre;
+	}
+
+	public void setAutre(Utilisateur autre) {
+		this.autre = autre;
+						  
+	}
+
+	public boolean isHasValidatedMoi() {
+		return hasValidatedMoi;
+										   
+	}
+
+	public void setHasValidatedMoi(boolean hasValidatedMoi) {
+		this.hasValidatedMoi = hasValidatedMoi;
+	}
+
+	public boolean isHasValidatedAutre() {
+		return hasValidatedAutre;
+	}
+
+	public void setHasValidatedAutre(boolean hasValidatedAutre) {
+		this.hasValidatedAutre = hasValidatedAutre;
+	}														  
 }																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																					 
 

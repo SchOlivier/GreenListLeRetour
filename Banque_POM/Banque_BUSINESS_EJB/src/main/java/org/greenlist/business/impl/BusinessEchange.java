@@ -1,6 +1,5 @@
 package org.greenlist.business.impl;
 
-import java.io.ObjectStreamConstants;
 import java.util.List;
 
 import javax.ejb.EJB;

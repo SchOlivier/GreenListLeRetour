@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Untitled Document</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GreenList P3</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+</head>
+
+<body>
+    <div class="mainPanel">
+        <form class="mainForm">
+            <!-- Echange Progress Steps Bar -->
+
+            <ol class="progress-track">
+                <li class="progress-done">
+                    <center>
+                        <div class="icon-wrap">
+                            <span class="fa fa-check"></span>
+                        </div>
+                        <span class="progress-text">
+                        Initialisation 
+                    </span>
+                    </center>
+                </li>
+                <li class="progress-done">
+                    <center>
+                        <div class="icon-wrap">
+                            <span class="fa fa-check"></span>
+                        </div>
+                        <span class="progress-text">
+                        Négociation 
+                    </span>
+                    </center>
+                </li>
+                <li class="progress-done">
+                    <center>
+                        <div class="icon-wrap">
+                            <span class="fa fa-check"></span>
+                        </div>
+                        <span class="progress-text">
+                        Rendez-Vous 
+                    </span>
+                    </center>
+                </li>
+                <li class="progress-done">
+                    <center>
+                        <div class="icon-wrap">
+                            <span class="fa fa-check"></span>
+                        </div>
+                        <span class="progress-text">
+                        Transaction 
+                    </span>
+                    </center>
+                </li>
+                <li class="progress-done">
+                    <center>
+                        <div class="icon-wrap">
+                            <span class="fa fa-check"></span>
+                        </div>
+                        <span class="progress-text">
+                        Confirmation 
+                    </span>
+                    </center>
+                </li>
+            </ol>
+
+            <!-- Echange Etape -->
+
+            <!-- Page titre -->
+
+
+            <div class="pageTitleBloc">
+                <div class="pageTitleIcon"><span class="fa fa-check"></span></div>
+                <div class="pageTitle">Echange Confirmé</div>
+            </div>
+
+            <!-- Page Content -->
+
+            <div class="mainEchange">
+                <div class="echangeOneBloc texteTeaser">
+                    Veuillez noter la qualité de votre échange avec AutreUser.
+                </div>
+
+                <div class="pageSubTitle">
+                    Votre Avis
+                </div>
+                <div class="echangeOneBloc avisBloc">
+                    <!-- Primefaces rating système -->
+                    <div>
+                    <span class="fa fa-star-o smallStar"></span><span class="fa fa-star-o smallStar"></span><span class="fa fa-star-o smallStar"></span><span class="fa fa-star-o smallStar"></span><span class="fa fa-star-o smallStar"></span>
+                    </div>
+                    <textarea class="saisieAvis"></textarea>
+                </div>
+                <div class="boutonsCenterBloc">
+                    <div class="pageBouton">
+                        <div class="objetItem">Valider</div>
+                    </div>
+                    <div class="pageBouton">
+                        <div class="objetItem">Annuler</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Chat Bloc -->
+        </form>
+    </div>
+
+
+    <!-- Scripts Temporaires -->
+
+    <script src="../js/slideshow.js"></script>
+    <script src="../js/base.js"></script>
+    <script>
+        function initMap() {
+            var uluru = {
+                lat: 48.856614,
+                lng: 2.3522219000000177
+            };
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 12,
+                center: uluru
+            });
+            var marker = new google.maps.Marker({
+                position: uluru,
+                map: map
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFouMfgD7XclwaKHPojMrWW44syHT2iZI&callback=initMap" async defer>
+    </script>
+</body>
+
+</html>
