@@ -16,6 +16,11 @@
 		<div>
 		Nombre de rdvs : <h:outputLabel value="#{mbEchange.nbRdvs}" />
 		</div>
+		<div>
+			<ui:repeat var="a" value="#{mbEchange.adresses}">
+				<div>#{a.rue}</div>
+			</ui:repeat>
+		</div>
 			<hr />
 
 			<h3>Initialisation</h3>

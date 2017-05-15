@@ -2,18 +2,24 @@ package org.greenlist.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import org.greenlist.business.api.IBusinessAdresse;
 import org.greenlist.business.api.IBusinessEchange;
 import org.greenlist.business.api.IBusinessObjet;
 import org.greenlist.business.api.IBusinessUtilisateur;
+import org.greenlist.entity.Adresse;
 import org.greenlist.entity.Conclusionechange;
 import org.greenlist.entity.Echange;
 import org.greenlist.entity.Note;
@@ -22,6 +28,10 @@ import org.greenlist.entity.Rdv;
 import org.greenlist.entity.Utilisateur;
 import org.greenlist.utilitaire.Conclusion;
 import org.greenlist.utilitaire.EtapeEchange;
+import org.primefaces.model.map.DefaultMapModel;
+import org.primefaces.model.map.LatLng;
+import org.primefaces.model.map.MapModel;
+import org.primefaces.model.map.Marker;
 
 @ManagedBean(name = "mbEchange")
 @SessionScoped
@@ -29,6 +39,9 @@ public class EchangeManagedBean {
 
 	@EJB
 	private IBusinessEchange proxyEchange;
+	
+	@EJB
+	private IBusinessAdresse proxyAdresse;
 
 	private Echange echange;
 	private Utilisateur userA;
@@ -43,6 +56,14 @@ public class EchangeManagedBean {
 	private String appreciationA;
 	private int noteB;
 	private String appreciationB;
+	private List<Adresse> adresses;
+	private Adresse adresseProposee;
+	private Date dateProposee;
+	private MapModel simpleModel;
+	private Utilisateur moi;
+	private Utilisateur autre;
+	private boolean hasValidatedMoi;
+	private boolean hasValidatedAutre;
 	
 	private static final String PAGE_INITIALISATION = "testInitialisation.xhtml";
 	private static final String PAGE_NEGOCIATION = "testNegociation.xhtml";
@@ -59,9 +80,11 @@ public class EchangeManagedBean {
 	private IBusinessObjet proxyObjet;
 	@EJB
 	private IBusinessUtilisateur proxyUser;
+	
+	@ManagedProperty(value = "#{mbUtilisateur}")
+	private UtilisateurManagedBean mbConnect;
 
-	private static int IDECHANGE = 1;
-	private int nbRdvs;
+	private static int IDECHANGE = 3;
 
 	// METHODES DE TEST
 	public void testMethod(int i) {
@@ -71,13 +94,6 @@ public class EchangeManagedBean {
 
 	@PostConstruct
 	public void init() {
-		Objet objet = new Objet();
-		objet.setId(1);
-		objet = proxyObjet.getObjet(objet);
-		Utilisateur uA = proxyUser.getUtilisateurById(1);
-		Utilisateur uB = proxyUser.getUtilisateurById(2);
-		echange = proxyObjet.creerEchange(objet, uA, uB);
-		IDECHANGE = echange.getId();
 		calculerEtape();
 	}
 
@@ -86,8 +102,7 @@ public class EchangeManagedBean {
 	/**
 	 * L'userB accepte l'échange : on passe à l'étape de négociation, les
 	 * HasValidated passent à false, et la date de début de négociation est
-	 * enregistrée.
-	 * Méthode privée : appelée via valider(userB).
+	 * enregistrée. Méthode privée : appelée via valider(userB).
 	 */
 	private void accepterEchange() {
 		echange.setDateDebutNegociation(new Date());
@@ -143,17 +158,20 @@ public class EchangeManagedBean {
 
 	// ETAPE 3 - Prise de RDV
 
-	public void proposerRDV(Utilisateur user) {
-		// Adresse en dur parce que j'ai pas envie de me faire chier, ce sera
-		// celle de l'userA.
+	public void proposerRDV() {
+		System.out.println("je rentre dans la propal");
+		
+		// je m'en suis pas sorti avec l'adresse, elle sera en dur, ce sera l'adresse 1 de l'userA.
 		Rdv rdv = new Rdv();
-		rdv.setAdresse(userA.getAdresses().get(0));
+		Adresse a = userA.getAdresses().get(0);
+		rdv.setAdresse(a);
 		rdv.setDate(dateRdv);
+		System.out.println("Date du rdv : " + dateRdv);
 		proxyEchange.prendreRdv(echange, rdv);
 		rdvs = proxyEchange.getRdv(echange);
 		// on annule l'éventuelle validation de l'autre user.
-		resetValidationAutreUser(user);
-		valider(user);
+		resetValidationAutreUser(moi);
+		valider();
 	}
 
 	private void resetValidationAutreUser(Utilisateur user) {
@@ -180,7 +198,7 @@ public class EchangeManagedBean {
 		echange.setConclusionechange(proxyEchange.getConclusionById(Conclusion.NOTATION.getIdConclusion()));
 		proxyEchange.majEchange(echange);
 		resetValidationAutreUser(user);
-		valider(user);
+		valider();
 	}
 
 	// ETAPE 6 - Notation
@@ -207,7 +225,7 @@ public class EchangeManagedBean {
 			note.setNote(noteB);
 		}
 		proxyEchange.noterEchange(note);
-		valider(user);
+		valider();
 	}
 
 	// METHODES GENERALES
@@ -220,19 +238,50 @@ public class EchangeManagedBean {
 		objets = new ArrayList<>();
 		notes = new ArrayList<>();
 		conclusion = new Conclusionechange();
+		adresses = new ArrayList<>();
+		dateProposee = null;
+		adresseProposee = new Adresse();
+		simpleModel = new DefaultMapModel();
 	}
 
 	private void recupereDonnees() {
 		// TODO: a modifier avec l'id de l'échange récupérée d'une page
 		// précédente.
+		
 		echange = proxyEchange.GetEchange(IDECHANGE);
 		userA = proxyEchange.GetUtilisateurA(echange);
 		userB = proxyEchange.GetUtilisateurB(echange);
+		moi = mbConnect.getUtilisateurConnecte();
+		if (moi.getId() == userA.getId()){
+			autre = userB;
+			hasValidatedMoi = echange.isHasvalidatedusera();
+			hasValidatedAutre = echange.isHasvalidateduserb();
+		}
+		else{
+			autre = userA;
+			hasValidatedMoi = echange.isHasvalidateduserb();
+			hasValidatedAutre = echange.isHasvalidatedusera();
+		}
+		
+		
 		rdvs = proxyEchange.getRdv(echange);
-		nbRdvs = rdvs.size();
 		objets = echange.getObjets();
 		notes = proxyEchange.getNotes(echange);
 		conclusion = proxyEchange.getConclusion(echange);
+		adresses.addAll(proxyAdresse.getAdresseByUtilisateur(userA));
+		adresses.addAll(proxyAdresse.getAdresseByUtilisateur(userB));
+		if (rdvs.size()>0){
+			dateProposee = rdvs.get(0).getDate();
+			adresseProposee = rdvs.get(0).getAdresse();
+			LatLng coord = new LatLng(adresseProposee.getLatitude(), adresseProposee.getLongitude());
+			simpleModel.addOverlay(new Marker(coord, "Adresse proposée"));
+		} else {
+			dateProposee = null;
+			adresseProposee.setNumeroVoie("");
+			adresseProposee.setRue("");
+			adresseProposee.setVille("");
+		}
+		
 	}
 
 	/**
@@ -273,22 +322,22 @@ public class EchangeManagedBean {
 				.getNavigationHandler();
 		switch(echange.getEtape()){
 		case INITIALISATION:
-			nav.performNavigation(PAGE_INITIALISATION + FACES_REDIRECT);
+//			nav.performNavigation(PAGE_INITIALISATION + FACES_REDIRECT);
 			break;
 		case NEGOCIATION:
-			nav.performNavigation(PAGE_NEGOCIATION + FACES_REDIRECT);
+//			nav.performNavigation(PAGE_NEGOCIATION + FACES_REDIRECT);
 			break;
 		case PRISE_RDV:
-			nav.performNavigation(PAGE_PRISE_RDV + FACES_REDIRECT);
+//			nav.performNavigation(PAGE_PRISE_RDV + FACES_REDIRECT);
 			break;
 		case RDV:
-			nav.performNavigation(PAGE_RDV + FACES_REDIRECT);
+//			nav.performNavigation(PAGE_RDV + FACES_REDIRECT);
 			break;
 		case CONCLUSION_RDV:
-			nav.performNavigation(PAGE_CONCLUSION_RDV+ FACES_REDIRECT);
+//			nav.performNavigation(PAGE_CONCLUSION_RDV+ FACES_REDIRECT);
 			break;
 		case NOTATION:
-			nav.performNavigation(PAGE_NOTATION + FACES_REDIRECT);
+//			nav.performNavigation(PAGE_NOTATION + FACES_REDIRECT);
 			break;
 		case TERMINE:
 			nav.performNavigation(PAGE_FIN + FACES_REDIRECT);
@@ -306,8 +355,8 @@ public class EchangeManagedBean {
 	 * @param user
 	 *            l'utilisateur ayant validé.
 	 */
-	public void valider(Utilisateur user) {
-		if (user.getId() == userA.getId()) {
+	public void valider() {
+		if (moi.getId() == userA.getId()) {
 			echange.setHasvalidatedusera(true);
 		} else {
 			echange.setHasvalidateduserb(true);
@@ -486,12 +535,76 @@ public class EchangeManagedBean {
 		Sapins = sapins;
 	}
 
-	public int getNbRdvs() {
-		return nbRdvs;
+	public List<Adresse> getAdresses() {
+		return adresses;
 	}
 
-	public void setNbRdvs(int nbRdvs) {
-		this.nbRdvs = nbRdvs;
+	public void setAdresses(List<Adresse> adresses) {
+		this.adresses = adresses;
+	}
+
+	public UtilisateurManagedBean getMbConnect() {
+		return mbConnect;
+	}
+
+	public void setMbConnect(UtilisateurManagedBean mbConnect) {
+		this.mbConnect = mbConnect;
+	}
+
+	public Adresse getAdresseProposee() {
+		return adresseProposee;
+	}
+
+	public void setAdresseProposee(Adresse adresseProposee) {
+		this.adresseProposee = adresseProposee;
+	}
+
+	public Date getDateProposee() {
+		return dateProposee;
+	}
+
+	public void setDateProposee(Date dateProposee) {
+		this.dateProposee = dateProposee;
+	}
+
+	public MapModel getSimpleModel() {
+		return simpleModel;
+	}
+
+	public void setSimpleModel(MapModel simpleModel) {
+		this.simpleModel = simpleModel;
+	}
+
+	public Utilisateur getMoi() {
+		return moi;
+	}
+
+	public void setMoi(Utilisateur moi) {
+		this.moi = moi;
+	}
+
+	public Utilisateur getAutre() {
+		return autre;
+	}
+
+	public void setAutre(Utilisateur autre) {
+		this.autre = autre;
+	}
+
+	public boolean isHasValidatedMoi() {
+		return hasValidatedMoi;
+	}
+
+	public void setHasValidatedMoi(boolean hasValidatedMoi) {
+		this.hasValidatedMoi = hasValidatedMoi;
+	}
+
+	public boolean isHasValidatedAutre() {
+		return hasValidatedAutre;
+	}
+
+	public void setHasValidatedAutre(boolean hasValidatedAutre) {
+		this.hasValidatedAutre = hasValidatedAutre;
 	}
 
 }
