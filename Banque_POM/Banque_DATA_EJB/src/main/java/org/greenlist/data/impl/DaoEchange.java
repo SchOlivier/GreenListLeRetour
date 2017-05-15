@@ -16,6 +16,7 @@ import org.greenlist.entity.Conclusionechange;
 import org.greenlist.entity.Echange;
 import org.greenlist.entity.Liste;
 import org.greenlist.entity.Message;
+import org.greenlist.entity.Note;								 
 import org.greenlist.entity.Objet;
 import org.greenlist.entity.Photo;
 import org.greenlist.entity.Rdv;
@@ -30,16 +31,26 @@ public class DaoEchange implements IDaoEchange {
 	private EntityManager em;
 
 	private static final String REQUETE_GET_ECHANGE = " SELECT e FROM Echange e " + "LEFT JOIN fetch e.objets "
+							  
+								
 			+ "WHERE e.id = :pEid";
 
-	private static final String REQUETE_GET_USERA = "SELECT e.utilisateurByIdusera FROM Echange e " + "WHERE e = :pE";
+	private static final String REQUETE_GET_USERA = 
+			"SELECT u FROM Utilisateur u "
+			+ "INNER JOIN fetch u.adresses "
+			+ "INNER JOIN u.echangesForIdusera e "
+			+ "WHERE e.id = :pE";
 
-	private static final String REQUETE_GET_USERB = "SELECT e.utilisateurByIduserb FROM Echange e " + "WHERE e = :pE";
+	private static final String REQUETE_GET_USERB =
+			"SELECT u FROM Utilisateur u "
+			+ "INNER JOIN fetch u.adresses "
+			+ "INNER JOIN u.echangesForIduserb e "
+			+ "WHERE e.id = :pE";
 
 	private static final String REQUETE_GET_OBJETS = "SELECT e.objets  fROM Echange e " + "WHERE e.id = :pEid";
 	private static final String REQUETE_COMPLETE_OBJET ="SELECT o FROM Objet o inner join fetch o.produit inner join fetch o.trancheAge WHERE o.id = :pidObjet";
-	private static final String REQUETE_GET_MESSAGES = "SELECT e.messages FROM Echange e" + " WHERE e.id = :pEid";
-	private static final String REQUETE_GET_RDVS = "SELECT rdv FROM Rdv rdv " + "INNER JOIN fetch rdv.adresse "
+	private static final String REQUETE_GET_MESSAGES = "SELECT e.messages FROM Echange e" + " WHERE e.id = :pEid" 
+	
 			+ "INNER JOIN rdv.echange " + "WHERE rdv.echange.id = :pEid";
 
 	private static final String REQUETE_GET_CONCLUSION = "SELECT e.conclusionechange FROM Echange e " + "WHERE e = :pE";
@@ -47,6 +58,25 @@ public class DaoEchange implements IDaoEchange {
 	private static final String REQUETE_RETIRER_OBJET = "DELETE FROM ECHANGE_OBJET "
 			+ "WHERE ECH_ID = :EId AND OBJ_ID = :OId";
 
+	
+	private static final String REQUETE_GET_RDVS =
+			"SELECT rdv FROM Rdv rdv " 
+			+ "INNER JOIN fetch rdv.adresse "
+			+ "INNER JOIN rdv.echange "
+			+ "WHERE rdv.echange.id = :pEid";
+	
+	private static final String REQUETE_GET_NOTES =
+			"SELECT e.notes FROM Echange e "
+			+ "WHERE e.id = :peId";
+	
+	private static final String GET_CONCLUSION_BY_ID =
+			"SELECT c FROM Conclusionechange c "
+			+ "WHERE c.id = :pCId";
+	
+	private static final String SUPPRIMER_RDVS =
+			"DELETE FROM RDV "
+			+ "WHERE RDV.IDECHANGE = :pEId";
+		  
 	@Override
 	public Echange creerEchange(Echange echange) {
 		em.persist(echange);
@@ -61,7 +91,7 @@ public class DaoEchange implements IDaoEchange {
 
 	@Override
 	public Utilisateur GetUtilisateurA(Echange echange) {
-		Query query = em.createQuery(REQUETE_GET_USERA).setParameter("pE", echange);
+			Query query = em.createQuery(REQUETE_GET_USERA).setParameter("pE", echange.getId());
 		Utilisateur user = (Utilisateur) query.getSingleResult();
 		em.merge(user);
 		user = recupererDonneesUtilisateur(user);
@@ -70,8 +100,7 @@ public class DaoEchange implements IDaoEchange {
 
 	@Override
 	public Utilisateur GetUtilisateurB(Echange echange) {
-		Query query = em.createQuery(REQUETE_GET_USERB).setParameter("pE", echange);
-		Utilisateur user = (Utilisateur) query.getSingleResult();
+	Query query = em.createQuery(REQUETE_GET_USERB).setParameter("pE", echange.getId());		Utilisateur user = (Utilisateur) query.getSingleResult();
 		em.merge(user);
 		user = recupererDonneesUtilisateur(user);
 		return user;
@@ -113,6 +142,7 @@ public class DaoEchange implements IDaoEchange {
 			objet.getTrancheAge();
 			objet.getProduit();
 		}
+		
 		return objets;
 	}
 
@@ -133,15 +163,23 @@ public class DaoEchange implements IDaoEchange {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Conclusionechange> getConclusion(Echange echange) {
+	public Conclusionechange getConclusion(Echange echange) {
 		Query query = em.createQuery(REQUETE_GET_CONCLUSION).setParameter("pE", echange);
-		return query.getResultList();
+		Conclusionechange conclusion;
+		// la conclusion n'est pas nécessairement rattachée à l'échange, 
+		// du coup try/catch au cas où il n'y ait rien à récuperer.
+		try {
+			conclusion = (Conclusionechange) query.getSingleResult();
+		} catch (Exception e) {
+			conclusion = null;
+		}
+		return conclusion;
 	}
 
 	@Override
 	public Echange retirerObjet(Objet objet, Echange echange) {
-		Query query = em.createNativeQuery(REQUETE_RETIRER_OBJET).setParameter("EId", echange.getId())
-				.setParameter("OId", objet.getId());
+		Query query = em.createNativeQuery(REQUETE_RETIRER_OBJET).setParameter("peId", echange.getId())
+				.setParameter("poId", objet.getId());
 		query.executeUpdate();
 		return echange;
 	}
@@ -163,6 +201,44 @@ public class DaoEchange implements IDaoEchange {
 	        }
 		
 				return objets;
+	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Note> getNotes(Echange echange) {
+  
+		return em.createQuery(REQUETE_GET_NOTES).setParameter("peId", echange.getId()).getResultList();
+	}
+
+	@Override
+	public void ajouterRdv(Rdv rdv) {
+		Query query = em.createNativeQuery(SUPPRIMER_RDVS).setParameter("pEId", rdv.getEchange().getId());
+		query.executeUpdate();
+		em.persist(rdv);
+							
+			  
+		  
+		
+	}
+
+	@Override
+	public void majRdv(Rdv rdv) {
+		em.merge(rdv);
+	}
+
+	@Override
+	public Conclusionechange getConclusionById(int id) {
+		return (Conclusionechange) em.createQuery(GET_CONCLUSION_BY_ID)
+				.setParameter("pCId", id)
+				.getSingleResult();
+	}
+
+	@Override
+	public Note noterEchange(Note note) {
+		em.persist(note);
+		return note;
+	}
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											  
 }
-}
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											  
+

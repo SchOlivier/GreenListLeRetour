@@ -127,7 +127,7 @@
 						</div>
 					</div>
 
-					<form class="mainForm">
+					<h:form class="mainForm">
 
 						<div class="echangeOneBloc">
 							<span>creer le #{mbEchange.echange.dateCreation}</span>
@@ -139,7 +139,13 @@
 								<ui:repeat value="#{mbEchange.objetsA}" var="objet">
 									<ul class="echangeLigneObjet">
 										<li class="ordre1"><span
-											class="fa fa-plus-circle fa-2x deepGreyColor"><h:commandButton action="#{mbEchange.retirerObjet(objet)}" value="+" /></span></li>
+											class="fa fa-plus-circle fa-2x deepGreyColor"> <h:commandButton value="-">
+											 <f:ajax event="click" render="@form" listener="#{mbEchange.retirerObjet(objet)}"/> 
+											 </h:commandButton>
+											 </span></li>
+											
+										<li class="ordre2"><h:graphicImage
+												value="#{objet.photos[0].url}" /></li>
 										
 										<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
 										<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
@@ -155,7 +161,14 @@
 								<ui:repeat value="#{mbEchange.objetsB}" var="objet">
 									<ul class="echangeLigneObjet">
 										<li class="ordre1"><span
-											class="fa fa-plus-circle fa-2x deepGreyColor"><h:commandButton action="#{mbEchange.retirerObjet(objet)}" value="-" /> </span></li>
+											class="fa fa-plus-circle fa-2x deepGreyColor">
+											 <h:commandButton value="-">
+											 <f:ajax event="click" render="@form" listener="#{mbEchange.retirerObjet(objet)}"/> 
+											 </h:commandButton>
+											 </span></li>
+											
+										<li class="ordre2"><h:graphicImage
+												value="#{objet.photos[0].url}" /></li>
 										
 										<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
 										<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
@@ -221,7 +234,14 @@
 								<ui:repeat value="#{mbEchange.userA.objets}" var="objet">
 									<ul class="echangeLigneObjet">
 										<li class="ordre1"><span
-											class="fa fa-plus-circle fa-2x deepGreyColor"> <h:commandButton action="#{mbEchange.ajouterObjet(objet)}" value="+" /> </span></li>
+											class="fa fa-plus-circle fa-2x deepGreyColor">
+											 <h:commandButton value="+">
+											 <f:ajax event="click" render="@form" listener="#{mbEchange.ajouterObjet(objet)}"/> 
+											 </h:commandButton>
+											 </span></li>
+										
+										<li class="ordre2"><h:graphicImage
+												value="#{objet.photos[0].url}" /></li>
 										
 										<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
 										<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
@@ -234,7 +254,13 @@
 								<ui:repeat value="#{mbEchange.userB.objets}" var="objet">
 									<ul class="echangeLigneObjet">
 										<li class="ordre1"><span
-											class="fa fa-plus-circle fa-2x deepGreyColor">  <h:commandButton action="#{mbEchange.ajouterObjet(objet)}" value="+" /></span></li>
+											class="fa fa-plus-circle fa-2x deepGreyColor"> 
+											  <h:commandButton value="+">
+											 <f:ajax event="click" render="@form" listener="#{mbEchange.ajouterObjet(objet)}"/> 
+											 </h:commandButton>
+											 </span></li>
+										<li class="ordre2"><h:graphicImage
+												value="#{objet.photos[0].url}" /></li>
 										
 										<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
 										<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
@@ -250,7 +276,7 @@
 							</div>
 
 						</div>
-					</form>
+					</h:form>
 				</div>
 
 				<!-- Chat Bloc -->

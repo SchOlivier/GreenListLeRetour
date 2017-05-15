@@ -67,7 +67,7 @@ public class Echange implements java.io.Serializable {
 	private boolean hasvalidatedusera;
 	@Column(name = "HASVALIDATEDUSERB", nullable = false)
 	private boolean hasvalidateduserb;
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "DATE_CONCLUSION", length = 10)
 	private Date dateConclusion;
 	@Column(name = "VALEUR_USER_A", nullable = false)

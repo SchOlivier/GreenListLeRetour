@@ -5,6 +5,7 @@ import java.util.List;
 import org.greenlist.entity.Conclusionechange;
 import org.greenlist.entity.Echange;
 import org.greenlist.entity.Message;
+import org.greenlist.entity.Note;
 import org.greenlist.entity.Objet;
 import org.greenlist.entity.Rdv;
 import org.greenlist.entity.Utilisateur;
@@ -29,11 +30,21 @@ public interface IDaoEchange {
 	
 	public List<Rdv> getRdv(Echange echange);
 	
-	public List<Conclusionechange> getConclusion (Echange echange);
+	public Conclusionechange getConclusion (Echange echange);
 	
 	public Echange retirerObjet(Objet objet, Echange echange);
 
 	public List<Objet> getObjetUserEchange(Echange echange, Utilisateur utilisateur);
+
+	List<Note> getNotes(Echange echange);
+
+	void ajouterRdv(Rdv rdv);
+
+	void majRdv(Rdv rdv);
+
+	Conclusionechange getConclusionById(int id);
+
+	Note noterEchange(Note note);
 	
 	
 	

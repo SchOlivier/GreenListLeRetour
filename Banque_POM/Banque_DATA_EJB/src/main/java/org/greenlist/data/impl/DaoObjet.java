@@ -28,7 +28,7 @@ public class DaoObjet implements IDaoObjet {
 	private EntityManager em;
 
 	private static final String REQUETTE_GET_OBJET_BY_ID = "SELECT o FROM Objet o WHERE o.id = :pidObjet";
-	private static final String REQUETTE_GET_OBJET_BY_ID_WITH_PDT_TA = "SELECT o FROM Objet o inner join fetch o.produit inner join fetch o.trancheAge inner join fetch o.utilisateur WHERE o.id = :pidObjet";
+	private static final String REQUETTE_GET_OBJET_BY_ID_WITH_PDT_TA = "SELECT o FROM Objet o inner join fetch o.produit inner join fetch o.trancheAge inner join fetch o.utilisateur inner join fetch o.photos WHERE o.id = :pidObjet";
 
 	private static final String REQUETTE_GET_OBJETS_BY_UTILISATEUR = "SELECT u.objets FROM Utilisateur as u WHERE u.id = :pIdUtilisateur";
 
@@ -85,7 +85,20 @@ public class DaoObjet implements IDaoObjet {
 				objetComplet.getProduit().getGroupe().getDomaine().getId());
 		objetComplet.getProduit().getGroupe().setDomaine((Domaine) queryDomaine.getSingleResult());
 
-		objetComplet.setPhotos(objetComplet.getPhotos());
+			
+		em.merge(objetComplet);
+		
+		if (objetComplet.getPhotos().size() == 0){
+			String path = "/img/pardefaut.png";
+
+			Photo defaut = new Photo();
+			defaut.setUrl(path);
+			defaut.setObjet(objetComplet);
+			List<Photo> ph = new ArrayList<>();
+				ph.add(defaut);
+			objetComplet.setPhotos(ph);
+		}
+	//	objetComplet.setPhotos(getPhotos(objetComplet));
 
 		return objetComplet;
 	}

@@ -62,7 +62,7 @@ public class Objet implements java.io.Serializable {
 	private List<Ticket> tickets = new ArrayList<>();
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "objet")
 	private List<Messagepublic> messagepublics = new ArrayList<>();
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "objet")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "objet")
 	private List<Photo> photos = new ArrayList<>();
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "objets")
 	private List<Panier> paniers = new ArrayList<>();

@@ -13,6 +13,7 @@ import org.greenlist.data.api.IDaoObjet;
 import org.greenlist.entity.Conclusionechange;
 import org.greenlist.entity.Echange;
 import org.greenlist.entity.Message;
+import org.greenlist.entity.Note;								 
 import org.greenlist.entity.Objet;
 import org.greenlist.entity.Rdv;
 import org.greenlist.entity.Utilisateur;
@@ -63,6 +64,7 @@ public class BusinessEchange implements IBusinessEchange {
 		for (Objet objet : objets){
 		
 			proxyObjet.getObjetByIdWithProduitAndTA(objet.getId());
+		
 			
 		}
 		
@@ -85,6 +87,7 @@ public class BusinessEchange implements IBusinessEchange {
 
 	
 
+
 	// partie RDV 
 	
 	@Override
@@ -94,9 +97,9 @@ public class BusinessEchange implements IBusinessEchange {
 
 	@Override
 	public Echange prendreRdv(Echange echange, Rdv rdv) {
-		echange.setRdvs(proxyEchange.getRdv(echange));
-		echange.getRdvs().add(rdv);
-		proxyEchange.majEchange(echange);
+		rdv.setEchange(echange);
+							 
+		proxyEchange.ajouterRdv(rdv);
 		return echange;
 	}
 
@@ -146,7 +149,7 @@ public class BusinessEchange implements IBusinessEchange {
 	}
 
 	@Override
-	public List<Conclusionechange> getConclusion(Echange echange) {
+	public Conclusionechange getConclusion(Echange echange) {
 		return proxyEchange.getConclusion(echange);
 	}
 
@@ -155,11 +158,20 @@ public class BusinessEchange implements IBusinessEchange {
 		return proxyEchange.majEchange(echange);
 	}
 
+		  
+											  
+										
+  
+
 	public IDaoEchange getProxyEchange() {
+								   
+					   
 		return proxyEchange;
+  
 	}
 
 	public void setProxyEchange(IDaoEchange proxyEchange) {
+															   
 		this.proxyEchange = proxyEchange;
 	}
 
@@ -168,7 +180,29 @@ public class BusinessEchange implements IBusinessEchange {
 		
 		return proxyEchange.getObjetUserEchange(echange,  utilisateur);
 	}
- // get set 
+@Override
+	public List<Note> getNotes(Echange echange) {
+		return proxyEchange.getNotes(echange);
+	}
+
+	@Override
+	public void accepterRDV(Rdv rdv) {
+		rdv.setAccepte(true);
+		proxyEchange.majRdv(rdv);
+		
+	}
+
+	@Override
+	public Conclusionechange getConclusionById(int idConclusion) {
+		return proxyEchange.getConclusionById(idConclusion);
+	}
+
+	@Override
+	public Note noterEchange(Note note) {
+  
+		return proxyEchange.noterEchange(note);
+	}
+
 	
 	
 	
