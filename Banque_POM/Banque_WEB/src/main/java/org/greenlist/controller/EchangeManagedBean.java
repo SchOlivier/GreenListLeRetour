@@ -2,10 +2,7 @@ package org.greenlist.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -169,6 +166,8 @@ public class EchangeManagedBean {
 		System.out.println("Date du rdv : " + dateRdv);
 		proxyEchange.prendreRdv(echange, rdv);
 		rdvs = proxyEchange.getRdv(echange);
+		dateProposee = rdvs.get(0).getDate();
+		adresseProposee = rdvs.get(0).getAdresse();
 		// on annule l'éventuelle validation de l'autre user.
 		resetValidationAutreUser(moi);
 		valider();

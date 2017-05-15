@@ -87,7 +87,7 @@
 								<div>
 									Date RDV :
 									<p:calendar id="datetime" value="#{mbEchange.dateRdv}"
-										pattern="MM/dd/yyyy HH:mm:ss" />
+										pattern="MM/dd/yyyy HH:mm" />
 								</div>
 								<ul>
 									<li>Mes Adresses :</li>
@@ -118,7 +118,7 @@
 								</h:panelGroup>
 									<h:panelGroup rendered="#{mbEchange.dateProposee != null}">
 										<h:outputText value="#{mbEchange.dateProposee}">
-											<f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+											<f:convertDateTime pattern="MM/dd/yyyy HH:mm" type="both" timeStyle="full"/>
 										</h:outputText>
 										<div>#{mbEchange.adresseProposee.numeroVoie}
 											#{mbEchange.adresseProposee.rue} -
