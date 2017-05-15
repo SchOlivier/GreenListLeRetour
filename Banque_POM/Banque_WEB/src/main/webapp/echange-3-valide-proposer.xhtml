@@ -118,7 +118,7 @@
 								</h:panelGroup>
 									<h:panelGroup rendered="#{mbEchange.dateProposee != null}">
 										<h:outputText value="#{mbEchange.dateProposee}">
-											<f:convertDateTime pattern="MM/dd/yyyy HH:mm" type="both" timeStyle="full"/>
+											<f:convertDateTime pattern="MM/dd/yyyy HH:mm"/>
 										</h:outputText>
 										<div>#{mbEchange.adresseProposee.numeroVoie}
 											#{mbEchange.adresseProposee.rue} -
