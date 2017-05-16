@@ -1,0 +1,169 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>GreenList - Bienvenue</title>
+	<f:metadata>
+		<f:event listener="#{mbEchange.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+</h:head>
+<h:body>
+	<ui:composition template="/WEB-INF/templates/base.xhtml">
+		<ui:define name="content">
+			<h:form class="mainForm">
+				<ol class="progress-track">
+					<li class="progress-done">
+						<center>
+							<div class="icon-wrap">
+								<span class="fa fa-check"></span>
+							</div>
+							<span class="progress-text"> Initialisation </span>
+						</center>
+					</li>
+					<li class="progress-done">
+						<center>
+							<div class="icon-wrap">
+								<span class="fa fa-check"></span>
+							</div>
+							<span class="progress-text"> Négociation </span>
+						</center>
+					</li>
+					<li class="progress-done">
+						<center>
+							<div class="icon-wrap">
+								<span class="fa fa-check"></span>
+							</div>
+							<span class="progress-text"> Rendez-Vous </span>
+						</center>
+					</li>
+					<li class="progress-done">
+						<center>
+							<div class="icon-wrap">
+								<span class="fa fa-check"></span>
+							</div>
+							<span class="progress-text"> Transaction </span>
+						</center>
+					</li>
+
+					<li class="progress-done progress-current">
+						<center>
+							<div class="icon-wrap">
+								<span class="fa fa-spinner fa-pulse"></span>
+							</div>
+							<span class="progress-text"> Confirmation </span>
+						</center>
+					</li>
+				</ol>
+
+				<!-- Echange Etape -->
+
+				<!-- Page titre -->
+
+					<div class="EchangeOneBloc">
+						<div class="pageBouton">
+							<h:commandButton class="objetItem fa fa-refresh fa-3x"
+										action="#{mbEchange.refresh()}" value="Recharger" />
+						</div>
+					</div>
+
+
+				<div class="pageTitleBloc">
+					<div class="pageTitleIcon">
+						<span class="fa-2x">5</span>
+					</div>
+					<div class="pageTitle">Confirmer l'Echange</div>
+				</div>
+
+				<!-- Page Content -->
+
+				<div class="mainEchange">
+					<div class="echangeVersusBloc">
+						<div class="pageSubTitle">
+							<span>Moi</span>
+						</div>
+						<div class="pageSubTitle">
+							<span>#{mbEchange.autre.pseudo}</span>
+						</div>
+					</div>
+					<div class="echangeVersusBloc">
+						<div class="userEchangeBloc">
+							<div>
+								<span class="fa fa-user-circle-o fa-3x userAvatar"></span>
+								<!-- <img id="imgProfil" class="userAvatar" /> -->
+							</div>
+							<ul>
+								<li><a>#{mbEchange.moi.pseudo}</a></li>
+								<li><span>Confirmé
+										#{mbEchange.userXP(mbEchange.moi)}</span></li>
+								<li class="stars">#{mbEchange.userMoyenne(mbEchange.moi)}</li>
+								<li><span><a>#{mbEchange.userAvis(mbEchange.moi)}
+											Avis</a></span></li>
+							</ul>
+						</div>
+
+						<div class="userEchangeBloc">
+							<div>
+								<span class="fa fa-user-circle-o fa-3x userAvatar"></span>
+								<!-- <img id="imgProfil" class="userAvatar" /> -->
+							</div>
+							<ul>
+								<li><a>#{mbEchange.autre.pseudo}</a></li>
+								<li><span>Confirmé
+										#{mbEchange.userXP(mbEchange.autre)}</span></li>
+								<li class="stars">#{mbEchange.userMoyenne(mbEchange.autre)}
+								</li>
+								<li><span><a>#{mbEchange.userAvis(mbEchange.autre)}
+											Avis</a></span></li>
+							</ul>
+						</div>
+					</div>
+					<div class="echangeVersusBloc">
+						<div class="validateState pageBouton">
+							<div>L'échange a été effectué tel quel</div>
+							<h:commandButton action="#{mbEchange.enregistrerConclusion()}"
+								value="Confirmer" rendered="#{!mbEchange.hasValidatedMoi}"
+								class="objetItem" />
+							<h:panelGroup rendered="#{mbEchange.hasValidatedMoi}">
+								<span class="fa fa-check-square-o fa-2x" />Validé
+							</h:panelGroup>
+						</div>
+						<div class="validateState">
+							<h:panelGroup rendered="#{mbEchange.hasValidatedAutre}">
+								<span class="fa fa-check-square-o fa-2x" />#{mbEchange.autre.pseudo}
+										a validé l'échange tel quel
+								</h:panelGroup>
+							<h:panelGroup rendered="#{!mbEchange.hasValidatedAutre}">
+								<span class="fa fa-square-o fa-2x" /> En attente de
+										#{mbEchange.autre.pseudo}
+								</h:panelGroup>
+						</div>
+
+					</div>
+					<div class="pageSubTitle">Sinon</div>
+					<div class="echangeOneBloc texteTeaser">Si l'échange a été...
+					</div>
+					<div class="echangeVersusBloc">
+						<fieldset>
+							<legend>Effectué</legend>
+							<div class="pageBouton">
+								<div class="objetItem">Renégocier</div>
+							</div>
+						</fieldset>
+						<fieldset>
+							<legend>Non effectué</legend>
+							<div class="pageBouton">
+								<div class="objetItem">Reporter</div>
+							</div>
+							<div class="pageBouton">
+								<div class="objetItem">Annuler</div>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

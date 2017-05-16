@@ -7,14 +7,14 @@ public enum Conclusion {
 
 	/*
 	 * INSERT into conclusionechange (ID,LIBELLE) values (1,'Termine'); 
-	 * INSERT into conclusionechange (ID,LIBELLE) values (2,'Annulation');
+	 * INSERT into conclusionechange (ID,LIBELLE) values (2,'Conclusion En Attente');
 	 * INSERT into conclusionechange (ID,LIBELLE) values (3,'Notation'); 
 	 * INSERT into conclusionechange (ID,LIBELLE) values (4,'Redéfinition'); 
 	 * INSERT into conclusionechange (ID,LIBELLE) values (5,'Renégociation'); 
 	 * INSERT into conclusionechange (ID,LIBELLE) values (6,'Reprise RDV');
 	 */
 
-	TERMINE(1, "Termine"), ANNULATION(2, "Annulation"), NOTATION(3, "Notation"), REDEFINITION(4,
+	TERMINE(1, "Termine"), ATTENTE_CONCLUSION(2, "Conclusion En Attente"), NOTATION(3, "Notation"), REDEFINITION(4,
 			"Redéfinition"), RENEGOCIATION(5, "Renégociation"), REPRISE_RDV(6, "Reprise RDV");
 
 	private int idConclusion;

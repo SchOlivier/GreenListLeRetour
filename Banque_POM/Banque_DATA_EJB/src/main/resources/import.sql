@@ -486,7 +486,7 @@ INSERT into motif_refus (ID,LIBELLE) values (5,'l''objet est abimé');
 INSERT into motif_refus (ID,LIBELLE) values (6,'Autre raison');
 
 INSERT into conclusionechange (ID,LIBELLE) values (1,'Terminé');
-INSERT into conclusionechange (ID,LIBELLE) values (2,'Annulation');
+INSERT into conclusionechange (ID,LIBELLE) values (2,'Conclusion En Attente');
 INSERT into conclusionechange (ID,LIBELLE) values (3,'Notation');
 INSERT into conclusionechange (ID,LIBELLE) values (4,'Redéfinition');
 INSERT into conclusionechange (ID,LIBELLE) values (5,'Renégociation');

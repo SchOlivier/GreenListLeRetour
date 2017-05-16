@@ -36,19 +36,7 @@ public class BusinessEchange implements IBusinessEchange {
 
 	@Override
 	public Echange GetEchange( int idEchange) {
-		Echange echange = proxyEchange.GetEchange(idEchange);
-		List<Objet> objCOmplet = echange.getObjets();
-		
-		
-
-		for (Objet objet : objCOmplet){
-			 proxyObjet.getObjetByIdWithProduitAndTA(objet.getId());
-		}
-		
-		
-		echange.setObjets(objCOmplet);
-		
-		
+		Echange echange = proxyEchange.GetEchange(idEchange);	
 		return echange;
 	}
 

@@ -16,7 +16,7 @@
 			<!-- Contenu Principal -->
 			<h:panelGroup>
 
-				<form class="formulaire formFicheObjet">
+				<h:form class="formulaire formFicheObjet">
 					<div class="ficheObjet">
 						<div class="ficheObjetBloc">
 							<div class="pageTitleBloc">
@@ -36,7 +36,9 @@
 								</div>
 								<div class="editSouhaitBloc">
 									<div class="editIcon">
+									<h:commandLink action="#{mbFicheObjet.creerEchange()}">
 										<span class="fa fa-handshake-o"></span>
+										</h:commandLink>
 									</div>
 								</div>
 							</div>
@@ -203,7 +205,7 @@
 							</div>
 						</div>
 					</div>
-				</form>
+				</h:form>
 			</h:panelGroup>
 			<!-- /Contenu Principal -->
 		</ui:define>

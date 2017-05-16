@@ -1,0 +1,159 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<head>
+
+<title>GreenList - Attente RDV</title>
+</head>
+<h:body>
+	<ui:composition template="/WEB-INF/templates/base.xhtml">
+		<ui:define name="content">
+			<h:panelGroup class="mainPanel">
+				<div class="mainPanel">
+					<form class="mainForm">
+						<!-- Echange Progress Steps Bar -->
+
+						<ol class="progress-track">
+							<li class="progress-done">
+								<center>
+									<div class="icon-wrap">
+										<span class="fa fa-check"></span>
+									</div>
+									<span class="progress-text"> Initialisation </span>
+								</center>
+							</li>
+							<li class="progress-done">
+								<center>
+									<div class="icon-wrap">
+										<span class="fa fa-check"></span>
+									</div>
+									<span class="progress-text"> Négociation </span>
+								</center>
+							</li>
+							<li class="progress-done">
+								<center>
+									<div class="icon-wrap">
+										<span class="fa fa-check"></span>
+									</div>
+									<span class="progress-text"> Rendez-Vous </span>
+								</center>
+							</li>
+
+							<li class="progress-done progress-current">
+								<center>
+									<div class="icon-wrap">
+										<span class="fa fa-spinner fa-pulse"></span>
+									</div>
+									<span class="progress-text"> Transaction </span>
+								</center>
+							</li>
+							<li class="progress-todo">
+								<center>
+									<div class="icon-wrap">
+										<span></span>
+									</div>
+									<span class="progress-text">Confirmation</span>
+								</center>
+							</li>
+						</ol>
+
+						<!-- Echange Etape -->
+
+						<div class="EchangeOneBloc">
+						<div class="pageBouton">
+							<h:commandButton class="objetItem fa fa-refresh fa-3x"
+										action="#{mbEchange.refresh()}" value="Recharger" />
+						</div>
+					</div>
+
+
+						<div class="pageTitleBloc">
+							<div class="pageTitleIcon">
+								<span class="fa-2x">4</span>
+							</div>
+							<div class="pageTitle">En attente du RDV</div>
+						</div>
+
+						<!-- Page Content -->
+
+						<div class="mainEchange">
+							<div class="pageSubTitle">
+								<span class="fa fa-info-circle"></span>
+							</div>
+							<div class="echangeVersusBloc">
+								<ul>
+									<li>Date:</li>
+									<li><h:outputText value="#{mbEchange.dateProposee}">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+										</h:outputText></li>
+								</ul>
+								<ul>
+									<li>Adresse:</li>
+									<li>#{mbEchange.adresseProposee.numeroVoie} -
+										#{mbEchange.adresseProposee.rue}
+										#{mbEchange.adresseProposee.codePostal} -
+										#{mbEchange.adresseProposee.ville}</li>
+								</ul>
+							</div>
+							<div class="echangeOneBloc">
+								<div class="mapBloc">
+									<div id="map">
+										
+										<div class="pageSubTitle">Localisation</div>
+										<div class="echangeOneBloc">
+											<div class="mapBloc">
+												<h:panelGroup rendered="#{mbEchange.dateProposee != null}">
+													<p:gmap id="map"
+														center="#{mbEchange.adresseProposee.latitude}, #{mbEchange.adresseProposee.longitude}"
+														zoom="12" type="ROADMAP" style="width:100%;height:400px"
+														model="#{mbEchange.simpleModel}">
+
+													</p:gmap>
+												</h:panelGroup>
+											</div>
+										</div>
+										
+
+
+									</div>
+								</div>
+							</div>
+
+							<div class="boutonsCenterBloc">
+								<div class="pageBouton">
+									<div class="objetItem">Reporter</div>
+								</div>
+							</div>
+
+
+
+
+							<div class="echangeVersusBloc">
+								<div class="validateState pageBouton">
+									<div class="objetItem">Valider</div>
+								</div>
+								<div class="validateState">
+									<span class="fa fa-check-square-o"></span>
+								</div>
+							</div>
+
+							<div class="boutonsCenterBloc">
+								<div class="pageBouton">
+									<div class="objetItem">Annuler</div>
+								</div>
+							</div>
+						</div>
+						<!-- Chat Bloc -->
+					</form>
+				</div>
+
+
+				<!-- Scripts Temporaires -->
+			</h:panelGroup>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+</html>

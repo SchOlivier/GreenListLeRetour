@@ -12,6 +12,7 @@ import javax.faces.context.FacesContext;
 
 import org.greenlist.business.api.IBusinessObjet;
 import org.greenlist.business.api.IBusinessUtilisateur;
+import org.greenlist.entity.Echange;
 import org.greenlist.entity.Objet;
 import org.greenlist.entity.Photo;
 import org.greenlist.entity.Utilisateur;
@@ -25,6 +26,9 @@ public class AfficherObjetManagerBean {
 	@EJB
 	private IBusinessUtilisateur proxyUtilisateur;
 
+	@ManagedProperty(value = "#{mbUtilisateur}")
+	private UtilisateurManagedBean mbConnect;
+	
 	private Objet objetAffiche = new Objet();
 	private List<Photo> photos;
 	private Utilisateur proprietaire = new Utilisateur();
@@ -33,12 +37,9 @@ public class AfficherObjetManagerBean {
 	private int nbEchanges = 0;
 
 
-	public void init() {
-		
-		 
+	public void init() {		 
 		
 		int cntxtId = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"));
-		
 		
 		objetAffiche.setId(cntxtId);
 		objetAffiche = proxyObjet.getObjetComplet(objetAffiche);
@@ -58,7 +59,14 @@ public class AfficherObjetManagerBean {
 
 	
 
-	
+	public String creerEchange(){
+		Utilisateur userConnecte = mbConnect.getUtilisateurConnecte();
+		Echange echange = proxyObjet.creerEchange(objetAffiche, userConnecte, proprietaire);
+		
+		String nav ="/echange.xhtml?faces-redirect=true&idE="+ echange.getId() ;
+		return nav;
+		
+	}
 	
 	
 	public Objet getObjetAffiche() {
@@ -123,6 +131,18 @@ public class AfficherObjetManagerBean {
 
 	public void setNbEchanges(int nbEchanges) {
 		this.nbEchanges = nbEchanges;
+	}
+
+
+
+	public UtilisateurManagedBean getMbConnect() {
+		return mbConnect;
+	}
+
+
+
+	public void setMbConnect(UtilisateurManagedBean mbConnect) {
+		this.mbConnect = mbConnect;
 	}
 
 

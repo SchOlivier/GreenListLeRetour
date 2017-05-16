@@ -1,5 +1,6 @@
 package org.greenlist.data.impl;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,7 +14,9 @@ import org.greenlist.data.api.IDaoEchange;
 import org.greenlist.data.api.IDaoObjet;
 import org.greenlist.entity.Adresse;
 import org.greenlist.entity.Conclusionechange;
+import org.greenlist.entity.Domaine;
 import org.greenlist.entity.Echange;
+import org.greenlist.entity.Groupe;
 import org.greenlist.entity.Liste;
 import org.greenlist.entity.Message;
 import org.greenlist.entity.Note;
@@ -53,11 +56,19 @@ public class DaoEchange implements IDaoEchange {
 	private static final String REQUETE_GET_RDVS = "SELECT rdv FROM Rdv rdv " + "INNER JOIN fetch rdv.adresse "
 			+ "INNER JOIN rdv.echange " + "WHERE rdv.echange.id = :pEid";
 
-	private static final String REQUETE_GET_NOTES = "SELECT e.notes FROM Echange e " + "WHERE e.id = :peId";
-
+	private static final String REQUETE_GET_NOTES = 
+			"SELECT e.notes FROM Echange e "
+			+ "WHERE e.id = :peId";
+	
 	private static final String GET_CONCLUSION_BY_ID = "SELECT c FROM Conclusionechange c " + "WHERE c.id = :pCId";
 
 	private static final String SUPPRIMER_RDVS = "DELETE FROM RDV " + "WHERE RDV.IDECHANGE = :pEId";
+
+	private static final String REQUETE_GET_GROUPE = "SELECT g from Groupe g where g.id = :pGId ";
+
+	private static final String REQUETE_GET_DOMAINE = "SELECT D from Domaine d where d.id = :pDId ";
+
+	private static final String REQUETTE_GET_OBJET_BY_ID_WITH_PDT_TA = "SELECT o FROM Objet o inner join fetch o.produit inner join fetch o.trancheAge inner join fetch o.utilisateur inner join fetch o.photos WHERE o.id = :pidObjet";
 
 	@Override
 	public Echange creerEchange(Echange echange) {
@@ -68,7 +79,50 @@ public class DaoEchange implements IDaoEchange {
 	@Override
 	public Echange GetEchange(int IdEchange) {
 		Query query = em.createQuery(REQUETE_GET_ECHANGE).setParameter("pEid", IdEchange);
-		return (Echange) query.getSingleResult();
+		Echange echange = (Echange) query.getSingleResult();
+		em.merge(echange);
+		
+		for (Objet objet : echange.getObjets()){
+			 objet = getObjetByIdWithProduitAndTA(objet.getId());
+		}
+		
+		return echange;
+	}
+	
+	/**
+	 * Methode pour r�cup�rer un objet par son id
+	 * 
+	 * @param idObjet
+	 *            id de l'objet recherch�
+	 */
+	
+	private Objet getObjetByIdWithProduitAndTA(int idObjet) {
+		Objet objetComplet = new Objet();
+		Query query = em.createQuery(REQUETTE_GET_OBJET_BY_ID_WITH_PDT_TA).setParameter("pidObjet", idObjet);
+		objetComplet = (Objet) query.getSingleResult();
+		Query queryGroupe = em.createQuery(REQUETE_GET_GROUPE).setParameter("pGId",
+				objetComplet.getProduit().getGroupe().getId());
+		objetComplet.getProduit().setGroupe((Groupe) queryGroupe.getSingleResult());
+		Query queryDomaine = em.createQuery(REQUETE_GET_DOMAINE).setParameter("pDId",
+				objetComplet.getProduit().getGroupe().getDomaine().getId());
+		objetComplet.getProduit().getGroupe().setDomaine((Domaine) queryDomaine.getSingleResult());
+
+			
+		em.merge(objetComplet);
+		
+		if (objetComplet.getPhotos().size() == 0){
+			String path = "/img/pardefaut.png";
+
+			Photo defaut = new Photo();
+			defaut.setUrl(path);
+			defaut.setObjet(objetComplet);
+			List<Photo> ph = new ArrayList<>();
+				ph.add(defaut);
+			objetComplet.setPhotos(ph);
+		}
+	//	objetComplet.setPhotos(getPhotos(objetComplet));
+
+		return objetComplet;
 	}
 
 	@Override
@@ -159,8 +213,8 @@ public class DaoEchange implements IDaoEchange {
 
 	@Override
 	public Echange retirerObjet(Objet objet, Echange echange) {
-		Query query = em.createNativeQuery(REQUETE_RETIRER_OBJET).setParameter("peId", echange.getId())
-				.setParameter("poId", objet.getId());
+		Query query = em.createNativeQuery(REQUETE_RETIRER_OBJET).setParameter("EId", echange.getId())
+				.setParameter("OId", objet.getId());
 		query.executeUpdate();
 		return echange;
 	}
@@ -186,8 +240,14 @@ public class DaoEchange implements IDaoEchange {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Note> getNotes(Echange echange) {
+		List<Note> notes = em.createQuery(REQUETE_GET_NOTES).setParameter("peId", echange.getId()).getResultList();
 
-		return em.createQuery(REQUETE_GET_NOTES).setParameter("peId", echange.getId()).getResultList();
+		for (Note n : notes){
+			em.merge(n);
+			Utilisateur u = n.getUtilisateurByIdutilisateurnote();
+			u.toString();
+		}
+		return notes;
 	}
 
 	@Override

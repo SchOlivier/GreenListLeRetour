@@ -1,14 +1,12 @@
 package org.greenlist.controller;
 
-						   
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.HashMap;					 
-						   
+import java.util.HashMap;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -48,7 +46,7 @@ public class EchangeManagedBean {
 	private IBusinessObjet proxyObjet;
 	@EJB
 	private IBusinessAdresse proxyAdresse;
-	
+
 	@ManagedProperty(value = "#{mbUtilisateur}")
 	private UtilisateurManagedBean mbConnect;
 
@@ -74,33 +72,41 @@ public class EchangeManagedBean {
 	private Utilisateur moi;
 	private Utilisateur autre;
 	private boolean hasValidatedMoi;
-	private boolean hasValidatedAutre;	
+	private boolean hasValidatedAutre;
 	private int floconsProposesMoi;
 	private int floconsProposesAutre;
 	private int propositionFloconsGauche;
 	private int propositionFloconsDroite;
-	
-	private static final String PAGE_INITIALISATION = "testInitialisation.xhtml";
+	private Note noteMoi;
+	private int idEchange;
+
+	private static final String PAGE_HUB = "echange.xhtml";
+	private static final String PAGE_INITIALISATION = "echangeInitialisation.xhtml";
 	private static final String PAGE_NEGOCIATION = "echangeEnCours.xhtml";
-	private static final String PAGE_PRISE_RDV = "testPriseRdv.xhtml";
-	private static final String PAGE_RDV = "testRdv.xhtml";
-	private static final String PAGE_CONCLUSION_RDV = "testConclusionRdv.xhtml";
-	private static final String PAGE_NOTATION = "testNotation.xhtml";
-	private static final String PAGE_FIN = "testFin.xhtml";
-	private static final String FACES_REDIRECT = "?faces-redirect=true";																	
+	private static final String PAGE_PRISE_RDV = "echange-3-valide-proposer.xhtml";
+	private static final String PAGE_RDV = "echange-4-attentetransaction.html";
+	private static final String PAGE_CONCLUSION_RDV = "echange-5-conclusion.xhtml";
+	private static final String PAGE_NOTATION = "echange-5-confirme-noter.xhtml";
+	private static final String PAGE_FIN = "echangeFinal.xhtml";
+	private static final String FACES_REDIRECT = "?faces-redirect=true&idE=";
 
 	// TODO: retirer ces attributs à la fin des tests
-	 private static int IDECHANGE = 2;
-			 
-				  
+	private static int IDECHANGE = 1;
+
 	// METHODE DE TEST
 	public void testMethod(int userId) {
-		
+
 	}
 
 	@PostConstruct
 	public void init() {
 		calculerEtape();
+	}
+	
+	// Bouton Refresh
+	
+	public String refresh(){
+		return PAGE_HUB + FACES_REDIRECT + idEchange;
 	}
 
 	// ETAPE 1 - INITIALISATION
@@ -108,14 +114,12 @@ public class EchangeManagedBean {
 	/**
 	 * L'userB accepte l'échange : on passe à l'étape de négociation, les
 	 * HasValidated passent à false, et la date de début de négociation est
-	 * enregistrée.
-	 * Méthode privée : appelée via valider(userB).
+	 * enregistrée. Méthode privée : appelée via valider(userB).
 	 */
 	private void accepterEchange() {
 		System.out.println("je rendre dans accepterEchange");
 		echange.setDateDebutNegociation(new Date());
-									  
-									  
+
 		echange.setEtape(EtapeEchange.NEGOCIATION);
 		proxyEchange.majEchange(echange);
 	}
@@ -168,17 +172,17 @@ public class EchangeManagedBean {
 		init();
 	}
 
-	public void cribleListes(List<Objet> userGetListe){
-	Iterator<Objet> i = userGetListe.iterator() ;
-    while (i.hasNext()){
-    	Objet obj = i.next();
-    	for (Objet objet : objets){
-    		if (objet.getId() == obj.getId()){
-    			i.remove();
-    		}
-    	}
-        
-    }
+	public void cribleListes(List<Objet> userGetListe) {
+		Iterator<Objet> i = userGetListe.iterator();
+		while (i.hasNext()) {
+			Objet obj = i.next();
+			for (Objet objet : objets) {
+				if (objet.getId() == obj.getId()) {
+					i.remove();
+				}
+			}
+
+		}
 	}
 
 	/**
@@ -192,19 +196,11 @@ public class EchangeManagedBean {
 	 *            l'utilisateur qui propose
 	 */
 	public void majNegociation() {
-		
-		if (propositionFloconsDroite > 0) {
-			if (autre.getId() == userA.getId()){
-				echange.setValeur(propositionFloconsDroite);
-			}
-			else{
-				echange.setValeur(-propositionFloconsDroite);
-			}
-		} else if (propositionFloconsGauche > 0){
-			if (autre.getId() == userA.getId()){
+
+		if (propositionFloconsGauche >= 0) {
+			if (autre.getId() == userA.getId()) {
 				echange.setValeur(propositionFloconsGauche);
-			}
-			else{
+			} else {
 				echange.setValeur(-propositionFloconsGauche);
 			}
 		}
@@ -222,8 +218,9 @@ public class EchangeManagedBean {
 	// ETAPE 3 - Prise de RDV
 
 	public void proposerRDV() {
-		System.out.println("je rentre dans la propal");	
-		// je m'en suis pas sorti avec l'adresse, elle sera en dur, ce sera l'adresse 1 de l'userA.
+		System.out.println("je rentre dans la propal");
+		// je m'en suis pas sorti avec l'adresse, elle sera en dur, ce sera
+		// l'adresse 1 de l'userA.
 		Rdv rdv = new Rdv();
 		Adresse a = userA.getAdresses().get(0);
 		rdv.setAdresse(a);
@@ -259,9 +256,9 @@ public class EchangeManagedBean {
 	 * pour faire joli.
 	 */
 	public void enregistrerConclusion() {
-		echange.setConclusionechange(proxyEchange.getConclusionById(Conclusion.NOTATION.getIdConclusion()));
+		echange.setConclusionechange(proxyEchange.getConclusionById(Conclusion.ATTENTE_CONCLUSION.getIdConclusion()));
 		proxyEchange.majEchange(echange);
-		resetValidationAutreUser();
+
 		valider();
 	}
 
@@ -275,23 +272,15 @@ public class EchangeManagedBean {
 	 */
 	public void Noter() {
 		Note note = new Note();
-		if (moi.getId() == userA.getId()) {
-			note.setEchange(echange);
-			note.setUtilisateurByIdutilisateurestnote(userB);
-			note.setUtilisateurByIdutilisateurnote(userA);
-			note.setAppreciation(appreciationA);
-			note.setNote(noteA);
-		} else {
-			note.setEchange(echange);
-			note.setUtilisateurByIdutilisateurestnote(userA);
-			note.setUtilisateurByIdutilisateurnote(userB);
-			note.setAppreciation(appreciationB);
-			note.setNote(noteB);
-		}
+		note.setEchange(echange);
+		note.setUtilisateurByIdutilisateurestnote(autre);
+		note.setUtilisateurByIdutilisateurnote(moi);
+		note.setAppreciation(appreciationA);
+		note.setNote(noteA);
 		proxyEchange.noterEchange(note);
 		valider();
 	}
-																	 
+
 	// METHODES GENERALES
 	private void razDonnees() {
 		echange = new Echange();
@@ -299,7 +288,7 @@ public class EchangeManagedBean {
 		userB = new Utilisateur();
 		rdvs = new ArrayList<>();
 		objets = new ArrayList<>();
-		notes = new ArrayList<>();
+		notes = null;
 		conclusion = new Conclusionechange();
 		adresses = new ArrayList<>();
 		dateProposee = null;
@@ -311,53 +300,57 @@ public class EchangeManagedBean {
 		autre = new Utilisateur();
 		floconsProposesMoi = 0;
 		floconsProposesAutre = 0;
+		noteMoi = null;
 	}
 
 	private void recupereDonnees() {
 		// TODO: a modifier avec l'id de l'échange récupérée d'une page
 		// précédente.
-		
+
 		echange = proxyEchange.GetEchange(IDECHANGE);
-		if (echange.getValeur()>0){
+		idEchange = echange.getId();
+		if (echange.getValeur() > 0) {
 			floconsProposesMoi = echange.getValeur();
 			propositionFloconsGauche = floconsProposesMoi;
 			floconsProposesAutre = 0;
-		}
-		else{
+		} else {
 			floconsProposesAutre = -echange.getValeur();
 			propositionFloconsDroite = floconsProposesAutre;
 			floconsProposesMoi = 0;
 		}
 		userA = proxyEchange.GetUtilisateurA(echange);
-		
+
 		userB = proxyEchange.GetUtilisateurB(echange);
-		
+
 		getObjetsEchangeUser(userA);
 		moi = mbConnect.getUtilisateurConnecte();
-		if (moi.getId() == userA.getId()){
+		if (moi.getId() == userA.getId()) {
 			autre = userB;
 			moi = userA;
 			hasValidatedMoi = echange.isHasvalidatedusera();
 			hasValidatedAutre = echange.isHasvalidateduserb();
-		}
-		else{
+		} else {
 			autre = userA;
 			moi = userB;
 			hasValidatedMoi = echange.isHasvalidateduserb();
 			hasValidatedAutre = echange.isHasvalidatedusera();
 		}
-		
-		
+
 		rdvs = proxyEchange.getRdv(echange);
-					   
+
 		objets = echange.getObjets();
 		cribleListes(userA.getObjets());
 		cribleListes(userB.getObjets());
 		notes = proxyEchange.getNotes(echange);
+			for (Note n : notes){
+				if(n.getUtilisateurByIdutilisateurnote().getId() == moi.getId()){
+					noteMoi = n;
+				}
+			}
 		conclusion = proxyEchange.getConclusion(echange);
 		adresses.addAll(proxyAdresse.getAdresseByUtilisateur(userA));
 		adresses.addAll(proxyAdresse.getAdresseByUtilisateur(userB));
-		if (rdvs.size()>0){
+		if (rdvs.size() > 0) {
 			dateProposee = rdvs.get(0).getDate();
 			adresseProposee = rdvs.get(0).getAdresse();
 			LatLng coord = new LatLng(adresseProposee.getLatitude(), adresseProposee.getLongitude());
@@ -379,16 +372,39 @@ public class EchangeManagedBean {
 	 * d'échange.
 	 */
 	private void calculerEtape() {
+//		try{
+//			IDECHANGE = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idE"));
+//		}catch (Exception e) {
+//			IDECHANGE = idEchange;
+//		}
+		
+		IDECHANGE = 2;
+		
 		razDonnees();
 		recupereDonnees();
 
 		Date dateDuJour = new Date();
+
+//		System.out.println(rdvs.size());
+//		System.out.println(rdvs.get(0).isAccepte());
+//		System.out.println(rdvs.get(0).getDate());
+//		System.out.println(dateDuJour);
 		
-		if (conclusion != null && conclusion.getId() == Conclusion.TERMINE.getIdConclusion()) {
-			echange.setEtape(EtapeEchange.TERMINE);
+		if (conclusion != null){
+			if (conclusion.getId() == Conclusion.TERMINE.getIdConclusion()) {
+				echange.setEtape(EtapeEchange.TERMINE);
+			}
+			else if(conclusion.getId() == Conclusion.NOTATION.getIdConclusion()){
+				if (noteMoi != null && noteMoi.getUtilisateurByIdutilisateurnote().getId() == moi.getId()){
+					echange.setEtape(EtapeEchange.TERMINE);
+				}
+				
+			}
 		} else if (conclusion != null && conclusion.getId() == Conclusion.NOTATION.getIdConclusion()) {
 			echange.setEtape(EtapeEchange.NOTATION);
-		} else if (rdvs.size() > 0 && rdvs.get(0).isAccepte() && rdvs.get(0).getDate().before(dateDuJour)) {
+		} else if (rdvs.size() > 0 && rdvs.get(0).isAccepte() && rdvs.get(0).getDate().before(dateDuJour) 
+				|| conclusion != null && conclusion.getId() == Conclusion.ATTENTE_CONCLUSION.getIdConclusion()) {
+			System.out.println("############################\nJE SUIS LA\n##################################");
 			echange.setEtape(EtapeEchange.CONCLUSION_RDV);
 		} else if (rdvs.size() > 0 && rdvs.get(0).isAccepte() && rdvs.get(0).getDate().after(dateDuJour)) {
 			echange.setEtape(EtapeEchange.RDV);
@@ -400,36 +416,33 @@ public class EchangeManagedBean {
 			echange.setEtape(EtapeEchange.INITIALISATION);
 		}
 
-		Navigation();
 	}
-	
-	private void Navigation() {
-		ConfigurableNavigationHandler  nav =
-				(ConfigurableNavigationHandler)
-				FacesContext.getCurrentInstance()
-				.getApplication()
-				.getNavigationHandler();
-		switch(echange.getEtape()){
+
+	public void Navigation() {
+		calculerEtape();
+		ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) FacesContext.getCurrentInstance()
+				.getApplication().getNavigationHandler();
+		switch (echange.getEtape()) {
 		case INITIALISATION:
-//			nav.performNavigation(PAGE_INITIALISATION + FACES_REDIRECT);
+			nav.performNavigation(PAGE_INITIALISATION + FACES_REDIRECT + IDECHANGE);
 			break;
 		case NEGOCIATION:
-//			nav.performNavigation(PAGE_NEGOCIATION + FACES_REDIRECT);
+			 nav.performNavigation(PAGE_NEGOCIATION + FACES_REDIRECT + IDECHANGE);
 			break;
 		case PRISE_RDV:
-//			nav.performNavigation(PAGE_PRISE_RDV + FACES_REDIRECT);
+			 nav.performNavigation(PAGE_PRISE_RDV + FACES_REDIRECT + IDECHANGE);
 			break;
 		case RDV:
-//			nav.performNavigation(PAGE_RDV + FACES_REDIRECT);
+			 nav.performNavigation(PAGE_RDV + FACES_REDIRECT + IDECHANGE);
 			break;
 		case CONCLUSION_RDV:
-//			nav.performNavigation(PAGE_CONCLUSION_RDV+ FACES_REDIRECT);
+			 nav.performNavigation(PAGE_CONCLUSION_RDV+ FACES_REDIRECT + IDECHANGE);
 			break;
 		case NOTATION:
-//			nav.performNavigation(PAGE_NOTATION + FACES_REDIRECT);
+			 nav.performNavigation(PAGE_NOTATION + FACES_REDIRECT + IDECHANGE);
 			break;
 		case TERMINE:
-			nav.performNavigation(PAGE_FIN + FACES_REDIRECT);
+			nav.performNavigation(PAGE_FIN + FACES_REDIRECT + IDECHANGE);
 			break;
 		}
 
@@ -439,7 +452,7 @@ public class EchangeManagedBean {
 	 * Méthode appelée quand un utilisateur valide le statut actuel de
 	 * l'échange, à toutes les étapes. Si les deux ont validé, appelle la
 	 * méthode pour passer à l'étape suivante.
-					   
+	 * 
 	 * 
 	 * @param user
 	 *            l'utilisateur ayant validé.
@@ -478,6 +491,9 @@ public class EchangeManagedBean {
 				break;
 			}
 			calculerEtape();
+			ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) FacesContext.getCurrentInstance()
+					.getApplication().getNavigationHandler();
+			nav.performNavigation(PAGE_HUB + FACES_REDIRECT);
 		}
 	}
 
@@ -496,7 +512,7 @@ public class EchangeManagedBean {
 	}
 
 	private void accepterRDV() {
-		if (dateRdv.after(new Date())) {
+		if (dateProposee.after(new Date())) {
 			proxyEchange.accepterRDV(rdvs.get(0));
 			echange.setEtape(EtapeEchange.RDV);
 		} else {
@@ -533,10 +549,10 @@ public class EchangeManagedBean {
 		for (Objet objet : laliste) {
 			total = total + objet.getValeur();
 		}
-		
-		if(user.getId() == moi.getId()){
+
+		if (user.getId() == moi.getId()) {
 			total += floconsProposesMoi;
-		}else{
+		} else {
 			total += floconsProposesAutre;
 		}
 
@@ -601,8 +617,6 @@ public class EchangeManagedBean {
 	public void setObjets(List<Objet> objets) {
 		this.objets = objets;
 	}
-
-
 
 	public List<Note> getNotes() {
 		return notes;
@@ -714,12 +728,12 @@ public class EchangeManagedBean {
 
 	public void setAutre(Utilisateur autre) {
 		this.autre = autre;
-						  
+
 	}
 
 	public boolean isHasValidatedMoi() {
 		return hasValidatedMoi;
-										   
+
 	}
 
 	public void setHasValidatedMoi(boolean hasValidatedMoi) {
@@ -780,6 +794,5 @@ public class EchangeManagedBean {
 
 	public void setPropositionFloconsDroite(int propositionFloconsDroite) {
 		this.propositionFloconsDroite = propositionFloconsDroite;
-	}														  
-}																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																					 
-
+	}
+}

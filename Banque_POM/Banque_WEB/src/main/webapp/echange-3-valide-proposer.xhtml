@@ -68,6 +68,13 @@
 
 					<!-- Page titre -->
 
+					<div class="EchangeOneBloc">
+						<div class="pageBouton">
+							<h:commandButton class="objetItem fa fa-refresh fa-3x"
+										action="#{mbEchange.refresh()}" value="Recharger" />
+						</div>
+					</div>
+
 
 					<div class="pageTitleBloc">
 						<div class="pageTitleIcon">
@@ -118,7 +125,7 @@
 								</h:panelGroup>
 									<h:panelGroup rendered="#{mbEchange.dateProposee != null}">
 										<h:outputText value="#{mbEchange.dateProposee}">
-											<f:convertDateTime pattern="MM/dd/yyyy HH:mm"/>
+											<f:convertDateTime pattern="MM/dd/yyyy HH:mm" />
 										</h:outputText>
 										<div>#{mbEchange.adresseProposee.numeroVoie}
 											#{mbEchange.adresseProposee.rue} -

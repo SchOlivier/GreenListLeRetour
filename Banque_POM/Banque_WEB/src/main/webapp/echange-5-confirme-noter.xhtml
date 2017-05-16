@@ -1,0 +1,117 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:head>
+	<title>Echange - Prise de Rendez-vous</title>
+	<f:metadata>
+		<f:event listener="#{mbEchange.init()}" type="preRenderView"></f:event>
+	</f:metadata>
+</h:head>
+
+<h:body>
+	<ui:composition template="/WEB-INF/templates/base.xhtml">
+		<ui:define name="content">
+			<h:panelGroup class="mainPanel">
+				<h:form class="mainForm">
+					<!-- Echange Progress Steps Bar -->
+
+					<ol class="progress-track">
+						<li class="progress-done">
+							<center>
+								<div class="icon-wrap">
+									<span class="fa fa-check"></span>
+								</div>
+								<span class="progress-text"> Initialisation </span>
+							</center>
+						</li>
+						<li class="progress-done">
+							<center>
+								<div class="icon-wrap">
+									<span class="fa fa-check"></span>
+								</div>
+								<span class="progress-text"> Négociation </span>
+							</center>
+						</li>
+						<li class="progress-done">
+							<center>
+								<div class="icon-wrap">
+									<span class="fa fa-check"></span>
+								</div>
+								<span class="progress-text"> Rendez-Vous </span>
+							</center>
+						</li>
+						<li class="progress-done">
+							<center>
+								<div class="icon-wrap">
+									<span class="fa fa-check"></span>
+								</div>
+								<span class="progress-text"> Transaction </span>
+							</center>
+						</li>
+						<li class="progress-done">
+							<center>
+								<div class="icon-wrap">
+									<span class="fa fa-check"></span>
+								</div>
+								<span class="progress-text"> Confirmation </span>
+							</center>
+						</li>
+					</ol>
+
+					<!-- Echange Etape -->
+
+					<!-- Page titre -->
+
+					<div class="EchangeOneBloc">
+						<div class="pageBouton">
+							<h:commandButton class="objetItem fa fa-refresh fa-3x"
+										action="#{mbEchange.refresh()}" value="Recharger" />
+						</div>
+					</div>
+
+
+					<div class="pageTitleBloc">
+						<div class="pageTitleIcon">
+							<span class="fa fa-check"></span>
+						</div>
+						<div class="pageTitle">Echange Confirmé</div>
+					</div>
+
+					<!-- Page Content -->
+
+					<div class="mainEchange">
+						<div class="echangeOneBloc texteTeaser">Veuillez noter la
+							qualité de votre échange avec #{mbEchange.autre.pseudo}.</div>
+
+						<div class="pageSubTitle">Votre Avis</div>
+						<div class="echangeOneBloc avisBloc">
+							<!-- Primefaces rating système -->
+							<div>
+								<h:outputText value="Note:" />
+								<p:rating value="#{mbEchange.noteA}" />
+							</div>
+							<p:inputTextarea value="#{mbEchange.appreciationA}" class="saisieAvis"></p:inputTextarea>
+						</div>
+						<div class="boutonsCenterBloc">
+							<div class="pageBouton">
+							<h:commandButton action="#{mbEchange.Noter()}" value="Valider" class="objetItem"/>
+							</div>
+							<div class="pageBouton">
+								<div class="objetItem">Annuler</div>
+							</div>
+						</div>
+					</div>
+					<!-- Chat Bloc -->
+
+				</h:form>
+			</h:panelGroup>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+
+</html>
