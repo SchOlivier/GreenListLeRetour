@@ -74,7 +74,11 @@ public class EchangeManagedBean {
 	private Utilisateur moi;
 	private Utilisateur autre;
 	private boolean hasValidatedMoi;
-	private boolean hasValidatedAutre;							   
+	private boolean hasValidatedAutre;	
+	private int floconsProposesMoi;
+	private int floconsProposesAutre;
+	private int propositionFloconsGauche;
+	private int propositionFloconsDroite;
 	
 	private static final String PAGE_INITIALISATION = "testInitialisation.xhtml";
 	private static final String PAGE_NEGOCIATION = "echangeEnCours.xhtml";
@@ -187,11 +191,22 @@ public class EchangeManagedBean {
 	 * @param user
 	 *            l'utilisateur qui propose
 	 */
-	public void majNegociation(int valeur, Utilisateur user) {
-		if (user.getId() == userA.getId()) {
-			echange.setValeur(valeur);
-		} else {
-			echange.setValeur(-valeur);
+	public void majNegociation() {
+		
+		if (propositionFloconsDroite > 0) {
+			if (autre.getId() == userA.getId()){
+				echange.setValeur(propositionFloconsDroite);
+			}
+			else{
+				echange.setValeur(-propositionFloconsDroite);
+			}
+		} else if (propositionFloconsGauche > 0){
+			if (autre.getId() == userA.getId()){
+				echange.setValeur(propositionFloconsGauche);
+			}
+			else{
+				echange.setValeur(-propositionFloconsGauche);
+			}
 		}
 		resetValidations();
 		proxyEchange.majEchange(echange);
@@ -290,6 +305,12 @@ public class EchangeManagedBean {
 		dateProposee = null;
 		adresseProposee = new Adresse();
 		simpleModel = new DefaultMapModel();
+		objetsMoi = new ArrayList<>();
+		objetsAutre = new ArrayList<>();
+		moi = new Utilisateur();
+		autre = new Utilisateur();
+		floconsProposesMoi = 0;
+		floconsProposesAutre = 0;
 	}
 
 	private void recupereDonnees() {
@@ -297,10 +318,20 @@ public class EchangeManagedBean {
 		// précédente.
 		
 		echange = proxyEchange.GetEchange(IDECHANGE);
+		if (echange.getValeur()>0){
+			floconsProposesMoi = echange.getValeur();
+			propositionFloconsGauche = floconsProposesMoi;
+			floconsProposesAutre = 0;
+		}
+		else{
+			floconsProposesAutre = -echange.getValeur();
+			propositionFloconsDroite = floconsProposesAutre;
+			floconsProposesMoi = 0;
+		}
 		userA = proxyEchange.GetUtilisateurA(echange);
-		cribleListes(userA.getObjets());
+		
 		userB = proxyEchange.GetUtilisateurB(echange);
-		cribleListes(userB.getObjets());
+		
 		getObjetsEchangeUser(userA);
 		moi = mbConnect.getUtilisateurConnecte();
 		if (moi.getId() == userA.getId()){
@@ -320,6 +351,8 @@ public class EchangeManagedBean {
 		rdvs = proxyEchange.getRdv(echange);
 					   
 		objets = echange.getObjets();
+		cribleListes(userA.getObjets());
+		cribleListes(userB.getObjets());
 		notes = proxyEchange.getNotes(echange);
 		conclusion = proxyEchange.getConclusion(echange);
 		adresses.addAll(proxyAdresse.getAdresseByUtilisateur(userA));
@@ -412,12 +445,9 @@ public class EchangeManagedBean {
 	 *            l'utilisateur ayant validé.
 	 */
 	public void valider() {
-		System.out.println("je rentre dans la méthode valider");
 		if (moi.getId() == userA.getId()) {
-			System.out.println("je valide pour A");
 			echange.setHasvalidatedusera(true);
 		} else {
-			System.out.println("je valide pour B");
 			echange.setHasvalidateduserb(true);
 		}
 		proxyEchange.majEchange(echange);
@@ -426,7 +456,6 @@ public class EchangeManagedBean {
 			resetValidations();
 			switch (echange.getEtape()) {
 			case INITIALISATION:
-				System.out.println("je suis dans le switch:case");
 				accepterEchange();
 				break;
 			case NEGOCIATION:
@@ -498,11 +527,17 @@ public class EchangeManagedBean {
 	}
 	// calcul sur listes
 
-	public int totalValeur(List<Objet> laliste) {
+	public int totalValeur(List<Objet> laliste, Utilisateur user) {
 		int total = 0;
 
 		for (Objet objet : laliste) {
 			total = total + objet.getValeur();
+		}
+		
+		if(user.getId() == moi.getId()){
+			total += floconsProposesMoi;
+		}else{
+			total += floconsProposesAutre;
 		}
 
 		return total;
@@ -713,6 +748,38 @@ public class EchangeManagedBean {
 
 	public void setObjetsAutre(List<Objet> objetsAutre) {
 		this.objetsAutre = objetsAutre;
+	}
+
+	public int getFloconsProposesMoi() {
+		return floconsProposesMoi;
+	}
+
+	public void setFloconsProposesMoi(int floconsProposesMoi) {
+		this.floconsProposesMoi = floconsProposesMoi;
+	}
+
+	public int getFloconsProposesAutre() {
+		return floconsProposesAutre;
+	}
+
+	public void setFloconsProposesAutre(int floconsProposesAutre) {
+		this.floconsProposesAutre = floconsProposesAutre;
+	}
+
+	public int getPropositionFloconsGauche() {
+		return propositionFloconsGauche;
+	}
+
+	public void setPropositionFloconsGauche(int propositionFloconsGauche) {
+		this.propositionFloconsGauche = propositionFloconsGauche;
+	}
+
+	public int getPropositionFloconsDroite() {
+		return propositionFloconsDroite;
+	}
+
+	public void setPropositionFloconsDroite(int propositionFloconsDroite) {
+		this.propositionFloconsDroite = propositionFloconsDroite;
 	}														  
 }																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																					 
 
