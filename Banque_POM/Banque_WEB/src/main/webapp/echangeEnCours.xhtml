@@ -90,17 +90,17 @@
 								<!-- <img id="imgProfil" class="userAvatar" /> -->
 							</div>
 							<ul>
-								<li><a>#{mbEchange.userA.pseudo}</a></li>
+								<li><a>#{mbEchange.moi.pseudo}</a></li>
 								<li><span>Confirmé
-										#{mbEchange.userXP(mbEchange.userA)}</span></li>
-								<li>#{mbEchange.userMoyenne(mbEchange.userA)} <span
+										#{mbEchange.userXP(mbEchange.moi)}</span></li>
+								<li>#{mbEchange.userMoyenne(mbEchange.moi)} <span
 									class="fa fa-star smallStar"></span><span
 									class="fa fa-star smallStar"></span><span
 									class="fa fa-star smallStar"></span><span
 									class="fa fa-star smallStar"></span><span
 									class="fa fa-star-half-o smallStar"></span>
 								</li>
-								<li><span><a>#{mbEchange.userAvis(mbEchange.userA)}
+								<li><span><a>#{mbEchange.userAvis(mbEchange.moi)}
 											Avis</a></span></li>
 							</ul>
 						</div>
@@ -111,17 +111,17 @@
 								<!-- <img id="imgProfil" class="userAvatar" /> -->
 							</div>
 							<ul>
-								<li><a>#{mbEchange.userB.pseudo}</a></li>
+								<li><a>#{mbEchange.autre.pseudo}</a></li>
 								<li><span>Confirmé
-										#{mbEchange.userXP(mbEchange.userB)}</span></li>
-								<li>#{mbEchange.userMoyenne(mbEchange.userB)} <span
+										#{mbEchange.userXP(mbEchange.autre)}</span></li>
+								<li>#{mbEchange.userMoyenne(mbEchange.autre)} <span
 									class="fa fa-star smallStar"></span><span
 									class="fa fa-star smallStar"></span><span
 									class="fa fa-star smallStar"></span><span
 									class="fa fa-star smallStar"></span><span
 									class="fa fa-star-half-o smallStar"></span>
 								</li>
-								<li><span><a>#{mbEchange.userAvis(mbEchange.userA)}
+								<li><span><a>#{mbEchange.userAvis(mbEchange.autre)}
 											Avis</a></span></li>
 							</ul>
 						</div>
@@ -136,7 +136,7 @@
 						<div class="echangeVersusBloc">
 							<section class="echangeObjetListe blocGauche">
 
-								<ui:repeat value="#{mbEchange.objetsA}" var="objet">
+								<ui:repeat value="#{mbEchange.objetsMoi}" var="objet">
 									<ul class="echangeLigneObjet">
 										<li class="ordre1"><span
 											class="fa fa-plus-circle fa-2x deepGreyColor"> <h:commandButton value="-">
@@ -158,7 +158,7 @@
 
 							</section>
 							<section class="echangeObjetListe blocDroit">
-								<ui:repeat value="#{mbEchange.objetsB}" var="objet">
+								<ui:repeat value="#{mbEchange.objetsAutre}" var="objet">
 									<ul class="echangeLigneObjet">
 										<li class="ordre1"><span
 											class="fa fa-plus-circle fa-2x deepGreyColor">
@@ -183,12 +183,12 @@
 						<div class="echangeVersusBloc">
 							<ul class="userTotal">
 								<li class="ordre1">Total</li>
-								<li class="ordre2">#{mbEchange.totalValeur(mbEchange.objetsA)}</li>
+								<li class="ordre2">#{mbEchange.totalValeur(mbEchange.objetsMoi)}</li>
 								<li class="fa fa-snowflake-o ordre5"></li>
 							</ul>
 							<ul class="userTotal ordreInverse">
 								<li class="ordre1">Total</li>
-								<li class="ordre2">#{mbEchange.totalValeur(mbEchange.objetsB)}</li>
+								<li class="ordre2">#{mbEchange.totalValeur(mbEchange.objetsAutre)}</li>
 								<li class="fa fa-snowflake-o ordre5"></li>
 							</ul>
 						</div>
@@ -231,7 +231,7 @@
 						<div class="echangeVersusBloc">
 							<section class="echangeObjetListe blocGauche">
 
-								<ui:repeat value="#{mbEchange.userA.objets}" var="objet">
+								<ui:repeat value="#{mbEchange.moi.objets}" var="objet">
 									<ul class="echangeLigneObjet">
 										<li class="ordre1"><span
 											class="fa fa-plus-circle fa-2x deepGreyColor">
@@ -251,7 +251,7 @@
 								</ui:repeat>
 							</section>
 							<section class="echangeObjetListe blocDroit">
-								<ui:repeat value="#{mbEchange.userB.objets}" var="objet">
+								<ui:repeat value="#{mbEchange.autre.objets}" var="objet">
 									<ul class="echangeLigneObjet">
 										<li class="ordre1"><span
 											class="fa fa-plus-circle fa-2x deepGreyColor"> 

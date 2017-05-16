@@ -58,8 +58,8 @@ public class EchangeManagedBean {
 	private List<Rdv> rdvs;
 	private Conclusionechange conclusion;
 	private List<Objet> objets;
-	private List<Objet> objetsA;
-	private List<Objet> objetsB;
+	private List<Objet> objetsMoi;
+	private List<Objet> objetsAutre;
 	private List<Note> notes;
 	private int Sapins;
 	private Date dateRdv;
@@ -77,7 +77,7 @@ public class EchangeManagedBean {
 	private boolean hasValidatedAutre;							   
 	
 	private static final String PAGE_INITIALISATION = "testInitialisation.xhtml";
-	private static final String PAGE_NEGOCIATION = "testNegociation.xhtml";
+	private static final String PAGE_NEGOCIATION = "echangeEnCours.xhtml";
 	private static final String PAGE_PRISE_RDV = "testPriseRdv.xhtml";
 	private static final String PAGE_RDV = "testRdv.xhtml";
 	private static final String PAGE_CONCLUSION_RDV = "testConclusionRdv.xhtml";
@@ -85,24 +85,9 @@ public class EchangeManagedBean {
 	private static final String PAGE_FIN = "testFin.xhtml";
 	private static final String FACES_REDIRECT = "?faces-redirect=true";																	
 
-								  
-					
-
-					
-								
-				
-
 	// TODO: retirer ces attributs à la fin des tests
-	 private static int IDECHANGE = 3;
-		   
-	
-		   
-   
-	
-  
-
-			   
-					 
+	 private static int IDECHANGE = 1;
+			 
 				  
 	// METHODE DE TEST
 	public void testMethod(int userId) {
@@ -123,6 +108,7 @@ public class EchangeManagedBean {
 	 * Méthode privée : appelée via valider(userB).
 	 */
 	private void accepterEchange() {
+		System.out.println("je rendre dans accepterEchange");
 		echange.setDateDebutNegociation(new Date());
 									  
 									  
@@ -153,9 +139,9 @@ public class EchangeManagedBean {
 		List<Objet> objetsUser = null;
 		for (Objet objet : objets) {
 			if (objet.getUtilisateur().getId() == utilisateurA.getId()) {
-				objetsA.add(objet);
+				objetsMoi.add(objet);
 			} else
-				objetsB.add(objet);
+				objetsAutre.add(objet);
 		}
 
 	}
@@ -312,8 +298,10 @@ public class EchangeManagedBean {
 		
 		echange = proxyEchange.GetEchange(IDECHANGE);
 		userA = proxyEchange.GetUtilisateurA(echange);
-								  
+		cribleListes(userA.getObjets());
 		userB = proxyEchange.GetUtilisateurB(echange);
+		cribleListes(userB.getObjets());
+		getObjetsEchangeUser(userA);
 		moi = mbConnect.getUtilisateurConnecte();
 		if (moi.getId() == userA.getId()){
 			autre = userB;
@@ -345,6 +333,9 @@ public class EchangeManagedBean {
 			adresseProposee.setRue("");
 			adresseProposee.setVille("");
 		}
+		objetsMoi = proxyEchange.getObjetUserEchange(echange, moi);
+
+		objetsAutre = proxyEchange.getObjetUserEchange(echange, autre);
 	}
 
 	/**
@@ -419,9 +410,12 @@ public class EchangeManagedBean {
 	 *            l'utilisateur ayant validé.
 	 */
 	public void valider() {
+		System.out.println("je rentre dans la méthode valider");
 		if (moi.getId() == userA.getId()) {
+			System.out.println("je valide pour A");
 			echange.setHasvalidatedusera(true);
 		} else {
+			System.out.println("je valide pour B");
 			echange.setHasvalidateduserb(true);
 		}
 		proxyEchange.majEchange(echange);
@@ -430,6 +424,7 @@ public class EchangeManagedBean {
 			resetValidations();
 			switch (echange.getEtape()) {
 			case INITIALISATION:
+				System.out.println("je suis dans le switch:case");
 				accepterEchange();
 				break;
 			case NEGOCIATION:
@@ -570,33 +565,7 @@ public class EchangeManagedBean {
 		this.objets = objets;
 	}
 
-	public List<Objet> getObjetsA() {
-		return objetsA;
-	}
 
-	public void setObjetsA(List<Objet> objetsA) {
-		this.objetsA = objetsA;
-	}
-
-	public List<Objet> getObjetsB() {
-		return objetsB;
-	}
-
-	public void setObjetsB(List<Objet> objetsB) {
-		this.objetsB = objetsB;
-  
-
-						
-			   
-  
-
-								  
-					 
-  
-
-								   
-					   
-	}
 
 	public List<Note> getNotes() {
 		return notes;
@@ -726,6 +695,22 @@ public class EchangeManagedBean {
 
 	public void setHasValidatedAutre(boolean hasValidatedAutre) {
 		this.hasValidatedAutre = hasValidatedAutre;
+	}
+
+	public List<Objet> getObjetsMoi() {
+		return objetsMoi;
+	}
+
+	public void setObjetsMoi(List<Objet> objetsMoi) {
+		this.objetsMoi = objetsMoi;
+	}
+
+	public List<Objet> getObjetsAutre() {
+		return objetsAutre;
+	}
+
+	public void setObjetsAutre(List<Objet> objetsAutre) {
+		this.objetsAutre = objetsAutre;
 	}														  
 }																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																					 
 

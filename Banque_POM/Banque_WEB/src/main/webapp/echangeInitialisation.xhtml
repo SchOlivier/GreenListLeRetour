@@ -5,206 +5,253 @@
 	xmlns:p="http://primefaces.org/ui">
 <h:head>
 	<title>GreenList - Bienvenue</title>
-
+	<f:metadata>
+		<f:event listener="#{mbEchange.init()}" type="preRenderView"></f:event>
+	</f:metadata>
 </h:head>
 <h:body>
 	<ui:composition template="/WEB-INF/templates/base.xhtml">
 		<ui:define name="content">
-		 <!-- Contenu Principal -->
-		 
-		<div class="mainPanel">
-        <form class="mainForm">
-            <!-- Echange Progress Steps Bar -->
+			<!-- Contenu Principal -->
 
-            <ol class="progress-track">
-                <li class="progress-done progress-current">
-                    <center>
-                        <div class="icon-wrap">
-                            <span class="fa fa-spinner fa-pulse"></span>
-                        </div>
-                        <span class="progress-text">
-                        Initialisation 
-                    </span>
-                    </center>
-                </li>
-                <li class="progress-todo">
-                    <center>
-                        <div class="icon-wrap">
-                            <span></span>
-                        </div>
-                        <span class="progress-text">Négociation</span>
-                    </center>
-                </li>
+			<div class="mainPanel">
+				<h:form class="mainForm">
+					<!-- Echange Progress Steps Bar -->
 
-                <li class="progress-todo">
-                    <center>
-                        <div class="icon-wrap">
-                            <span></span>
-                        </div>
-                        <span class="progress-text">Rendez-vous</span>
-                    </center>
-                </li>
+					<ol class="progress-track">
+						<li class="progress-done progress-current">
+							<center>
+								<div class="icon-wrap">
+									<span class="fa fa-spinner fa-pulse"></span>
+								</div>
+								<span class="progress-text"> Initialisation </span>
+							</center>
+						</li>
+						<li class="progress-todo">
+							<center>
+								<div class="icon-wrap">
+									<span></span>
+								</div>
+								<span class="progress-text">Négociation</span>
+							</center>
+						</li>
 
-                <li class="progress-todo">
-                    <center>
-                        <div class="icon-wrap">
-                            <span></span>
-                        </div>
-                        <span class="progress-text">Transaction</span>
-                    </center>
-                </li>
-                <li class="progress-todo">
-                    <center>
-                        <div class="icon-wrap">
-                            <span></span>
-                        </div>
-                        <span class="progress-text">Confirmation</span>
-                    </center>
-                </li>
-            </ol>
+						<li class="progress-todo">
+							<center>
+								<div class="icon-wrap">
+									<span></span>
+								</div>
+								<span class="progress-text">Rendez-vous</span>
+							</center>
+						</li>
 
-            <!-- Echange Etape -->
+						<li class="progress-todo">
+							<center>
+								<div class="icon-wrap">
+									<span></span>
+								</div>
+								<span class="progress-text">Transaction</span>
+							</center>
+						</li>
+						<li class="progress-todo">
+							<center>
+								<div class="icon-wrap">
+									<span></span>
+								</div>
+								<span class="progress-text">Confirmation</span>
+							</center>
+						</li>
+					</ol>
 
-            <!-- Page titre -->
+					<!-- Echange Etape -->
+
+					<!-- Page titre -->
 
 
-            <div class="pageTitleBloc">
-                <div class="pageTitleIcon"><span class="fa-2x">1</span></div>
-                <div class="pageTitle">Ouvrir Echange </div>
-            </div>
+					<div class="pageTitleBloc">
+						<div class="pageTitleIcon">
+							<span class="fa-2x">1</span>
+						</div>
+						<div class="pageTitle">Ouvrir Echange</div>
+					</div>
 
-            <!-- Page Content -->
+					<!-- Page Content -->
 
-            <div class="mainEchange">
-                <div class="echangeVersusBloc">
-                    <div class="pageSubTitle">
-                        <span>Moi</span>
-                    </div>
-                    <div class="pageSubTitle">
-                        <span>Autre</span></div>
-                </div>
-                <div class="echangeVersusBloc">
-                    <div class="userEchangeBloc">
-                        <div>
-                            <span class="fa fa-user-circle-o fa-3x userAvatar"></span>
-                            <!-- <img id="imgProfil" class="userAvatar" /> -->
-                        </div>
-                        <ul>
-                            <li><a>#{mbEchange.userA.pseudo}</a></li>
-                            <li><span>Confirmé #{mbEchange.userXP(mbEchange.userA)}</span></li>
-                            <li>
-                               #{mbEchange.userMoyenne(mbEchange.userA)} <span class="fa fa-star smallStar"></span><span class="fa fa-star smallStar"></span><span class="fa fa-star smallStar"></span><span class="fa fa-star smallStar"></span><span class="fa fa-star-half-o smallStar"></span>
-                            </li>
-                            <li><span><a>#{mbEchange.userAvis(mbEchange.userA)} Avis</a></span></li>
-                        </ul>
-                    </div>
+					<div class="mainEchange">
+						<div class="echangeVersusBloc">
+							<div class="pageSubTitle">
+								<span>Moi</span>
+							</div>
+							<div class="pageSubTitle">
+								<span>Autre</span>
+							</div>
+						</div>
+						<div class="echangeVersusBloc">
+							<div class="userEchangeBloc">
+								<div>
+									<span class="fa fa-user-circle-o fa-3x userAvatar"></span>
+									<!-- <img id="imgProfil" class="userAvatar" /> -->
+								</div>
+								<ul>
+									<li><a>#{mbEchange.moi.pseudo}</a></li>
+									<li><span>Confirmé
+											#{mbEchange.userXP(mbEchange.moi)}</span></li>
+									<li>#{mbEchange.userMoyenne(mbEchange.moi)} <span
+										class="fa fa-star smallStar"></span><span
+										class="fa fa-star smallStar"></span><span
+										class="fa fa-star smallStar"></span><span
+										class="fa fa-star smallStar"></span><span
+										class="fa fa-star-half-o smallStar"></span>
+									</li>
+									<li><span><a>#{mbEchange.userAvis(mbEchange.moi)}
+												Avis</a></span></li>
+								</ul>
+							</div>
 
-                    <div class="userEchangeBloc">
-                        <div>
-                            <span class="fa fa-user-circle-o fa-3x userAvatar"></span>
-                            <!-- <img id="imgProfil" class="userAvatar" /> -->
-                        </div>
-                        <ul>
-                            <li><a>#{mbEchange.userB.pseudo}</a></li>
-                            <li><span>Confirmé #{mbEchange.userXP(mbEchange.userB)}</span></li>
-                            <li>
-                                #{mbEchange.userMoyenne(mbEchange.userB)} <span class="fa fa-star smallStar"></span><span class="fa fa-star smallStar"></span><span class="fa fa-star smallStar"></span><span class="fa fa-star smallStar"></span><span class="fa fa-star-half-o smallStar"></span>
-                            </li>
-                            <li><span><a>#{mbEchange.userAvis(mbEchange.userA)} Avis</a></span></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="echangeVersusBloc">
-                    <div class="echangeLigneBox">
-                        <ul class="echangeLigneSouhait">
-                            <li class="echangeLigneIntitule"> #{mbEchange.objets[0]} </li>
-                        </ul>
-                    </div>
-                    <div class="echangeLigneBox">
-                        <ul class="echangeLigneObjet ordreInverse">
-                            <li class="ordre5">
-                                <span class="fa fa-chevron-down">       </span>
-                            </li>
-                            <li class="ordre3"><img class="minPhoto" /></li>
-                            <li class="echangeLigneIntitule ordre2">{#{mbEchange.objets[0].libelle}</li>
-                            <li class="echangeLigneValeur ordre1">1<span class="fa fa-snowflake-o"></span></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="echangeVersusBloc">
-                    <ul class="echangeDescription">
-                        <li><span>Date: 10/03/2017</span></li>
-                        <li>
-                            <div class="catLabel">
-                                Catégorie</div>
-                            <div><a class="fa fa-angle-double-right">Jeux et Jouets</a></div>
-                            <ul>
-                                <li>
-                                    <div><a class="fa fa-angle-double-right">Poupées et Peluches</a></div>
-                                    <ul>
-                                        <li>
-                                            <a class="fa fa-angle-double-right">
-                                                <span>Lego</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <span>Age</span>
-                            <ul>
-                                <li><span>Enfant</span></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <ul class="echangeDescription">
-                        <li>Date: 10/03/2017</li>
-                        <li>Description:</li>
-                        <li>#{mbEchange.objets[0].description}</li>
-                        <li>
-                            <div class="catLabel">
-                                Catégorie</div>
-                            <div><a class="fa fa-angle-double-right">Jeux et Jouets</a></div>
-                            <ul>
-                                <li>
-                                    <div><a class="fa fa-angle-double-right">Poupées et Peluches</a></div>
-                                    <ul>
-                                        <li>
-                                            <a class="fa fa-angle-double-right">
-                                                <span>LEGO</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <span>Age</span>
-                            <ul>
-                                <li><span>Enfant</span></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+							<div class="userEchangeBloc">
+								<div>
+									<span class="fa fa-user-circle-o fa-3x userAvatar"></span>
+									<!-- <img id="imgProfil" class="userAvatar" /> -->
+								</div>
+								<ul>
+									<li><a>#{mbEchange.autre.pseudo}</a></li>
+									<li><span>Confirmé
+											#{mbEchange.userXP(mbEchange.autre)}</span></li>
+									<li>#{mbEchange.userMoyenne(mbEchange.autre)} <span
+										class="fa fa-star smallStar"></span><span
+										class="fa fa-star smallStar"></span><span
+										class="fa fa-star smallStar"></span><span
+										class="fa fa-star smallStar"></span><span
+										class="fa fa-star-half-o smallStar"></span>
+									</li>
+									<li><span><a>#{mbEchange.userAvis(mbEchange.autre)}
+												Avis</a></span></li>
+								</ul>
+							</div>
+						</div>
+						<div class="echangeVersusBloc">
+							<div class="echangeLigneBox">
+								<h:panelGroup
+									rendered="#{mbEchange.moi.id == mbEchange.objets[0].utilisateur.id}">
+									<ul class="echangeLigneObjet ">
+										<li class="ordre5"><span class="fa fa-chevron-down">
+										</span></li>
+										<li class="ordre3">PHOTO OBJET</li>
+										<li class="echangeLigneIntitule ordre2">#{mbEchange.objets[0].libelle}</li>
+										<li class="echangeLigneValeur ordre1">#{mbEchange.objets[0].valeur}<span
+											class="fa fa-snowflake-o"></span></li>
+									</ul>
+								</h:panelGroup>
+							</div>
+							<div class="echangeLigneBox">
+								<h:panelGroup
+									rendered="#{mbEchange.autre.id == mbEchange.objets[0].utilisateur.id}">
+									<ul class="echangeLigneObjet ordreInverse">
+										<li class="ordre5"><span class="fa fa-chevron-down">
+										</span></li>
+										<li class="ordre3">PHOTO OBJET</li>
+										<li class="echangeLigneIntitule ordre2">#{mbEchange.objets[0].libelle}</li>
+										<li class="echangeLigneValeur ordre1">#{mbEchange.objets[0].valeur}<span
+											class="fa fa-snowflake-o"></span></li>
+									</ul>
+								</h:panelGroup>
+							</div>
+						</div>
+						<div class="echangeVersusBloc">
+							<div class="echangeDescription">
+								<h:panelGroup
+									rendered="#{mbEchange.moi.id ==
+									mbEchange.objets[0].utilisateur.id}">
+									<ul>
+										<li>Description:</li>
+										<li>#{mbEchange.objets[0].description}</li>
+										<li>
+											<div class="catLabel">Catégorie</div>
+											<div>
+												<a class="fa fa-angle-double-right">#{mbEchange.objets[0].produit.groupe.domaine.libelle}</a>
+											</div>
+											<ul>
+												<li>
+													<div>
+														<a class="fa fa-angle-double-right">#{mbEchange.objets[0].produit.groupe.libelle}</a>
+													</div>
+													<ul>
+														<li><a class="fa fa-angle-double-right"> <span>#{mbEchange.objets[0].produit.libelle}</span>
+														</a></li>
+													</ul>
+												</li>
+											</ul>
+										</li>
+										<li><span>Age</span>
+											<ul>
+												<li><span>#{mbEchange.objets[0].trancheAge.libelle}</span></li>
+											</ul></li>
+									</ul>
+								</h:panelGroup>
+							</div>
+							<div class="echangeDescription">
+								<h:panelGroup
+									rendered="#{mbEchange.autre.id ==
+									mbEchange.objets[0].utilisateur.id}">
+									<ul>
+										<li>Description:</li>
+										<li>#{mbEchange.objets[0].description}</li>
+										<li>
+											<div class="catLabel">Catégorie</div>
+											<div>
+												<a class="fa fa-angle-double-right">#{mbEchange.objets[0].produit.groupe.domaine.libelle}</a>
+											</div>
+											<ul>
+												<li>
+													<div>
+														<a class="fa fa-angle-double-right">#{mbEchange.objets[0].produit.groupe.libelle}</a>
+													</div>
+													<ul>
+														<li><a class="fa fa-angle-double-right"> <span>#{mbEchange.objets[0].produit.libelle}</span>
+														</a></li>
+													</ul>
+												</li>
+											</ul>
+										</li>
+										<li><span>Age</span>
+											<ul>
+												<li><span>#{mbEchange.objets[0].trancheAge.libelle}</span></li>
+											</ul></li>
+									</ul>
+								</h:panelGroup>
+							</div>
+						</div>
+					</div>
 
-            <!-- Bloc de boutons -->
+					<!-- Bloc de boutons -->
 
-            <div class="boutonsCenterBloc">
-                <div class="pageBouton">
-                    <div class="objetItem">Ouvrir </div>
-                </div>
-                <div class="pageBouton">
-                    <div class="objetItem">Annuler</div>
-                </div>
-            </div>
+					<div class="echangeVersusBloc">
+						<div class="validateState">
+							<h:panelGroup rendered="#{mbEchange.hasValidatedMoi}">
+								<span class="fa fa-check-square-o fa-2x" />Validé
+								</h:panelGroup>
+							<h:panelGroup class="pageBouton"
+								rendered="#{!mbEchange.hasValidatedMoi}">
+								<h:commandButton styleClass="objetItem"
+									action="#{mbEchange.valider()}" value="Accepter l'échange" />
+							</h:panelGroup>
+						</div>
+						<div class="validateState">
+							<h:panelGroup rendered="#{mbEchange.hasValidatedAutre}">
+								<span class="fa fa-check-square-o fa-2x" />#{mbEchange.autre.pseudo}
+										souhaite débuter un échange avec vous
+								</h:panelGroup>
+							<h:panelGroup rendered="#{!mbEchange.hasValidatedAutre}">
+								<span class="fa fa-square-o fa-2x" /> En attente de
+										#{mbEchange.autre.pseudo}
+								</h:panelGroup>
+						</div>
+					</div>
+					<!-- Chat Bloc -->
+				</h:form>
+			</div>
 
-            <!-- Chat Bloc -->
-        </form>
-    </div>
-
-    <!-- /Contenu Principal -->
+			<!-- /Contenu Principal -->
 		</ui:define>
 	</ui:composition>
 </h:body>
