@@ -136,47 +136,52 @@
 						<div class="echangeVersusBloc">
 							<section class="echangeObjetListe blocGauche">
 
-								<ui:repeat value="#{mbEchange.objetsMoi}" var="objet">
-									<ul class="echangeLigneObjet">
-										<li class="ordre1"><span
-											class="fa fa-plus-circle fa-2x deepGreyColor"> <h:commandButton value="-">
-											 <f:ajax event="click" render="@form" listener="#{mbEchange.retirerObjet(objet)}"/> 
-											 </h:commandButton>
-											 </span></li>
-											
-										<li class="ordre2"><h:graphicImage
-												value="#{objet.photos[0].url}" /></li>
-										
-										<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
-										<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
-										<li class="fa fa-snowflake-o ordre5"></li>
-									</ul>
+								<h:panelGroup
+									rendered="#{mbEchange.moi.id == mbEchange.objets[0].utilisateur.id}">
+									<ui:repeat value="#{mbEchange.objetsMoi}" var="objet">
+										<ul class="echangeLigneObjet">
+											<li class="ordre1"><span
+												class="fa fa-plus-circle fa-2x deepGreyColor"> <h:commandButton
+														value="-">
+														<f:ajax event="click" render="@form"
+															listener="#{mbEchange.retirerObjet(objet)}" />
+													</h:commandButton>
+											</span></li>
 
-								</ui:repeat>
+											<li class="ordre2">photo</li>
 
+											<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
+											<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
+											<li class="fa fa-snowflake-o ordre5"></li>
+										</ul>
+
+									</ui:repeat>
+								</h:panelGroup>
 
 
 							</section>
 							<section class="echangeObjetListe blocDroit">
-								<ui:repeat value="#{mbEchange.objetsAutre}" var="objet">
-									<ul class="echangeLigneObjet">
-										<li class="ordre1"><span
-											class="fa fa-plus-circle fa-2x deepGreyColor">
-											 <h:commandButton value="-">
-											 <f:ajax event="click" render="@form" listener="#{mbEchange.retirerObjet(objet)}"/> 
-											 </h:commandButton>
-											 </span></li>
-											
-										<li class="ordre2"><h:graphicImage
-												value="#{objet.photos[0].url}" /></li>
-										
-										<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
-										<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
-										<li class="fa fa-snowflake-o ordre5"></li>
-									</ul>
+								<h:panelGroup
+									rendered="#{mbEchange.autre.id == mbEchange.objets[0].utilisateur.id}">
+									<ui:repeat value="#{mbEchange.objetsAutre}" var="objet">
+										<ul class="echangeLigneObjet">
+											<li class="ordre1"><span
+												class="fa fa-plus-circle fa-2x deepGreyColor"> <h:commandButton
+														value="-">
+														<f:ajax event="click" render="@form"
+															listener="#{mbEchange.retirerObjet(objet)}" />
+													</h:commandButton>
+											</span></li>
 
-								</ui:repeat>
-								
+											<li class="ordre2">Photo</li>
+
+											<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
+											<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
+											<li class="fa fa-snowflake-o ordre5"></li>
+										</ul>
+
+									</ui:repeat>
+								</h:panelGroup>
 							</section>
 						</div>
 
@@ -216,7 +221,7 @@
 							</div>
 						</div>
 
-						
+
 						<div class="echangeVersusBloc">
 							<div class="tabTitle moreTab">
 								<span class="arrowButton fa fa-caret-left"></span> <span
@@ -231,43 +236,53 @@
 						<div class="echangeVersusBloc">
 							<section class="echangeObjetListe blocGauche">
 
-								<ui:repeat value="#{mbEchange.moi.objets}" var="objet">
-									<ul class="echangeLigneObjet">
-										<li class="ordre1"><span
-											class="fa fa-plus-circle fa-2x deepGreyColor">
-											 <h:commandButton value="+">
-											 <f:ajax event="click" render="@form" listener="#{mbEchange.ajouterObjet(objet)}"/> 
-											 </h:commandButton>
-											 </span></li>
-										
-										<li class="ordre2"><h:graphicImage
-												value="#{objet.photos[0].url}" /></li>
-										
-										<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
-										<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
-										<li class="fa fa-snowflake-o ordre5"></li>
-									</ul>
+								<h:panelGroup
+									rendered="#{mbEchange.moi.id == mbEchange.objets[0].utilisateur.id}">
 
-								</ui:repeat>
+									<ui:repeat value="#{mbEchange.moi.objets}" var="objet">
+										<ul class="echangeLigneObjet">
+											<li class="ordre1"><span
+												class="fa fa-plus-circle fa-2x deepGreyColor"> <h:commandButton
+														value="+">
+														<f:ajax event="click" render="@form"
+															listener="#{mbEchange.ajouterObjet(objet)}" />
+													</h:commandButton>
+											</span></li>
+
+											<li class="ordre2">Photo</li>
+
+											<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
+											<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
+											<li class="fa fa-snowflake-o ordre5"></li>
+										</ul>
+
+									</ui:repeat>
+
+								</h:panelGroup>
 							</section>
 							<section class="echangeObjetListe blocDroit">
-								<ui:repeat value="#{mbEchange.autre.objets}" var="objet">
-									<ul class="echangeLigneObjet">
-										<li class="ordre1"><span
-											class="fa fa-plus-circle fa-2x deepGreyColor"> 
-											  <h:commandButton value="+">
-											 <f:ajax event="click" render="@form" listener="#{mbEchange.ajouterObjet(objet)}"/> 
-											 </h:commandButton>
-											 </span></li>
-										<li class="ordre2"><h:graphicImage
-												value="#{objet.photos[0].url}" /></li>
-										
-										<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
-										<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
-										<li class="fa fa-snowflake-o ordre5"></li>
-									</ul>
+								<h:panelGroup
+									rendered="#{mbEchange.autre.id == mbEchange.objets[0].utilisateur.id}">
 
-								</ui:repeat>
+									<ui:repeat value="#{mbEchange.autre.objets}" var="objet">
+										<ul class="echangeLigneObjet">
+											<li class="ordre1"><span
+												class="fa fa-plus-circle fa-2x deepGreyColor"> <h:commandButton
+														value="+">
+														<f:ajax event="click" render="@form"
+															listener="#{mbEchange.ajouterObjet(objet)}" />
+													</h:commandButton>
+											</span></li>
+											<li class="ordre2">Photo</li>
+
+											<li class="echangeLigneIntitule ordre3">#{objet.libelle}</li>
+											<li class="echangeLigneValeur ordre4">#{objet.valeur}</li>
+											<li class="fa fa-snowflake-o ordre5"></li>
+										</ul>
+
+									</ui:repeat>
+
+								</h:panelGroup>
 							</section>
 						</div>
 						<div class="boutonsCenterBloc">

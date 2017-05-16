@@ -86,7 +86,7 @@ public class EchangeManagedBean {
 	private static final String FACES_REDIRECT = "?faces-redirect=true";																	
 
 	// TODO: retirer ces attributs à la fin des tests
-	 private static int IDECHANGE = 1;
+	 private static int IDECHANGE = 2;
 			 
 				  
 	// METHODE DE TEST
@@ -305,11 +305,13 @@ public class EchangeManagedBean {
 		moi = mbConnect.getUtilisateurConnecte();
 		if (moi.getId() == userA.getId()){
 			autre = userB;
+			moi = userA;
 			hasValidatedMoi = echange.isHasvalidatedusera();
 			hasValidatedAutre = echange.isHasvalidateduserb();
 		}
 		else{
 			autre = userA;
+			moi = userB;
 			hasValidatedMoi = echange.isHasvalidateduserb();
 			hasValidatedAutre = echange.isHasvalidatedusera();
 		}
